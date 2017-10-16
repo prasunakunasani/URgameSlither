@@ -1,11 +1,26 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
-</html>
+<% include partials/header%>
+
+<div id="content">
+  <div class="container-fluid">
+    <div class="g-signin2 float-right" data-onsuccess="onSignIn" data-theme="dark"></div>
+    <a class="float-left" href="#" onclick="signOut();">Sign out</a>
+
+    <svg viewBox="0 0 1600 300">   <!--min-x, min-y, width, height-->
+      <symbol id="s-text">
+        <text text-anchor="middle" x="50%" y="80%">URgame.me</text>
+      </symbol>
+      <g class="g-ants">
+        <use xlink:href="#s-text" class="text-copy"></use>
+        <use xlink:href="#s-text" class="text-copy"></use>
+        <use xlink:href="#s-text" class="text-copy"></use>
+      </g>
+    </svg>
+
+    <form action="data">
+      <input type="submit" value="View Profile">
+    </form>
+  </div>
+
+</div>
+
+<% include partials/footer%>

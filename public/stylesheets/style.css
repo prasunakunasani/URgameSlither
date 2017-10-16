@@ -1,8 +1,64 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-color: #161C22;
+    color: white;
 }
 
 a {
-  color: #00B7FF;
+    color: #00B7FF;
+}
+
+#chartdiv {
+    width: 100%;
+    height: 500px;
+}
+
+#content {
+    background-image: url("../images/slitherbackgroundgrain.png");
+}
+
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+
+.nav-fill {
+    background-color: black;
+    width: 100%;
+}
+
+svg {
+    display: block;
+    font: 10.5em 'Montserrat';
+    margin: 0 auto;
+}
+
+.text-copy {
+    fill: none;
+    stroke: white;
+    stroke-dasharray: 16% 9%;
+    stroke-width: 5px;
+    stroke-dashoffset: 0%;
+    animation: stroke-offset 3.5s infinite linear;
+}
+
+/*44CCFF, D138BF, 35FF69*/
+/*FF2ECC, FF6663, E0FF4F*/
+/*F8FF34 41DBDB 35FF69*/
+
+.text-copy:nth-child(1) {
+    stroke: #F8FF34;
+    animation-delay: -1s;
+}
+
+.text-copy:nth-child(2) {
+    stroke: #41DBDB;
+    animation-delay: -2s;
+}
+
+.text-copy:nth-child(3) {
+    stroke: #35FF69;
+    animation-delay: -3s;
+}
+
+@keyframes stroke-offset {
+    100% {
+        stroke-dashoffset: -15%;
+    }
 }

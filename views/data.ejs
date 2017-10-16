@@ -1,0 +1,81 @@
+<% include partials/header %>
+
+<nav class="navbar navbar-expand-sm sticky-top">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs nav-fill">
+        <li class="nav-item">
+            <a class="nav-link" href="/">Back to the Game</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#home">USER PROFILE</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#profile">GENERAL USER STATISTICS</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#global">GLOBAL GAMEPLAY PERFORMANCE</a>
+        </li>
+    </ul>
+    <!-- END of Nav tabs -->
+</nav>
+
+<div class=" container-fluid tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">USER PROFILE STUFF
+
+        <% playersList.forEach(function(player){ %>
+        <li>
+            <%= player.snake_name %>
+        </li>
+        <% }) %>
+
+        <% playerSnakeDetailsList.forEach(function(player){ %>
+        <li>
+            <%= player.boost_count %>
+        </li>
+        <% }) %>
+
+        <div id="chartdiv"></div>
+
+    </div>
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">GENERAL USER STATISTICS
+        STUFF
+    </div>
+    <div class="tab-pane fade" id="global" role="tabpanel" aria-labelledby="global-tab">GLOBAL GAMEPLAY PERFORMANCE
+        STUFF
+        <h1>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate distinctio dolor fuga fugit illo
+            incidunt iste necessitatibus obcaecati officia, placeat possimus quibusdam soluta voluptatibus? Et fuga
+            laborum quidem velit voluptatem!
+        </h1>
+        <h1>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate distinctio dolor fuga fugit illo
+            incidunt iste necessitatibus obcaecati officia, placeat possimus quibusdam soluta voluptatibus? Et fuga
+            laborum quidem velit voluptatem!
+        </h1>
+        <h1>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate distinctio dolor fuga fugit illo
+            incidunt iste necessitatibus obcaecati officia, placeat possimus quibusdam soluta voluptatibus? Et fuga
+            laborum quidem velit voluptatem!
+        </h1>
+        <h1>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate distinctio dolor fuga fugit illo
+            incidunt iste necessitatibus obcaecati officia, placeat possimus quibusdam soluta voluptatibus? Et fuga
+            laborum quidem velit voluptatem!
+        </h1>
+        <h1>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate distinctio dolor fuga fugit illo
+            incidunt iste necessitatibus obcaecati officia, placeat possimus quibusdam soluta voluptatibus? Et fuga
+            laborum quidem velit voluptatem!
+        </h1>
+        <h1>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate distinctio dolor fuga fugit illo
+            incidunt iste necessitatibus obcaecati officia, placeat possimus quibusdam soluta voluptatibus? Et fuga
+            laborum quidem velit voluptatem!
+        </h1>
+
+
+    </div>
+</div>
+
+
+<% include partials/footer %>
