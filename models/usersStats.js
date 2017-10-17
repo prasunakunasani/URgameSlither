@@ -67,7 +67,44 @@ var usersStatsSchema = new mongoose.Schema({
     lastModifiedOn:
         {
             type: Date
+        },
+
+    records:
+        {
+            highest_kills:
+                {
+                    type: Number
+                },
+            largest_snake_killed_length:
+                {
+                    type: Number
+                }
+        },
+    totals:
+        {
+            boosts:
+                {
+                    type: Number
+                },
+            deaths:
+                {
+                    type: Number
+                },
+            duration:
+                {
+                    type: Number
+                },
+            kills:
+                {
+                    type: Number
+                },
+            length:
+                {
+                    type: Number
+                }
+
         }
+
 });
 
 var usersStats = mongoose.model('usersStats', usersStatsSchema, 'users.stats');
