@@ -34,5 +34,5 @@ var calculatedStatsSchema = new mongoose.Schema({
         }
 });
 
-var calculatedStats = mongoose.model('calculatedStats', calculatedStatsSchema, 'calculatedStats');
+var calculatedStats = mongoose.model('calculatedStats', calculatedStatsSchema, 'calculatedstats');
 module.exports = calculatedStats;
