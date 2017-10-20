@@ -48,5 +48,5 @@ var dailyStatsSchema = new mongoose.Schema({
 
 });
 
-var dailyStats = mongoose.model('dailyStats', dailyStatsSchema, 'dailystats');
+var dailyStats = mongoose.model('dailystats', dailyStatsSchema);
 module.exports = dailyStats;

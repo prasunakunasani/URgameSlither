@@ -11,7 +11,7 @@ var usersStatsSchema = new mongoose.Schema({
                 {
                     type: Number
                 },
-            createOn:
+            createdOn:
                 {
                     type: Date
                 },
@@ -107,5 +107,5 @@ var usersStatsSchema = new mongoose.Schema({
 
 });
 
-var usersStats = mongoose.model('usersStats', usersStatsSchema, 'users.stats');
+var usersStats = mongoose.model('users.stats', usersStatsSchema);
 module.exports = usersStats;
