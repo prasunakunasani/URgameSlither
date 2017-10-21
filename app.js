@@ -67,8 +67,8 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-
-//creating a server that browsers can connect to
-app.listen(3000, function () {
-    console.log('listening on 3000')
-});
+//
+// //creating a server that browsers can connect to
+// app.listen(3000, function () {
+//     console.log('listening on 3000')
+// });
