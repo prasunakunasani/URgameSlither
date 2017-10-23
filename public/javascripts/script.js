@@ -1,3 +1,19 @@
+
+$(document).ready(function()
+{
+    var hash = document.location.hash;
+
+    if (hash == "#global")
+       activeTab('global');
+   else if (hash == "profile")
+       activeTab('profile');
+});
+
+function activeTab(tab)
+{
+    $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+}
+
 function onSignIn(googleUser) {
     // Useful data for your client-side scripts:
     var profile = googleUser.getBasicProfile();
@@ -11,7 +27,7 @@ function onSignIn(googleUser) {
     // The ID token you need to pass to your backend:
     var id_token = googleUser.getAuthResponse().id_token;
     console.log("ID Token: " + id_token);
-};
+}
 
 function signOut() {
     var auth2 = gapi.auth2.getAuthInstance();

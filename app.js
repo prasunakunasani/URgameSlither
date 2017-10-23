@@ -5,8 +5,11 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+//The .js files
 var index = require('./routes/index');
-var data = require('./routes/data');
+var stats = require('./routes/stats');
+var globalstats = require('./routes/globalstats');
+var profilestats = require('./routes/profilestats');
 
 var app = express();
 
@@ -40,7 +43,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use('/', index);
-app.use('/',data);
+app.use('/', globalstats)
+app.use('/', profilestats)
+app.use('/', stats);
 
 //Using express.static middleware to server all public files
 //Note: the path that you provide to the express.static f(x) is relative to the directory from where you launch
