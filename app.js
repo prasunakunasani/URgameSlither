@@ -59,7 +59,7 @@ app.use(cookieParser());
 const sessionConfig = {
     resave: false,
     saveUninitialized: false,
-    secret: "32",
+    secret: "n5QL0atAVhe5rQvZuwmyczX4",
     signed: true
 };
 
