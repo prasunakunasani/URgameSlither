@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 
-router.get('/profilestats', function(req, res, next) {
+router.get('/profilestats', function(req, res) {
     res.redirect('/stats'+'#profile');
 });
 

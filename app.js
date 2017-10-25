@@ -1,23 +1,24 @@
-var express = require('express');
-var path = require('path');
+let express = require('express');
+let path = require('path');
 //var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+let logger = require('morgan');
+let cookieParser = require('cookie-parser');
+let bodyParser = require('body-parser');
 
 //The .js files
-var index = require('./routes/index');
-var stats = require('./routes/stats');
-var globalstats = require('./routes/globalstats');
-var profilestats = require('./routes/profilestats');
+let index = require('./routes/index');
+let stats = require('./routes/stats');
+let globalstats = require('./routes/globalstats');
+let profilestats = require('./routes/profilestats');
+let getData = require('./routes/getData');
 
-var app = express();
+let app = express();
 
 const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/cobra');
 
-var db = mongoose.connection;
+let db = mongoose.connection;
 
 //Check connection
 db.once('open', function () {
@@ -43,9 +44,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use('/', index);
-app.use('/', globalstats)
-app.use('/', profilestats)
+app.use('/', globalstats);
+app.use('/', profilestats);
 app.use('/', stats);
+app.use('/',getData);
 
 //Using express.static middleware to server all public files
 //Note: the path that you provide to the express.static f(x) is relative to the directory from where you launch
@@ -54,13 +56,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  let err = new Error('Not Found');
   err.status = 404;
+
   next(err);
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

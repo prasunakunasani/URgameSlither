@@ -1,12 +1,11 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 
-
-var Users = require('../models/users');
-var UsersStats = require('../models/usersStats');
-var UsersSnakes = require('../models/usersSnakes');
-var DailyStats = require('../models/dailyStats');
-var CalculatedStats = require('../models/calculatedStats');
+let Users = require('../models/users');
+let UsersStats = require('../models/usersStats');
+let UsersSnakes = require('../models/usersSnakes');
+let DailyStats = require('../models/dailyStats');
+let CalculatedStats = require('../models/calculatedStats');
 
 
 /*
@@ -16,8 +15,15 @@ Display that data by rendering stats.ejs file
 */
 
 router.get('/stats', function (req, res) {
+        res.render('stats', {});
+});
 
-    Users.find(function (err, users) {
+
+module.exports = router;
+
+/*
+
+   Users.find(function (err, users) {
         UsersSnakes.find(function (err, usersSnakes) {
             UsersStats.find(function (err, usersStats) {
                 DailyStats.find(function (err, dailyStats) {
@@ -37,6 +43,4 @@ router.get('/stats', function (req, res) {
             });
         });
     });
-});
-
-module.exports = router;
+ */

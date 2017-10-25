@@ -4,14 +4,13 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs nav-fill">
         <li class="nav-item">
-            <a class="nav-link" href="/">Back to the Game</a>
+            <a class="nav-link  active" href="/">Back to the Game</a>
         </li>
         <li class="nav-item">
-
-            <a class="nav-link active" data-toggle="tab" href="#profile">USER PROFILE</a>
+            <a class="nav-link " id = "profiletab" data-toggle="tab" href="#profile">USER PROFILE</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#global">GLOBAL GAMEPLAY PERFORMANCE</a>
+            <a class="nav-link" id="globaltab" data-toggle="tab" href="#global">GLOBAL GAMEPLAY PERFORMANCE</a>
         </li>
     </ul>
     <!-- END of Nav tabs -->
@@ -20,17 +19,15 @@
 <div class=" container-fluid tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">USER PROFILE STUFF
 
-        <% usersList.forEach(function(user){ %>
-        <li>
-            <%= user.cookie_id %>
-        </li>
-        <% }) %>
-
         <div id="chartdiv"></div>
+
 
     </div>
     <div class="tab-pane fade" id="global" role="tabpanel" aria-labelledby="global-tab">GLOBAL GAMEPLAY PERFORMANCE
         STUFF
+        <div id="ajaxdiv"></div>
+
+
         <h1>
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate distinctio dolor fuga fugit illo
             incidunt iste necessitatibus obcaecati officia, placeat possimus quibusdam soluta voluptatibus? Et fuga
