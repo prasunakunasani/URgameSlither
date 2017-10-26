@@ -1,24 +1,24 @@
-let express = require('express');
-let path = require('path');
+var express = require('express');
+var path = require('path');
 //var favicon = require('serve-favicon');
-let logger = require('morgan');
-let cookieParser = require('cookie-parser');
-let bodyParser = require('body-parser');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 
 //The .js files
-let index = require('./routes/index');
-let stats = require('./routes/stats');
-let globalstats = require('./routes/globalstats');
-let profilestats = require('./routes/profilestats');
-let getData = require('./routes/getData');
+var index = require('./routes/index');
+var stats = require('./routes/stats');
+var globalstats = require('./routes/globalstats');
+var profilestats = require('./routes/profilestats');
+var getData = require('./routes/getData');
 
-let app = express();
+var app = express();
 
 const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/cobra');
 
-let db = mongoose.connection;
+var db = mongoose.connection;
 
 //Check connection
 db.once('open', function () {
@@ -56,9 +56,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  let err = new Error('Not Found');
+  var err = new Error('Not Found');
   err.status = 404;
-
   next(err);
 });
 
