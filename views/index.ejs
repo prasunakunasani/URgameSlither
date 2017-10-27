@@ -2,6 +2,18 @@
 
 <div id="content">
   <div class="container-fluid">
+    <!--<div class="g-signin2 float-right" data-onsuccess="onSignIn" data-theme="dark"></div>-->
+    <!--<a class="float-left" href="#" onclick="signOut();">Sign out</a>-->
+    <div>
+        <% if (!profile) { %>
+      <a  href="/auth/login" >Google Log In</a>
+        <% }else{ %>
+      <span></span>
+        <span>Welcome <%=profile.displayName%> </span>
+        <a href="/auth/logout" >LOG OUT</a>
+        <% } %>
+    </div>
+
     <svg viewBox="0 0 1600 300">   <!--min-x, min-y, width, height-->
       <symbol id="s-text">
         <text text-anchor="middle" x="50%" y="80%">URgame.me</text>
