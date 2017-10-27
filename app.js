@@ -7,9 +7,12 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-
-//Routes
+//The .js files
 var index = require('./routes/index');
+var stats = require('./routes/stats');
+var globalstats = require('./routes/globalstats');
+var profilestats = require('./routes/profilestats');
+var getData = require('./routes/getData');
 var data = require('./routes/data');
 var oauth2 = require('./lib/oauth2');
 
@@ -49,23 +52,19 @@ app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-//OAuth
+//OAuth20
 const sessionConfig = {
     resave: false,
     saveUninitialized: false,
     secret: "n5QL0atAVhe5rQvZuwmyczX4",
     signed: true
 };
-
 app.use(session(sessionConfig));
-
-// OAuth2
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(require('./lib/oauth2').router);
@@ -73,10 +72,10 @@ app.use(require('./lib/oauth2').router);
 
 //Routes
 app.use('/', index);
-app.use('/',data);
-
-
-
+app.use('/', globalstats);
+app.use('/', profilestats);
+app.use('/', stats);
+app.use('/',getData);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -86,7 +85,7 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

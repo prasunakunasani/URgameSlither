@@ -1,5 +1,96 @@
+$(document).ready(function()
+{
+    var hash = document.location.hash;
+
+    if (hash == "#global")
+        makeTabActive('global');
+    else if (hash == "#profile")
+        makeTabActive('profile');
+
+});
+
+function makeTabActive(tab) {
+
+    console.log("Making "+tab+" active!");
+    $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+};
 
 
+var activeTab = null;
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    activeTab = e.target.id;
+    console.log(activeTab);
+    $("#"+activeTab+"").click();
+});
+
+$("#globaltab").click(function () {
+    console.log("Button was clicked");
+    $.ajax(
+        {
+            type: "GET",
+            url: "/getData/globaldata",
+            success: function (result) {
+                console.log("This was a success!!");
+                console.log(result);
+                $("#ajaxdiv").html(result);
+                //$("html").html(result); //- kinda working... no CSS and tab activation is not working
+                //$('#champ').html(result);
+                //activeTab('global');
+            }
+        });
+});
+
+$("#profiletab").click(function () {
+    console.log("Button was clicked");
+    $.ajax(
+        {
+            type: "GET",
+            url: "/getData/profiledata",
+            success: function (result) {
+                console.log("This was a success!!");
+                console.log(result);
+
+                //$("html").html(result); //- kinda working... no CSS and tab activation is not working
+                //$('#champ').html(result);
+                //activeTab('global');
+            }
+        });
+});
+
+/*
+$("#viewGlobal").click(function () {
+    console.log("Button was clicked");
+    $.ajax(
+        {
+            type: "GET",
+            url: "/globalstats",
+            success: function (result) {
+                console.log("This was a success!!");
+                console.log(result);
+               $("html").html(result); //- kinda working... no CSS and tab activation is not working
+               //$('#champ').html(result);
+                activeTab('global');
+            }
+        });
+});
+
+$("#viewProfile").click(function () {
+    console.log("Button was clicked");
+    $.ajax(
+        {
+            type: "GET",
+            url: "/profilestats",
+            success: function (result) {
+                console.log("This was a also success!!");
+               console.log(result);
+                $("html").html(result); //- kinda working... no CSS and tab activation is not working
+                //$('#champ').html(result);
+                activeTab('profile');
+            }
+        });
+});
+
+*/
 var chartData = generateChartData();
 var chart = AmCharts.makeChart("chartdiv", {
     "type": "serial",
@@ -24,8 +115,8 @@ var chart = AmCharts.makeChart("chartdiv", {
         "title": "red line",
         "valueField": "visits",
         "useLineColorForBulletBorder": true,
-        "balloon":{
-            "drop":true
+        "balloon": {
+            "drop": true
         }
     }],
     "chartScrollbar": {
@@ -34,7 +125,7 @@ var chart = AmCharts.makeChart("chartdiv", {
         "scrollbarHeight": 40
     },
     "chartCursor": {
-        "limitToGraph":"g1"
+        "limitToGraph": "g1"
     },
     "categoryField": "date",
     "categoryAxis": {
@@ -73,7 +164,7 @@ function generateChartData() {
         var newDate = new Date(firstDate);
         newDate.setDate(newDate.getDate() + i);
 
-        visits += Math.round((Math.random()<0.5?1:-1)*Math.random()*10);
+        visits += Math.round((Math.random() < 0.5 ? 1 : -1) * Math.random() * 10);
 
         chartData.push({
             date: newDate,
