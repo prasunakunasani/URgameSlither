@@ -13,16 +13,12 @@ var stats = require('./routes/stats');
 var globalstats = require('./routes/globalstats');
 var profilestats = require('./routes/profilestats');
 var getData = require('./routes/getData');
-var data = require('./routes/data');
 var oauth2 = require('./lib/oauth2');
+
 
 
 const passport = require('passport');
 const session = require('express-session');
-
-var GOOGLE_CLIENT_ID = process.env['40503956114-tpipggvtu7vau02q78roviac34gea6fs.apps.googleusercontent.com'];
-var GOOGLE_API_KEY = process.env['n5QL0atAVhe5rQvZuwmyczX4'];
-
 
 const app = express();
 
@@ -62,6 +58,7 @@ const sessionConfig = {
     resave: false,
     saveUninitialized: false,
     secret: "n5QL0atAVhe5rQvZuwmyczX4",
+    //secret: config.get('SECRET'),
     signed: true
 };
 app.use(session(sessionConfig));
