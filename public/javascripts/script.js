@@ -33,9 +33,6 @@ $("#globaltab").click(function () {
                 console.log("This was a success!!");
                 console.log(result);
                 $("#ajaxdiv").html(result);
-                //$("html").html(result); //- kinda working... no CSS and tab activation is not working
-                //$('#champ').html(result);
-                //activeTab('global');
             }
         });
 });
@@ -49,48 +46,11 @@ $("#profiletab").click(function () {
             success: function (result) {
                 console.log("This was a success!!");
                 console.log(result);
-
-                //$("html").html(result); //- kinda working... no CSS and tab activation is not working
-                //$('#champ').html(result);
-                //activeTab('global');
             }
         });
 });
 
-/*
-$("#viewGlobal").click(function () {
-    console.log("Button was clicked");
-    $.ajax(
-        {
-            type: "GET",
-            url: "/globalstats",
-            success: function (result) {
-                console.log("This was a success!!");
-                console.log(result);
-               $("html").html(result); //- kinda working... no CSS and tab activation is not working
-               //$('#champ').html(result);
-                activeTab('global');
-            }
-        });
-});
 
-$("#viewProfile").click(function () {
-    console.log("Button was clicked");
-    $.ajax(
-        {
-            type: "GET",
-            url: "/profilestats",
-            success: function (result) {
-                console.log("This was a also success!!");
-               console.log(result);
-                $("html").html(result); //- kinda working... no CSS and tab activation is not working
-                //$('#champ').html(result);
-                activeTab('profile');
-            }
-        });
-});
-
-*/
 var chartData = generateChartData();
 var chart = AmCharts.makeChart("chartdiv", {
     "type": "serial",
