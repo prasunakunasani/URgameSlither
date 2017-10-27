@@ -20,7 +20,7 @@ var activeTab = null;
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     activeTab = e.target.id;
     console.log(activeTab);
-    $("#"+activeTab+"").click();
+    // $("#"+activeTab+"").click();
 });
 
 $("#globaltab").click(function () {

@@ -11,7 +11,8 @@ router.use(oauth2.template);
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-    //console.log(req);
+    //CHECK IF THE REQUEST HAS A COOKIE ATTACHED
+    //ELSE MAKE A COOKIE!
     next();
 });
 

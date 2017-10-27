@@ -16,7 +16,6 @@ Display that data by rendering stats.ejs file
 
 router.get('/stats', function (req, res) {
     Users.count({'cookie_id': cookie_id}, function (err, count) {
-        console.log('Count is' + count);
         UsersStats.findOne({'cookie_id': cookie_id}, function (err, userstats) {
             res.render('stats', {totalgames: count, usersStats: userstats});
         });
@@ -27,7 +26,6 @@ router.get('/stats', function (req, res) {
 module.exports = router;
 
 /*
-
    Users.find(function (err, users) {
         UsersSnakes.find(function (err, usersSnakes) {
             UsersStats.find(function (err, usersStats) {

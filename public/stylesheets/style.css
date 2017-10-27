@@ -3,6 +3,19 @@ body {
     color: white;
 }
 
+
+.well#one
+{
+    background-color: thistle;
+}
+.well#two
+{
+    background-color: salmon;
+}
+.well#three
+{
+    background-color: mediumblue;
+}
 a {
     color: #00B7FF;
 }

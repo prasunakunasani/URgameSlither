@@ -61,6 +61,9 @@ const sessionConfig = {
     //secret: config.get('SECRET'),
     signed: true
 };
+
+
+
 app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
