@@ -14,6 +14,7 @@ var globalstats = require('./routes/globalstats');
 var profilestats = require('./routes/profilestats');
 var getData = require('./routes/getData');
 var oauth2 = require('./lib/oauth2');
+var cookie = require('./lib/cookie');
 
 
 
@@ -64,6 +65,10 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use('/',cookie);
+//app.use(cookie.router);
+
 app.use(require('./lib/oauth2').router);
 
 
