@@ -18,7 +18,7 @@ const passport = require('passport');
 const session = require('express-session');
 
 var GOOGLE_CLIENT_ID = process.env['40503956114-tpipggvtu7vau02q78roviac34gea6fs.apps.googleusercontent.com'];
-var GOOGLE_API_KEY = process.env['32'];
+var GOOGLE_API_KEY = process.env['n5QL0atAVhe5rQvZuwmyczX4'];
 
 
 const app = express();
