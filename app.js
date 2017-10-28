@@ -15,7 +15,7 @@ var profilestats = require('./routes/profilestats');
 var getData = require('./routes/getData');
 var oauth2 = require('./lib/oauth2');
 var cookie = require('./lib/cookie');
-
+var statsController = require('./routes/statsController')
 
 
 const passport = require('passport');
@@ -77,10 +77,13 @@ app.use(require('./lib/oauth2').router);
 
 //Routes
 app.use('/', index);
-app.use('/', globalstats);
+app.use('/stats',statsController);
+//app.use('/stats',statsController);
 app.use('/', profilestats);
 app.use('/', stats);
 app.use('/',getData);
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

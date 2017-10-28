@@ -2,6 +2,7 @@
 let express = require('express');
 let router = express.Router();
 
+
 router.get('/getData/globaldata', function(req, res) {
     if (req.xhr)
     {
