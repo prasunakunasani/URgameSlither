@@ -1,5 +1,12 @@
-$(document).ready(function()
-{
+
+$(window).ready(function () {
+    window.scrollTo(0, 0);
+});
+
+//console.log("Trying to print local variable in js");
+//console.log(clientGameState);
+
+$(document).ready(function () {
     var hash = document.location.hash;
 
     if (hash == "#global")
@@ -11,18 +18,9 @@ $(document).ready(function()
 
 function makeTabActive(tab) {
 
-    console.log("Making "+tab+" active!");
+    console.log("Making " + tab + " active!");
     $('.nav-tabs a[href="#' + tab + '"]').tab('show');
 };
-//fixme - is this below code even necessary?
-
-/*
-var activeTab = null;
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    activeTab = e.target.id;
-    console.log('The active tab right now is: '+activeTab);
-});
-*/
 
 $("#globaltab").click(function () {
     console.log("Button was clicked. Time for AJAX call");
@@ -33,7 +31,7 @@ $("#globaltab").click(function () {
             success: function (result) {
                 console.log("I just finished the call and got updated data");
                 console.log(result);
-                $("#ajaxdiv").html(result);
+                $("#ajaxUpdateGlobalStats").html(result);
             }
         });
 });
@@ -47,70 +45,87 @@ $("#profiletab").click(function () {
             success: function (result) {
                 console.log("I just finished the call and got updated data");
                 console.log(result);
+                $("#ajaxUpdateProfileStats").html(result);
             }
         });
 });
 
+//todo - This data will actually come from nodejs to ejs to this variables in the view.
+var avgSnakeLengthChartData = generateChartData();
+ var highestSnakeLengthChartData = generateChartData();
+ var timeOfKillsChartData = generateChartData();
+ var avgSnakeLengthAllChartData = generateChartData();
+ var highestSnakeLengthAllChartData = generateChartData();
 
-var chartData = generateChartData();
-var chart = AmCharts.makeChart("chartdiv", {
-    "type": "serial",
-    "theme": "black",
-    "marginRight": 80,
-    "autoMarginOffset": 20,
-    "marginTop": 7,
-    "dataProvider": chartData,
-    "valueAxes": [{
-        "axisAlpha": 0.2,
-        "dashLength": 1,
-        "position": "left"
-    }],
-    "mouseWheelZoomEnabled": true,
-    "graphs": [{
-        "id": "g1",
-        "balloonText": "[[value]]",
-        "bullet": "round",
-        "bulletBorderAlpha": 1,
-        "bulletColor": "#FFFFFF",
-        "hideBulletsCount": 50,
-        "title": "red line",
-        "valueField": "visits",
-        "useLineColorForBulletBorder": true,
-        "balloon": {
-            "drop": true
+
+var avgSnakeLengthChart = makeChart("avgSnakeLengthchartdiv", avgSnakeLengthChartData);
+ var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData);
+ var timeOfKillsChart = makeChart("timeOfKillschartdiv", timeOfKillsChartData);
+ var avgSnakeLengthAllChart = makeChart("avgSnakeLengthAllchartdiv", avgSnakeLengthAllChartData);
+ var highestSnakeLengthAllChart = makeChart("highestSnakeLengthAllchartdiv", highestSnakeLengthAllChartData);
+
+function makeChart(chartDiv, chartData) {
+
+    return  AmCharts.makeChart(chartDiv, {
+        "type": "serial",
+        "theme": "black",
+        "marginRight": 80,
+        "autoMarginOffset": 20,
+        "marginTop": 7,
+        "dataProvider": chartData,
+        "valueAxes": [{
+            "axisAlpha": 0.2,
+            "dashLength": 1,
+            "position": "left"
+        }],
+        "mouseWheelZoomEnabled": true,
+        "graphs": [{
+            "id": "g1",
+            "balloonText": "[[value]]",
+            "bullet": "round",
+            "bulletBorderAlpha": 1,
+            "bulletColor": "#FFFFFF",
+            "hideBulletsCount": 50,
+            "title": "red line",
+            "valueField": "visits",
+            "useLineColorForBulletBorder": true,
+            "balloon": {
+                "drop": true
+            }
+        }],
+        "chartScrollbar": {
+            "autoGridCount": true,
+            "graph": "g1",
+            "scrollbarHeight": 40
+        },
+        "chartCursor": {
+            "limitToGraph": "g1"
+        },
+        "categoryField": "date",
+        "categoryAxis": {
+            "parseDates": true,
+            "axisColor": "#DADADA",
+            "dashLength": 1,
+            "minorGridEnabled": true
+        },
+        "export": {
+            "enabled": true
         }
-    }],
-    "chartScrollbar": {
-        "autoGridCount": true,
-        "graph": "g1",
-        "scrollbarHeight": 40
-    },
-    "chartCursor": {
-        "limitToGraph": "g1"
-    },
-    "categoryField": "date",
-    "categoryAxis": {
-        "parseDates": true,
-        "axisColor": "#DADADA",
-        "dashLength": 1,
-        "minorGridEnabled": true
-    },
-    "export": {
-        "enabled": true
-    }
-});
-
-chart.addListener("rendered", zoomChart);
-zoomChart();
-
-// this method is called when chart is first inited as we listen for "rendered" event
-function zoomChart() {
-    // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
-    chart.zoomToIndexes(chartData.length - 40, chartData.length - 1);
-}
+    });
+};
 
 
-// generate some random data, quite different range
+// chart.addListener("rendered", zoomChart);
+// //zoomChart();
+//
+// // this method is called when chart is first inited as we listen for "rendered" event
+// function zoomChart() {
+//     // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+//     chart.zoomToIndexes(chartData.length - 40, chartData.length - 1);
+// }
+
+
+//todo - once the data comes from the server, this function can go.
 
 // generate some random data, quite different range
 function generateChartData() {

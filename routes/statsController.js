@@ -3,6 +3,8 @@
 let express = require('express');
 let router = express.Router();
 //var _ = require('underscore');
+let UserService = require('../services/userService');
+
 
 let Users = require('../models/users');
 let UsersStats = require('../models/usersStats');
@@ -11,15 +13,18 @@ let DailyStats = require('../models/dailyStats');
 let CalculatedStats = require('../models/calculatedStats');
 var cookie_id = "rkrDhmZA-";
 
+
 class StatsController {
 
     constructor(express) {
         this.express = express;
-       // this.foo = 10;
+        // this.foo = 10;
     }
 
-
     Index(req, res, next) {
+
+        //var test = new UserService(express);
+        //console.log(test.Get());
 
         Users.count({'cookie_id': cookie_id}, function (err, count) {
             Users.findOne({'cookie_id': cookie_id}, function (err, users) {
