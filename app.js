@@ -9,7 +9,6 @@ var bodyParser = require('body-parser');
 
 //The .js files
 var index = require('./routes/index');
-var stats = require('./routes/stats');
 var globalstats = require('./routes/globalstats');
 var profilestats = require('./routes/profilestats');
 var getData = require('./routes/getData');
@@ -78,11 +77,7 @@ app.use(require('./lib/oauth2').router);
 //Routes
 app.use('/', index);
 app.use('/stats',statsController);
-//app.use('/stats',statsController);
-app.use('/', profilestats);
-app.use('/', stats);
 app.use('/',getData);
-
 
 
 // catch 404 and forward to error handler

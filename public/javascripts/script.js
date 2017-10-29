@@ -14,23 +14,24 @@ function makeTabActive(tab) {
     console.log("Making "+tab+" active!");
     $('.nav-tabs a[href="#' + tab + '"]').tab('show');
 };
+//fixme - is this below code even necessary?
 
-
+/*
 var activeTab = null;
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     activeTab = e.target.id;
-    console.log(activeTab);
-    // $("#"+activeTab+"").click();
+    console.log('The active tab right now is: '+activeTab);
 });
+*/
 
 $("#globaltab").click(function () {
-    console.log("Button was clicked");
+    console.log("Button was clicked. Time for AJAX call");
     $.ajax(
         {
             type: "GET",
             url: "/getData/globaldata",
             success: function (result) {
-                console.log("This was a success!!");
+                console.log("I just finished the call and got updated data");
                 console.log(result);
                 $("#ajaxdiv").html(result);
             }
@@ -38,13 +39,13 @@ $("#globaltab").click(function () {
 });
 
 $("#profiletab").click(function () {
-    console.log("Button was clicked");
+    console.log("Button was clicked. Time for AJAX call");
     $.ajax(
         {
             type: "GET",
             url: "/getData/profiledata",
             success: function (result) {
-                console.log("This was a success!!");
+                console.log("I just finished the call and got updated data");
                 console.log(result);
             }
         });
