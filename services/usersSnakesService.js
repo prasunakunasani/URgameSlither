@@ -1,5 +1,5 @@
 let express = require('express');
-let UsersSnakes = require('../models/usersSnakes');
+let UsersSnakes = require('../models/userssnakes');
 
 class UsersSnakesService {
 
@@ -8,8 +8,11 @@ class UsersSnakesService {
         this.foo = 10;
     }
 
+    InsertUsersSnakeData(req, res, next) {
+        res.send('Insert');
+    }
 
-    Insert(req, res, next) {
+    InsertUsersStatsData(req, res, next) {
         res.send('Insert');
     }
 

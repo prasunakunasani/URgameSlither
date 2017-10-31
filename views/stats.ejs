@@ -1,5 +1,11 @@
 <% include partials/header %>
 
+<script>
+    //used - instead of = cause' - "outputs the unescaped value into the template"
+    var avgSnakeLengthChartData = <%- JSON.stringify(avgSnakeLengths) %>
+    var highestSnakeLengthChartData = <%- JSON.stringify(highestSnakeLengths) %>
+</script>
+
 <nav class="navbar navbar-expand-sm sticky-top">
     <!-- Nav tabs -->
     <ul class="container nav nav-tabs nav-fill">
@@ -62,10 +68,6 @@
                     <div class="well">8</div>
                 </div>
             </div>
-
-            <!--<script>-->
-                <!--var clientGameState = %= totalgames %-->
-            <!--</script>-->
 
 
             <div class="row">

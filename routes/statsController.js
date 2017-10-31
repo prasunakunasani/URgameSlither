@@ -3,28 +3,52 @@
 let express = require('express');
 let router = express.Router();
 //var _ = require('underscore');
-let UserService = require('../services/userService');
+let statsService = require('../services/statsService');
 
 
 let Users = require('../models/users');
 let UsersStats = require('../models/usersStats');
-let UsersSnakes = require('../models/usersSnakes');
+let UsersSnakes = require('../models/userssnakes');
 let DailyStats = require('../models/dailyStats');
-let CalculatedStats = require('../models/calculatedStats');
+let CalculatedStats = require('../models/calculatedstats');
 var cookie_id = "rkrDhmZA-";
+var tempHOlder = [];
 
+function generateAvgChartData(usersStats) {
+
+    var avgSnakeLengthChartData = [];
+
+    for (var x = 0; x < usersStats.interval_data.averages.length; x++) {
+        avgSnakeLengthChartData.push({
+            second: x * 5,
+            length: usersStats.interval_data.averages[x]
+        });
+
+    }
+    return avgSnakeLengthChartData;
+};
+
+function generateHighChartData(usersStats) {
+
+    var highestSnakeLengthChartData = [];
+
+    for (var x = 0; x < usersStats.interval_data.sums.length; x++) {
+        highestSnakeLengthChartData.push({
+            second: x * 5,
+            length: usersStats.interval_data.sums[x]
+        });
+
+    }
+    return highestSnakeLengthChartData;
+};
 
 class StatsController {
 
     constructor(express) {
         this.express = express;
-        // this.foo = 10;
     }
 
     Index(req, res, next) {
-
-        //var test = new UserService(express);
-        //console.log(test.Get());
 
         Users.count({'cookie_id': cookie_id}, function (err, count) {
             Users.findOne({'cookie_id': cookie_id}, function (err, users) {
@@ -41,7 +65,8 @@ class StatsController {
                                         usersStatsList: usersStats,
                                         dailyStatsList: dailyStats,
                                         calculatedStatsList: calculatedStats,
-
+                                        avgSnakeLengths: generateAvgChartData(usersStats),
+                                        highestSnakeLengths: generateHighChartData(usersStats)
                                     });
                             });
                         });
@@ -65,9 +90,23 @@ class StatsController {
 }
 
 var statsController = new StatsController(express);
-//_.bindAll(statsController,'Index');
+//Could've also done _.bindAll(statsController,'Index') and then called Index as the second parameter below;
 router.get('/', statsController.Index.bind(statsController));
 router.get('/profilestats', statsController.ProfileStats.bind(statsController));
 router.get('/globalstats', statsController.GlobalStats.bind(statsController));
 
 module.exports = router;
+
+/*
+
+FROM INDEX FILE TO TEST SINGLETON
+var test = new statsService(express);
+
+        console.log(test.time);
+
+        setTimeout(function(){
+            var test = new statsService(express);
+            console.log(test.time);
+            console.log(test.cachedCalculatedStats);
+        },4000);
+ */

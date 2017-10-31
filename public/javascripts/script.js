@@ -1,4 +1,3 @@
-
 $(window).ready(function () {
     window.scrollTo(0, 0);
 });
@@ -51,72 +50,85 @@ $("#profiletab").click(function () {
 });
 
 //todo - This data will actually come from nodejs to ejs to this variables in the view.
-var avgSnakeLengthChartData = generateChartData();
- var highestSnakeLengthChartData = generateChartData();
- var timeOfKillsChartData = generateChartData();
- var avgSnakeLengthAllChartData = generateChartData();
- var highestSnakeLengthAllChartData = generateChartData();
 
+//  var timeOfKillsChartData = generateChartData();
+//  var avgSnakeLengthAllChartData = generateChartData();
+//  var highestSnakeLengthAllChartData = generateChartData();
+
+console.log('Printing Avg here:');
+console.log(avgSnakeLengthChartData);
+console.log('Printing highest here:');
+console.log(highestSnakeLengthChartData);
 
 var avgSnakeLengthChart = makeChart("avgSnakeLengthchartdiv", avgSnakeLengthChartData);
  var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData);
- var timeOfKillsChart = makeChart("timeOfKillschartdiv", timeOfKillsChartData);
- var avgSnakeLengthAllChart = makeChart("avgSnakeLengthAllchartdiv", avgSnakeLengthAllChartData);
- var highestSnakeLengthAllChart = makeChart("highestSnakeLengthAllchartdiv", highestSnakeLengthAllChartData);
+// var timeOfKillsChart = makeChart("timeOfKillschartdiv", timeOfKillsChartData);
+// var avgSnakeLengthAllChart = makeChart("avgSnakeLengthAllchartdiv", avgSnakeLengthAllChartData);
+// var highestSnakeLengthAllChart = makeChart("highestSnakeLengthAllchartdiv", highestSnakeLengthAllChartData);
 
 function makeChart(chartDiv, chartData) {
 
-    return  AmCharts.makeChart(chartDiv, {
+    return AmCharts.makeChart(chartDiv, {
         "type": "serial",
         "theme": "black",
         "marginRight": 80,
         "autoMarginOffset": 20,
         "marginTop": 7,
         "dataProvider": chartData,
-        "valueAxes": [{
-            "axisAlpha": 0.2,
-            "dashLength": 1,
-            "position": "left"
-        }],
+        "categoryField": "second", //field of x-axis
+        "categoryAxis":
+            {
+
+            },
+        "valueAxis": [
+            {
+                "position": "left",
+                "title": "Avg Length of snake" //not showing up
+            }],
         "mouseWheelZoomEnabled": true,
-        "graphs": [{
-            "id": "g1",
-            "balloonText": "[[value]]",
-            "bullet": "round",
-            "bulletBorderAlpha": 1,
-            "bulletColor": "#FFFFFF",
-            "hideBulletsCount": 50,
-            "title": "red line",
-            "valueField": "visits",
-            "useLineColorForBulletBorder": true,
-            "balloon": {
-                "drop": true
+        "graphs": [
+            {
+                "id": "g1",
+                "balloonText": "[[value]]", //what the pop up when hovered is
+                "bullet": "round", //available: none, square, triangleUp, traingleDown, bubble, custom, round
+                "bulletBorderAlpha": 1, //bulletborderopacity
+                "bulletColor": "#FFFFFF",
+                 "hideBulletsCount": 50, //"If there are more data points than hideBulletsCount, the bullets will not be shown. 0 means the bullets will always be visible.
+                "title": "title goes here", //just a variable for the ballonText
+                "valueField": "length", //the name of the field in data in Y-axis
+                "useLineColorForBulletBorder": true, //determines border of value dot(bullet)
+                "type": "smoothedLine", //typeofgraph - line, column, step, smoothedLine, candlestick,ohIc
+                "balloon":
+                    {
+                        "drop": true  //if you want the balloon to be in a tear shape
+                    },
+                "fillAlphas": 0.7
+            }],
+        "chartScrollbar":
+            {
+                "autoGridCount": true,
+                "graph": "g1",
+                "scrollbarHeight": 40
+            },
+        "chartCursor":
+            {
+                "limitToGraph": "g1"
+            },
+        "export":
+            {
+                "enabled": true
+            },
+        "legend":
+            {
+                "enabled": true,
+                "useGraphSettings": true
             }
-        }],
-        "chartScrollbar": {
-            "autoGridCount": true,
-            "graph": "g1",
-            "scrollbarHeight": 40
-        },
-        "chartCursor": {
-            "limitToGraph": "g1"
-        },
-        "categoryField": "date",
-        "categoryAxis": {
-            "parseDates": true,
-            "axisColor": "#DADADA",
-            "dashLength": 1,
-            "minorGridEnabled": true
-        },
-        "export": {
-            "enabled": true
-        }
     });
 };
 
-
+//
 // chart.addListener("rendered", zoomChart);
-// //zoomChart();
+// zoomChart();
 //
 // // this method is called when chart is first inited as we listen for "rendered" event
 // function zoomChart() {
@@ -143,8 +155,8 @@ function generateChartData() {
         visits += Math.round((Math.random() < 0.5 ? 1 : -1) * Math.random() * 10);
 
         chartData.push({
-            date: newDate,
-            visits: visits
+            second: i*5,
+            length: visits
         });
     }
     return chartData;

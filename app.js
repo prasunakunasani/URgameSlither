@@ -1,5 +1,4 @@
 
-
 var express = require('express');
 var path = require('path');
 //var favicon = require('serve-favicon');
@@ -60,8 +59,6 @@ const sessionConfig = {
     signed: true
 };
 
-
-
 app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -71,14 +68,13 @@ app.use('/',cookie);
 
 app.use(oauth2.router);
 
-
 //Routes
 app.use('/', index);
 app.use('/stats',statsController);
 app.use('/',getData);
 
 
-// catch 404 and forward to error handler
+// catch 404 and forward to error handler2
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;

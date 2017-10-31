@@ -2,9 +2,7 @@ let express = require('express');
 
 let Users = require('../models/users');
 let UsersStats = require('../models/usersStats');
-let UsersSnakes = require('../models/usersSnakes');
-let DailyStats = require('../models/dailyStats');
-let CalculatedStats = require('../models/calculatedStats');
+let UsersSnakes = require('../models/userssnakes');
 var cookie_id = "rkrDhmZA-";
 
 class UserService {
@@ -14,23 +12,25 @@ class UserService {
         this.foo = 10;
     }
 
-    Get(req, res, next) {
-        return (this.foo);
+    GetUserDetails(req, res, next) {
+        res.send('GetUserDetails function');
     }
 
-    Insert(req, res, next) {
-        res.send('The insert function of userservice. ');
+    InsertUserDetails(req, res, next) {
+        res.send('The InsertUserDetails function of userservice. ');
 
     }
 
-    Update(req, res, next) {
-        res.send('The update function of userservice. ');
+    UpdateUserDetails(req, res, next) {
+        res.send('The UpdateUserDetails function of userservice. ');
     }
 
-    saveUsersSnakeData(req, res, next) {
-        res.send('The saveUsersSnakeData function of userservice. ');
+    UpdateUsersStats(req, res, next) {
+        res.send('The UpdateUsersStats function of userservice. ');
     }
 
 }
 
 module.exports = UserService;
+
+//fixme - Make sure the class diagram functions match the code (capitals and stuff)

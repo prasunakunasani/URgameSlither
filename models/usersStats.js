@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-let UsersSnakes = require('../models/usersSnakes');
+let UsersSnakes = require('./userssnakes');
 
 
 var usersStatsSchema = new mongoose.Schema({
