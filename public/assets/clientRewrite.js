@@ -18,7 +18,6 @@ var connected = false;
 var dead_mtm = -1;
 var ui_holder_opacity = 0;
 var play_btn;
-var snake;
 
 
 const GameScene = Object.freeze({
@@ -654,7 +653,7 @@ function GameClient() {
 			lsym = 0,
 			my_nick = "",
 			gw2k16 = !1;
-
+	var snake = null;
 
 	var mscps = 0,
 			fmlts = [],
@@ -1256,82 +1255,13 @@ function GameClient() {
 			b.blba = 1
 		}
 		c = null;
-
-		//Snake skin part colors
-		if (9 == f) {
-			c = [7, 9, 7, 9, 7, 9, 7, 9, 7, 9, 7, 10, 10, 10, 10, 10, 10, 10, 10, 10]
-		} else if (10 == f) {
-			c = [9, 9, 9, 9, 9, 1, 1, 1, 1, 1, 7, 7, 7, 7, 7]
-		} else if (11 == f) {
-			c = [11, 11, 11, 11, 11, 7, 7, 7, 7, 7, 12, 12, 12, 12, 12]
-		} else if (12 == f) {
-			c = [7, 7, 7, 7, 7, 9, 9, 9, 9, 9, 13, 13, 13, 13, 13]
-		} else if (13 == f) {
-			c = [14, 14, 14, 14, 14, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7]
-		} else if (14 == f) {
-			c = [9, 9, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7]
-		} else if (15 == f) {
-			c = [0, 1, 2, 3, 4, 5, 6, 7, 8]
-		} else if (16 == f) {
-			c = [15, 15, 15, 15, 15, 15, 15, 4, 4, 4, 4, 4, 4, 4]
-		} else if (17 == f) {
-			c = [9, 9, 9, 9, 9, 9, 9, 16, 16, 16, 16, 16, 16, 16]
-		} else if (18 == f) {
-			c = [7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 9, 9, 9, 9]
-		} else if (19 == f) {
-			c = [9]
-		} else if (20 == f) {
-			c = [3, 3, 3, 3, 3, 0, 0, 0, 0, 0]
-		} else if (21 == f) {
-			c = [3, 3, 3, 3, 3, 3, 3, 18, 18, 18, 18, 18, 18, 20, 19, 20, 19, 20, 19, 20, 18, 18, 18, 18, 18, 18]
-		} else if (22 == f) {
-			c = [5, 5, 5, 5, 5, 5, 5, 9, 9, 9, 9, 9, 9, 9, 13, 13, 13, 13, 13, 13, 13]
-		} else if (23 == f) {
-			c = [16, 16, 16, 16, 16, 16, 16, 18, 18, 18, 18, 18, 18, 18, 7, 7, 7, 7, 7, 7, 7]
-		} else if (24 == f) {
-			c = [23, 23, 23, 23, 23, 23, 23, 23, 23, 18, 18, 18, 18, 18, 18, 18, 18, 18]
-		} else if (25 == f) {
-			c = [21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22, 22, 22, 22, 22, 22, 22, 22, 22]
-		} else if (26 == f) {
-			c = [24]
-		} else if (27 == f) {
-			c = [25]
-		} else if (28 == f) {
-			c = [18, 18, 18, 18, 18, 18, 18, 25, 25, 25, 25, 25, 25, 25, 7, 7, 7, 7, 7, 7, 7]
-		} else if (29 == f) {
-			c = [11, 11, 4, 11, 11, 11, 11, 4, 11, 11]
-		} else if (30 == f) {
-			c = [10, 10, 19, 20, 10, 10, 20, 19]
-		} else if (31 == f) {
-			c = [10, 10]
-		} else if (32 == f) {
-			c = [20, 20]
-		} else if (33 == f) {
-			c = [12, 11, 11]
-		} else if (34 == f) {
-			c = [7, 7, 9, 13, 13, 9, 16, 16, 9, 12, 12, 9, 7, 7, 9, 16, 16, 9]
-		} else if (35 == f) {
-			c = [7, 7, 9, 9, 6, 6, 9, 9]
-		} else if (36 == f) {
-			c = [16, 16, 9, 9, 15, 15, 9, 9]
-		} else if (37 == f) {
-			c = [22]
-		} else if (38 == f) {
-			c = [18]
-		} else if (39 == f) {
-			c = [23]
-		} else if (40 == f) {
-			c = [26]
-		} else if (41 == f) {
-			c = [27]
-		} else if (42 == f) {
-			c = [2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 7, 7, 7, 7, 7, 7, 7, 7]
-		} else if (43 == f) {
-			c = [28]
-		} else {
-			f %= 9;
-		}
-
+		9 == f ? c = [7, 9, 7, 9, 7, 9, 7, 9, 7, 9, 7, 10, 10, 10, 10, 10, 10, 10, 10, 10] : 10 == f ? c = [9, 9, 9, 9,
+			9, 1, 1, 1, 1, 1, 7, 7, 7, 7, 7
+		] : 11 == f ? c = [11, 11, 11, 11, 11, 7, 7, 7, 7, 7, 12, 12, 12, 12, 12] : 12 == f ? c = [7, 7, 7, 7, 7, 9, 9, 9, 9, 9, 13, 13, 13, 13, 13] : 13 == f ? c = [14, 14, 14, 14, 14, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7] : 14 == f ? c = [9, 9, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7] : 15 == f ? c = [0, 1, 2, 3, 4, 5, 6, 7, 8] : 16 == f ? c = [15, 15, 15, 15, 15, 15, 15, 4, 4, 4, 4, 4, 4, 4] : 17 == f ? c = [9, 9, 9, 9, 9, 9, 9, 16, 16, 16, 16, 16, 16, 16] : 18 == f ? c = [7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 9, 9, 9, 9] : 19 == f ? c = [9] : 20 == f ? c = [3, 3, 3, 3, 3, 0, 0, 0, 0, 0] : 21 == f ? c = [3, 3, 3, 3, 3, 3, 3, 18, 18, 18, 18, 18, 18, 20, 19, 20, 19, 20, 19, 20, 18, 18, 18, 18, 18, 18] : 22 == f ? c = [5, 5, 5, 5, 5, 5,
+			5, 9, 9, 9, 9, 9, 9, 9, 13, 13, 13, 13, 13, 13, 13
+		] : 23 == f ? c = [16, 16, 16, 16, 16, 16, 16, 18, 18, 18, 18, 18, 18, 18, 7, 7, 7, 7, 7, 7, 7] : 24 == f ? c = [23, 23, 23, 23, 23, 23, 23, 23, 23, 18, 18, 18, 18, 18, 18, 18, 18, 18] : 25 == f ? c = [21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22, 22, 22, 22, 22, 22, 22, 22, 22] : 26 == f ? c = [24] : 27 == f ? c = [25] : 28 == f ? c = [18, 18, 18, 18, 18, 18, 18, 25, 25, 25, 25, 25, 25, 25, 7, 7, 7, 7, 7, 7, 7] : 29 == f ? c = [11, 11, 4, 11, 11, 11, 11, 4, 11, 11] : 30 == f ? c = [10, 10, 19, 20, 10, 10, 20, 19] : 31 == f ? c = [10, 10] : 32 == f ? c = [20, 20] : 33 == f ? c = [12, 11, 11] : 34 == f ? c = [7, 7, 9, 13, 13, 9, 16, 16, 9, 12, 12, 9, 7, 7, 9,
+			16, 16, 9
+		] : 35 == f ? c = [7, 7, 9, 9, 6, 6, 9, 9] : 36 == f ? c = [16, 16, 9, 9, 15, 15, 9, 9] : 37 == f ? c = [22] : 38 == f ? c = [18] : 39 == f ? c = [23] : 40 == f ? c = [26] : 41 == f ? c = [27] : 42 == f ? c = [2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 7, 7, 7, 7, 7, 7, 7, 7] : 43 == f ? c = [28] : f %= 9;
 		c && (f = c[0]);
 		b.rbcs = c;
 		b.cv = f
@@ -1356,7 +1286,8 @@ function GameClient() {
 		f = "00" + Math.min(255, Math.max(0, Math.round(e.gg))).toString(16);
 		c = "00" + Math.min(255, Math.max(0, Math.round(e.bb))).toString(16);
 		b = b.substr(b.length - 2);
-		f = f.substr(f.length -	2);
+		f = f.substr(f.length -
+				2);
 		c = c.substr(c.length - 2);
 		e.cs = "#" + b + f + c;
 		b = "00" + Math.min(255, Math.max(0, Math.round(.4 * e.rr))).toString(16);
@@ -1368,7 +1299,8 @@ function GameClient() {
 		e.cs04 = "#" + b + f + c;
 		b = "00" + Math.min(255, Math.max(0, Math.round(.5 * (255 + e.rr)))).toString(16);
 		f = "00" + Math.min(255, Math.max(0, Math.round(.5 * (255 + e.gg)))).toString(16);
-		c = "00" + Math.min(255, Math.max(0, Math.round(.5 * (255 + e.bb)))).toString(16);
+		c = "00" + Math.min(255, Math.max(0, Math.round(.5 *
+				(255 + e.bb)))).toString(16);
 		b = b.substr(b.length - 2);
 		f = f.substr(f.length - 2);
 		c = c.substr(c.length - 2);
@@ -1414,8 +1346,7 @@ function GameClient() {
 		snakes.splice(0, 0, e);
 		return os["s" + e.id] = e
 	}
-	
-	//Calculates snake length?
+
 	function snl(b) {
 		var f = b.tl;
 		b.tl = b.sct + b.fam;
@@ -1748,8 +1679,7 @@ function GameClient() {
 				}
 			b.restore();
 			b.save();
-
-			//Draw snakes
+			
 			b.strokeStyle = "#90C098";
 			for (var e, w, C, f = snakes.length - 1; 0 <= f; f--) c = snakes[f], e = c.xx + c.fx, w = c.yy + c.fy + 40, 0 < c.na && e >= bpx1 - 100 && w >= bpy1 && e <= bpx2 + 100 && w <= bpy2 && (c == snake && (c.fnfr++, 200 < c.fnfr && (c.na -= .004, 0 > c.na && (c.na = 0))), b.save(), b.globalAlpha = .5 * c.na * c.alive_amt * (1 - c.dead_amt), b.font = "12px Arial, Helvetica Neue, Helvetica, sans-serif", b.fillStyle = c.csw, b.textBaseline = "middle", b.textAlign = "center", h = c.xx + c.fx, u = c.yy + c.fy, h = mww2 + (h - view_xx) * gsc, u = mhh2 + (u - view_yy) * gsc, b.fillText(c.nk, h, u + 32 +
 					11 * c.sc * gsc), b.restore());
@@ -1790,9 +1720,9 @@ function GameClient() {
 						b.save();
 						b.lineJoin = "round";
 						b.lineCap = "round";
-						doiosh ?
+						doiosh ? 
 								(c.sp > c.fsp && (t = c.alive_amt * (1 - c.dead_amt) * Math.max(0,
-										Math.min(1, (c.sp - c.ssp) / (c.msp - c.ssp))), b.save(), b.strokeStyle = c.cs, b.globalAlpha = .3 * t, b.lineWidth = (D + 6) * gsc, b.stroke(), b.lineWidth = (D + 9) * gsc, b.stroke(), b.lineWidth = (D + 12) * gsc, b.stroke(), b.restore()), b.globalAlpha = 1 * c.alive_amt * (1 - c.dead_amt), b.strokeStyle = "#000000", b.lineWidth = (D + 5) * gsc)
+								Math.min(1, (c.sp - c.ssp) / (c.msp - c.ssp))), b.save(), b.strokeStyle = c.cs, b.globalAlpha = .3 * t, b.lineWidth = (D + 6) * gsc, b.stroke(), b.lineWidth = (D + 9) * gsc, b.stroke(), b.lineWidth = (D + 12) * gsc, b.stroke(), b.restore()), b.globalAlpha = 1 * c.alive_amt * (1 - c.dead_amt), b.strokeStyle = "#000000", b.lineWidth = (D + 5) * gsc) 
 								: (c.sp > c.fsp && (t = c.alive_amt * (1 - c.dead_amt) * Math.max(0, Math.min(1, (c.sp - c.ssp) / (c.msp - c.ssp))), b.save(), b.lineWidth = (D - 2) * gsc, b.shadowBlur = 30 * gsc, b.shadowColor = "rgba(" + c.rr + "," + c.gg + "," + c.bb + ", " + Math.round(1E4 * t) /
 								1E4 + ")", b.stroke(), b.stroke(), b.restore()), b.globalAlpha = .4 * c.alive_amt * (1 - c.dead_amt), b.strokeStyle = "#000000", b.lineWidth = (D + 5) * gsc, b.stroke(), b.strokeStyle = c.cs, b.lineWidth = D * gsc, b.strokeStyle = "#000000", b.globalAlpha = 1 * c.alive_amt * (1 - c.dead_amt));
 						b.stroke();
@@ -1896,51 +1826,9 @@ function GameClient() {
 								b.restore()
 							}
 						} else {
-							for (t = B - 1; 0 <= t; t--) {
-								if (1 == pbu[t]) {
-									px = pbx[t];
-									py = pby[t];
-									if (2 <= t) {
-										q = t - 2;
-										if (1 == pbu[q]) {
-											e = pbx[q];
-											w = pby[q];
-											b.save();
-											b.translate((e - view_xx) * gsc, (w - view_yy) * gsc);
-											if (9 > q) {
-												b.globalAlpha = q / 9 * A;
-												if (4 > q) {
-													e = H * (1 + (4 - q) * c.swell);
-													b.drawImage(ksmc, -e, -e, 2 * e, 2 * e);
-												} else {
-													b.drawImage(ksmc, -H, -H, 2 * H, 2 * H);
-												}
-											} else {
-												b.globalAlpha = A;
-												b.drawImage(ksmc, -H, -H, 2 * H, 2 * H);
-											}
-											b.restore();
-										}
-									}
-									b.save();
-									b.globalAlpha = G;
-									b.translate((px - view_xx) * gsc, (py - view_yy) * gsc);
-									b.rotate(pba[t]);
-									q = t % (2 * z.length);
-									if (q >= z.length)
-										q = 2 * z.length - (q + 1);
-									if (4 > t) {
-										e = D * (1 + (4 - t) * c.swell);
-										b.drawImage(z[q], -gsc * e, -gsc * e, 2 * gsc * e, 2 * gsc * e)
-									} else {
-										b.drawImage(z[q], -gsc * D, -gsc * D, 2 * gsc * D, 2 * gsc * D)
-									}
-									b.restore();
-								}
-							}
-
-
-							if (c.tsp > c.fsp && (high_quality || 0 < gla)) {
+							for (t = B - 1; 0 <= t; t--) 1 == pbu[t] && (px = pbx[t], py = pby[t], 2 <= t && (q = t - 2, 1 == pbu[q] && (e = pbx[q], w = pby[q], b.save(),
+									b.translate((e - view_xx) * gsc, (w - view_yy) * gsc), 9 > q ? (b.globalAlpha = q / 9 * A, 4 > q ? (e = H * (1 + (4 - q) * c.swell), b.drawImage(ksmc, -e, -e, 2 * e, 2 * e)) : b.drawImage(ksmc, -H, -H, 2 * H, 2 * H)) : (b.globalAlpha = A, b.drawImage(ksmc, -H, -H, 2 * H, 2 * H)), b.restore())), b.save(), b.globalAlpha = G, b.translate((px - view_xx) * gsc, (py - view_yy) * gsc), b.rotate(pba[t]), q = t % (2 * z.length), q >= z.length && (q = 2 * z.length - (q + 1)), 4 > t ? (e = D * (1 + (4 - t) * c.swell), b.drawImage(z[q], -gsc * e, -gsc * e, 2 * gsc * e, 2 * gsc * e)) : b.drawImage(z[q], -gsc * D, -gsc * D, 2 * gsc * D, 2 * gsc * D), b.restore());
+							if (c.tsp < c.fsp && (high_quality || 0 < gla)) {
 								b.save();
 								b.globalCompositeOperation = "lighter";
 								for (t = B - 1; 0 <= t; t--) 1 == pbu[t] && (px = pbx[t], py = pby[t], q = t % (2 * z.length), q >= z.length && (q = 2 * z.length - (q + 1)), b.save(), b.translate((px - view_xx) * gsc, (py - view_yy) * gsc), b.rotate(pba[t]), b.globalAlpha = G * J * gla * (.5 + .5 * Math.cos(t / 4 - c.sfr)), 4 > t ? (e = D * (1 + (4 - t) * c.swell), b.drawImage(z[q], -gsc * e, -gsc * e, 2 * gsc * e, 2 * gsc * e)) : b.drawImage(z[q], -gsc * D, -gsc * D, 2 * gsc * D, 2 * gsc * D), b.restore());
@@ -2063,7 +1951,7 @@ function GameClient() {
 				b.restore()
 			}
 			if (wumsts && 0 < rank && 0 < snake_count && playing) {
-
+		
 
 				wumsts = !1;
 				c = "Your length";
@@ -2178,7 +2066,7 @@ function GameClient() {
 
 
 	function connect() {
-		server = "127.0.0.1";
+		server = window.location.hostname;
 		port = 8080;
 
 		resetGame();

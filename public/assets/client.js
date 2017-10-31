@@ -2310,14 +2310,14 @@ var dfs = s,
 									b.restore()
 								}
 							} else {
-								// for (t = B - 1; 0 <= t; t--) 1 == pbu[t] && (px = pbx[t], py = pby[t], 2 <= t && (q = t - 2, 1 == pbu[q] && (e = pbx[q], w = pby[q], b.save(),
-								// 		b.translate((e - view_xx) * gsc, (w - view_yy) * gsc), 9 > q ? (b.globalAlpha = q / 9 * A, 4 > q ? (e = H * (1 + (4 - q) * c.swell), b.drawImage(ksmc, -e, -e, 2 * e, 2 * e)) : b.drawImage(ksmc, -H, -H, 2 * H, 2 * H)) : (b.globalAlpha = A, b.drawImage(ksmc, -H, -H, 2 * H, 2 * H)), b.restore())), b.save(), b.globalAlpha = G, b.translate((px - view_xx) * gsc, (py - view_yy) * gsc), b.rotate(pba[t]), q = t % (2 * z.length), q >= z.length && (q = 2 * z.length - (q + 1)), 4 > t ? (e = D * (1 + (4 - t) * c.swell), b.drawImage(z[q], -gsc * e, -gsc * e, 2 * gsc * e, 2 * gsc * e)) : b.drawImage(z[q], -gsc * D, -gsc * D, 2 * gsc * D, 2 * gsc * D), b.restore());
-								// if (c.tsp > c.fsp && (high_quality || 0 < gla)) {
-								// 	b.save();
-								// 	b.globalCompositeOperation = "lighter";
-								// 	for (t = B - 1; 0 <= t; t--) 1 == pbu[t] && (px = pbx[t], py = pby[t], q = t % (2 * z.length), q >= z.length && (q = 2 * z.length - (q + 1)), b.save(), b.translate((px - view_xx) * gsc, (py - view_yy) * gsc), b.rotate(pba[t]), b.globalAlpha = G * J * gla * (.5 + .5 * Math.cos(t / 4 - c.sfr)), 4 > t ? (e = D * (1 + (4 - t) * c.swell), b.drawImage(z[q], -gsc * e, -gsc * e, 2 * gsc * e, 2 * gsc * e)) : b.drawImage(z[q], -gsc * D, -gsc * D, 2 * gsc * D, 2 * gsc * D), b.restore());
-								// 	b.restore()
-								// }
+								for (t = B - 1; 0 <= t; t--) 1 == pbu[t] && (px = pbx[t], py = pby[t], 2 <= t && (q = t - 2, 1 == pbu[q] && (e = pbx[q], w = pby[q], b.save(),
+										b.translate((e - view_xx) * gsc, (w - view_yy) * gsc), 9 > q ? (b.globalAlpha = q / 9 * A, 4 > q ? (e = H * (1 + (4 - q) * c.swell), b.drawImage(ksmc, -e, -e, 2 * e, 2 * e)) : b.drawImage(ksmc, -H, -H, 2 * H, 2 * H)) : (b.globalAlpha = A, b.drawImage(ksmc, -H, -H, 2 * H, 2 * H)), b.restore())), b.save(), b.globalAlpha = G, b.translate((px - view_xx) * gsc, (py - view_yy) * gsc), b.rotate(pba[t]), q = t % (2 * z.length), q >= z.length && (q = 2 * z.length - (q + 1)), 4 > t ? (e = D * (1 + (4 - t) * c.swell), b.drawImage(z[q], -gsc * e, -gsc * e, 2 * gsc * e, 2 * gsc * e)) : b.drawImage(z[q], -gsc * D, -gsc * D, 2 * gsc * D, 2 * gsc * D), b.restore());
+								if (c.tsp > c.fsp && (high_quality || 0 < gla)) {
+									b.save();
+									b.globalCompositeOperation = "lighter";
+									for (t = B - 1; 0 <= t; t--) 1 == pbu[t] && (px = pbx[t], py = pby[t], q = t % (2 * z.length), q >= z.length && (q = 2 * z.length - (q + 1)), b.save(), b.translate((px - view_xx) * gsc, (py - view_yy) * gsc), b.rotate(pba[t]), b.globalAlpha = G * J * gla * (.5 + .5 * Math.cos(t / 4 - c.sfr)), 4 > t ? (e = D * (1 + (4 - t) * c.swell), b.drawImage(z[q], -gsc * e, -gsc * e, 2 * gsc * e, 2 * gsc * e)) : b.drawImage(z[q], -gsc * D, -gsc * D, 2 * gsc * D, 2 * gsc * D), b.restore());
+									b.restore()
+								}
 							}
 							if (c.antenna)
 								if (e = Math.cos(c.ang), w = Math.sin(c.ang),
@@ -2627,7 +2627,7 @@ function connect() {
 
 	testing && (console.log("connecting to " + server + ":" + port + "... "));
 	//ws = new WebSocket("ws://" + bso.ip + ":" + bso.po + "/slither");
-	ws = new WebSocket("ws://" + server + ":" + port + "/game");
+	ws = new WebSocket("ws://" + server + ":" + port + "/game/socket");
 	ws.binaryType = "arraybuffer";
 	window.ws = ws;
 	ws.onmessage = function (b) {
