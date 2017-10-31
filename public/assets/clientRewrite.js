@@ -2066,7 +2066,7 @@ function GameClient() {
 
 
 	function connect() {
-		server = window.location.href;
+		server = window.location.hostname;
 		port = 8080;
 
 		resetGame();
