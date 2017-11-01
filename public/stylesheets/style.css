@@ -3,11 +3,23 @@ body {
     color: white;
 }
 
+.well#one
+{
+    background-color: thistle;
+}
+.well#two
+{
+    background-color: salmon;
+}
+.well#three
+{
+    background-color: mediumblue;
+}
 a {
     color: #00B7FF;
 }
 
-#chartdiv {
+#avgSnakeLengthchartdiv, #highestSnakeLengthchartdiv, #timeOfKillschartdiv, #avgSnakeLengthAllchartdiv, #highestSnakeLengthAllchartdiv {
     width: 100%;
     height: 500px;
 }

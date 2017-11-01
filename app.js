@@ -1,5 +1,4 @@
 
-
 var express = require('express');
 var path = require('path');
 //var favicon = require('serve-favicon');
@@ -9,13 +8,11 @@ var bodyParser = require('body-parser');
 
 //The .js files
 var index = require('./routes/index');
-var stats = require('./routes/stats');
-var globalstats = require('./routes/globalstats');
-var profilestats = require('./routes/profilestats');
-var getData = require('./routes/getData');
 var oauth2 = require('./lib/oauth2');
 var cookie = require('./lib/cookie');
-
+var statsController = require('./routes/statsController');
+var gameController = require('./routes/gameController');
+var gameServer = require('./routes/removeGameServer');  //fixme - remove me after testing
 
 
 const passport = require('passport');
@@ -62,6 +59,7 @@ const sessionConfig = {
     //secret: config.get('SECRET'),
     signed: true
 };
+
 app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -69,17 +67,17 @@ app.use(passport.session());
 app.use('/',cookie);
 //app.use(cookie.router);
 
-app.use(require('./lib/oauth2').router);
-
+app.use(oauth2.router);
 
 //Routes
 app.use('/', index);
-app.use('/', globalstats);
-app.use('/', profilestats);
-app.use('/', stats);
-app.use('/',getData);
+app.use('/stats',statsController);
+app.use('/something',gameServer); //fixme - remove me after testing
+app.use('/deadSnake',gameController);
 
-// catch 404 and forward to error handler
+
+
+// catch 404 and forward to error handler2
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;

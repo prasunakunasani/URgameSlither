@@ -1,5 +1,9 @@
-$(document).ready(function()
-{
+$(window).ready(function () {
+    window.scrollTo(0, 0);
+});
+
+
+$(document).ready(function () {
     var hash = document.location.hash;
 
     if (hash == "#global")
@@ -11,145 +15,131 @@ $(document).ready(function()
 
 function makeTabActive(tab) {
 
-    console.log("Making "+tab+" active!");
+    console.log("Making " + tab + " active!");
     $('.nav-tabs a[href="#' + tab + '"]').tab('show');
 };
 
 
-var activeTab = null;
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    activeTab = e.target.id;
-    console.log(activeTab);
-    $("#"+activeTab+"").click();
+$("#profiletab").click(function () {
+    console.log("Button was clicked. Time for AJAX call");
+    $.ajax(
+        {
+            type: "GET",
+            url: "stats/ajaxUpdate/profile",
+            success: function (result) {
+                console.log("I just finished the call and got updated data");
+                console.log(result);
+                $("#ajaxUpdateProfileStats").html(result);
+            }
+        });
 });
 
 $("#globaltab").click(function () {
-    console.log("Button was clicked");
+    console.log("Button was clicked. Time for AJAX call");
     $.ajax(
         {
             type: "GET",
-            url: "/getData/globaldata",
+            url: "stats/ajaxUpdate/global",
             success: function (result) {
-                console.log("This was a success!!");
+                console.log("I just finished the call and got updated data");
                 console.log(result);
-                $("#ajaxdiv").html(result);
-                //$("html").html(result); //- kinda working... no CSS and tab activation is not working
-                //$('#champ').html(result);
-                //activeTab('global');
+                $("#ajaxUpdateGlobalStats").html(result);
             }
         });
 });
 
-$("#profiletab").click(function () {
-    console.log("Button was clicked");
-    $.ajax(
-        {
-            type: "GET",
-            url: "/getData/profiledata",
-            success: function (result) {
-                console.log("This was a success!!");
-                console.log(result);
 
-                //$("html").html(result); //- kinda working... no CSS and tab activation is not working
-                //$('#champ').html(result);
-                //activeTab('global');
-            }
-        });
-});
+//todo - This data will actually come from nodejs to ejs to this variables in the view.
+loadProfileCharts();
+loadGlobalCharts();
 
-/*
-$("#viewGlobal").click(function () {
-    console.log("Button was clicked");
-    $.ajax(
-        {
-            type: "GET",
-            url: "/globalstats",
-            success: function (result) {
-                console.log("This was a success!!");
-                console.log(result);
-               $("html").html(result); //- kinda working... no CSS and tab activation is not working
-               //$('#champ').html(result);
-                activeTab('global');
-            }
-        });
-});
+function loadProfileCharts() {
 
-$("#viewProfile").click(function () {
-    console.log("Button was clicked");
-    $.ajax(
-        {
-            type: "GET",
-            url: "/profilestats",
-            success: function (result) {
-                console.log("This was a also success!!");
-               console.log(result);
-                $("html").html(result); //- kinda working... no CSS and tab activation is not working
-                //$('#champ').html(result);
-                activeTab('profile');
-            }
-        });
-});
+    var avgSnakeLengthChart = makeChart("avgSnakeLengthchartdiv", avgSnakeLengthChartData, "length");
+    var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData, "length");
+    var timeOfKillsChart = makeChart("timeOfKillschartdiv", timeOfKillsChartData, "kills");
 
-*/
-var chartData = generateChartData();
-var chart = AmCharts.makeChart("chartdiv", {
-    "type": "serial",
-    "theme": "black",
-    "marginRight": 80,
-    "autoMarginOffset": 20,
-    "marginTop": 7,
-    "dataProvider": chartData,
-    "valueAxes": [{
-        "axisAlpha": 0.2,
-        "dashLength": 1,
-        "position": "left"
-    }],
-    "mouseWheelZoomEnabled": true,
-    "graphs": [{
-        "id": "g1",
-        "balloonText": "[[value]]",
-        "bullet": "round",
-        "bulletBorderAlpha": 1,
-        "bulletColor": "#FFFFFF",
-        "hideBulletsCount": 50,
-        "title": "red line",
-        "valueField": "visits",
-        "useLineColorForBulletBorder": true,
-        "balloon": {
-            "drop": true
-        }
-    }],
-    "chartScrollbar": {
-        "autoGridCount": true,
-        "graph": "g1",
-        "scrollbarHeight": 40
-    },
-    "chartCursor": {
-        "limitToGraph": "g1"
-    },
-    "categoryField": "date",
-    "categoryAxis": {
-        "parseDates": true,
-        "axisColor": "#DADADA",
-        "dashLength": 1,
-        "minorGridEnabled": true
-    },
-    "export": {
-        "enabled": true
-    }
-});
-
-chart.addListener("rendered", zoomChart);
-zoomChart();
-
-// this method is called when chart is first inited as we listen for "rendered" event
-function zoomChart() {
-    // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
-    chart.zoomToIndexes(chartData.length - 40, chartData.length - 1);
 }
 
+function loadGlobalCharts() {
+    console.log('Printing kills here:');
+    console.log(avgSnakeLengthAllChart);
+    console.log('Printing kills here:');
+    console.log(highestSnakeLengthAllChart);
+    var avgSnakeLengthAllChart = makeChart("avgSnakeLengthAllchartdiv", avgSnakeLengthAllChartData, "length");
+    var highestSnakeLengthAllChart = makeChart("highestSnakeLengthAllchartdiv", highestSnakeLengthAllChartData, "length");
+}
 
-// generate some random data, quite different range
+function makeChart(chartDiv, chartData, yAxisName) {
+
+    return AmCharts.makeChart(chartDiv, {
+        "type": "serial",
+        "theme": "black",
+        "marginRight": 80,
+        "autoMarginOffset": 20,
+        "marginTop": 7,
+        "dataProvider": chartData,
+        "categoryField": "second", //field of x-axis
+        "categoryAxis":
+            {},
+        "valueAxis": [
+            {
+                "position": "left",
+                "title": "Avg Length of snake" //not showing up
+            }],
+        "mouseWheelZoomEnabled": true,
+        "graphs": [
+            {
+                "id": "g1",
+                "balloonText": "[[value]]", //what the pop up when hovered is
+                "bullet": "round", //available: none, square, triangleUp, traingleDown, bubble, custom, round
+                "bulletBorderAlpha": 1, //bulletborderopacity
+                "bulletColor": "#FFFFFF",
+                "hideBulletsCount": 50, //"If there are more data points than hideBulletsCount, the bullets will not be shown. 0 means the bullets will always be visible.
+                "title": "title goes here", //just a variable for the ballonText
+                "valueField": yAxisName, //the name of the field in data in Y-axis
+                "useLineColorForBulletBorder": true, //determines border of value dot(bullet)
+                "type": "smoothedLine", //typeofgraph - line, column, step, smoothedLine, candlestick,ohIc
+                "balloon":
+                    {
+                        "drop": true  //if you want the balloon to be in a tear shape
+                    },
+                "fillAlphas": 0.7
+            }],
+        "chartScrollbar":
+            {
+                "autoGridCount": true,
+                "graph": "g1",
+                "scrollbarHeight": 40
+            },
+        "chartCursor":
+            {
+                "limitToGraph": "g1"
+            },
+        "export":
+            {
+                "enabled": true
+            },
+        "legend":
+            {
+                "enabled": true,
+                "useGraphSettings": true
+            }
+    });
+};
+
+//
+// chart.addListener("rendered", zoomChart);
+// zoomChart();
+//
+// // this method is called when chart is first inited as we listen for "rendered" event
+// function zoomChart() {
+//     // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+//     chart.zoomToIndexes(chartData.length - 40, chartData.length - 1);
+// }
+
+
+//todo - once the data comes from the server, this function can go.
 
 // generate some random data, quite different range
 function generateChartData() {
@@ -167,8 +157,8 @@ function generateChartData() {
         visits += Math.round((Math.random() < 0.5 ? 1 : -1) * Math.random() * 10);
 
         chartData.push({
-            date: newDate,
-            visits: visits
+            second: i * 5,
+            length: visits
         });
     }
     return chartData;

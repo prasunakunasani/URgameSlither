@@ -1,0 +1,116 @@
+
+    USER PROFILE STUFF
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="well" id="one">1
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="well" id="two">2</div>
+                </div>
+                <div class="col-md-6">
+                    <div class="well" id="three">3</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="well">4</div>
+                </div>
+                <div class="col-md-6">
+                    <div class="well">5</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="well">6</div>
+        </div>
+        <div class="col-md-4">
+            <div class="well">7</div>
+        </div>
+        <div class="col-md-4">
+            <div class="well">8</div>
+        </div>
+    </div>
+
+
+    <div class="row">
+
+        <div class="col-sm rad-info-box">
+            <div class="icon">
+                <i class="fa fa-gamepad"></i>
+            </div>
+            <span class="heading">Total games played ever!</span>
+            <span class="value"><span><%= totalgames %></span></span>
+        </div>
+
+        <div class="col-sm rad-info-box">
+            <div class="icon">
+                <i class="fa fa-gamepad"></i>
+            </div>
+            <span class="heading">Total snake length ever!</span>
+            <span class="value"><span><%= usersStatsList.totals.length %></span></span>
+        </div>
+        <div class="col-sm rad-info-box">
+            <div class="icon">
+                <i class="fa fa-gamepad"></i>
+            </div>
+            <span class="heading">Length of Largest snake killed</span>
+            <span class="value"><span><%= usersStatsList.records.largest_snake_killed_length %></span></span>
+        </div>
+    </div>  <!--row-->
+    <div class="row">
+
+        <div class="col-sm box0">
+            <div class="box1">
+                <span class="li_heart"></span>
+                <h3><%= usersStatsList.best_snake.duration %></h3>
+                <h3>Time taken to get highest recorded length in a game</h3>
+            </div>
+            <p>933 People liked your page the last 24hs. Whoohoo!</p>
+        </div>
+
+        <div class="col-sm box0">
+            <div class="box1">
+                <span class="li_heart"></span>
+                <h3><%= usersStatsList.totals.kills %></h3>
+                <h3>Your total number of kills ever!</h3>
+            </div>
+            <p>933 People liked your page the last 24hs. Whoohoo!</p>
+        </div>
+
+        <div class="col-sm box0">
+            <div class="box1">
+                <span class="li_heart"></span>
+                <h3><%= usersStatsList.totals.boosts %></h3>
+                <h3>Your total amount of boosts used ever!</h3>
+            </div>
+            <p>933 People liked your page the last 24hs. Whoohoo!</p>
+        </div>
+
+        <div class="col-sm box0">
+            <div class="box1">
+                <span class="li_heart"></span>
+                <h3><%= usersStatsList.totals.deaths %></h3>
+                <h3>Total times you died(basically total games played) ever!</h3>
+            </div>
+            <p>933 People liked your page the last 24hs. Whoohoo!</p>
+        </div>
+    </div>  <!--row-->
+
+    <h1>HIGHEST SNAKE LENGTH per game</h1>
+    <h1>HIGHEST KILLS per game</h1>
+    <h1>HIGHEST USE OF BOOSTS per game</h1>
+
+    <h1>AVERAGE SNAKE LENGTH per game</h1>
+    <h1>AVERAGE KILLS per game</h1>
+    <h1>AVERAGE USE OF BOOSTS per game</h1>

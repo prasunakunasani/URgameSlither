@@ -1,48 +1,9 @@
 var mongoose = require('mongoose');
+let UsersSnakes = require('./userssnakes');
+
 
 var usersStatsSchema = new mongoose.Schema({
-    best_snake:
-        {
-            _id:
-                {
-                    type: mongoose.Schema.Types.ObjectId
-                },
-            boosts:
-                {
-                    type: Number
-                },
-            createdOn:
-                {
-                    type: Date
-                },
-            duration:
-                {
-                    type: Number
-                },
-            interval_data:
-                {
-                    kills:
-                        {
-                            type: [Number]
-                        },
-                    length:
-                        {
-                            type: [Number]
-                        }
-                },
-            kills:
-                {
-                    type: Number
-                },
-            length:
-                {
-                    type: Number
-                },
-            user_id:
-                {
-                    type: String
-                }
-        },
+    best_snake: UsersSnakes.schema,
     cookie_id:
         {
             type: String,
