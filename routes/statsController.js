@@ -84,11 +84,29 @@ class StatsController {
     Index(req, res, next) {
 //fixme - the data for dailystats should come from today's date
         Users.count({'cookie_id': cookie_id}, function (err, count) {
+            if (err) {
+                res.send('User model count error: ' + err);
+            }
             Users.findOne({'cookie_id': cookie_id}, function (err, users) {
+                if (err) {
+                    res.send('User model error: ' + err);
+                }
                 UsersSnakes.find(function (err, usersSnakes) {
+                    if (err) {
+                        res.send('User Snakes model error: ' + err);
+                    }
                     UsersStats.findOne({'cookie_id': cookie_id}, function (err, usersStats) {
+                        if (err) {
+                            res.send('User Stats model error: ' + err);
+                        }
                         DailyStats.findOne({'createdOn': {$lt: new Date().toISOString()} }, function (err, dailyStats) {
+                            if (err) {
+                                res.send('Daily Stats model error: ' + err);
+                            }
                             CalculatedStats.find(function (err, calculatedStats) {
+                                if (err) {
+                                    res.send('Calculated Stats model error: ' + err);
+                                }
                                 res.render('stats',
                                     {
                                         totalgames: count,
@@ -101,7 +119,7 @@ class StatsController {
                                         highestSnakeLengths: generateHighChartData(usersStats),
                                         timeOfKills: generateKillsChartData(usersStats),
                                         avgSnakeLengthAll: generateAllAvgChartData(dailyStats),
-                                         highestSnakeLengthAll: generateAllHighChartData(dailyStats)
+                                        highestSnakeLengthAll: generateAllHighChartData(dailyStats)
                                     });
                             });
                         });
