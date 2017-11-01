@@ -2,8 +2,6 @@ $(window).ready(function () {
     window.scrollTo(0, 0);
 });
 
-//console.log("Trying to print local variable in js");
-//console.log(clientGameState);
 
 $(document).ready(function () {
     var hash = document.location.hash;
@@ -21,26 +19,13 @@ function makeTabActive(tab) {
     $('.nav-tabs a[href="#' + tab + '"]').tab('show');
 };
 
-$("#globaltab").click(function () {
-    console.log("Button was clicked. Time for AJAX call");
-    $.ajax(
-        {
-            type: "GET",
-            url: "/getData/globaldata",
-            success: function (result) {
-                console.log("I just finished the call and got updated data");
-                console.log(result);
-                $("#ajaxUpdateGlobalStats").html(result);
-            }
-        });
-});
 
 $("#profiletab").click(function () {
     console.log("Button was clicked. Time for AJAX call");
     $.ajax(
         {
             type: "GET",
-            url: "/getData/profiledata",
+            url: "stats/ajaxUpdate/profile",
             success: function (result) {
                 console.log("I just finished the call and got updated data");
                 console.log(result);
@@ -49,24 +34,43 @@ $("#profiletab").click(function () {
         });
 });
 
+$("#globaltab").click(function () {
+    console.log("Button was clicked. Time for AJAX call");
+    $.ajax(
+        {
+            type: "GET",
+            url: "stats/ajaxUpdate/global",
+            success: function (result) {
+                console.log("I just finished the call and got updated data");
+                console.log(result);
+                $("#ajaxUpdateGlobalStats").html(result);
+            }
+        });
+});
+
+
 //todo - This data will actually come from nodejs to ejs to this variables in the view.
+loadProfileCharts();
+loadGlobalCharts();
 
-//  var timeOfKillsChartData = generateChartData();
-//  var avgSnakeLengthAllChartData = generateChartData();
-//  var highestSnakeLengthAllChartData = generateChartData();
+function loadProfileCharts() {
 
-console.log('Printing Avg here:');
-console.log(avgSnakeLengthChartData);
-console.log('Printing highest here:');
-console.log(highestSnakeLengthChartData);
+    var avgSnakeLengthChart = makeChart("avgSnakeLengthchartdiv", avgSnakeLengthChartData, "length");
+    var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData, "length");
+    var timeOfKillsChart = makeChart("timeOfKillschartdiv", timeOfKillsChartData, "kills");
 
-var avgSnakeLengthChart = makeChart("avgSnakeLengthchartdiv", avgSnakeLengthChartData);
- var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData);
-// var timeOfKillsChart = makeChart("timeOfKillschartdiv", timeOfKillsChartData);
-// var avgSnakeLengthAllChart = makeChart("avgSnakeLengthAllchartdiv", avgSnakeLengthAllChartData);
-// var highestSnakeLengthAllChart = makeChart("highestSnakeLengthAllchartdiv", highestSnakeLengthAllChartData);
+}
 
-function makeChart(chartDiv, chartData) {
+function loadGlobalCharts() {
+    console.log('Printing kills here:');
+    console.log(avgSnakeLengthAllChart);
+    console.log('Printing kills here:');
+    console.log(highestSnakeLengthAllChart);
+    var avgSnakeLengthAllChart = makeChart("avgSnakeLengthAllchartdiv", avgSnakeLengthAllChartData, "length");
+    var highestSnakeLengthAllChart = makeChart("highestSnakeLengthAllchartdiv", highestSnakeLengthAllChartData, "length");
+}
+
+function makeChart(chartDiv, chartData, yAxisName) {
 
     return AmCharts.makeChart(chartDiv, {
         "type": "serial",
@@ -77,9 +81,7 @@ function makeChart(chartDiv, chartData) {
         "dataProvider": chartData,
         "categoryField": "second", //field of x-axis
         "categoryAxis":
-            {
-
-            },
+            {},
         "valueAxis": [
             {
                 "position": "left",
@@ -93,9 +95,9 @@ function makeChart(chartDiv, chartData) {
                 "bullet": "round", //available: none, square, triangleUp, traingleDown, bubble, custom, round
                 "bulletBorderAlpha": 1, //bulletborderopacity
                 "bulletColor": "#FFFFFF",
-                 "hideBulletsCount": 50, //"If there are more data points than hideBulletsCount, the bullets will not be shown. 0 means the bullets will always be visible.
+                "hideBulletsCount": 50, //"If there are more data points than hideBulletsCount, the bullets will not be shown. 0 means the bullets will always be visible.
                 "title": "title goes here", //just a variable for the ballonText
-                "valueField": "length", //the name of the field in data in Y-axis
+                "valueField": yAxisName, //the name of the field in data in Y-axis
                 "useLineColorForBulletBorder": true, //determines border of value dot(bullet)
                 "type": "smoothedLine", //typeofgraph - line, column, step, smoothedLine, candlestick,ohIc
                 "balloon":
@@ -155,7 +157,7 @@ function generateChartData() {
         visits += Math.round((Math.random() < 0.5 ? 1 : -1) * Math.random() * 10);
 
         chartData.push({
-            second: i*5,
+            second: i * 5,
             length: visits
         });
     }

@@ -6,6 +6,17 @@ var dailyStatsSchema = new mongoose.Schema({
         {
             type: Date
         },
+    interval_data:
+        {
+            averages:
+                {
+                    type: [Number]
+                },
+            sums:
+                {
+                    type: [Number]
+                }
+        },
     peak:
         {
             concurrent:

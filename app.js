@@ -8,10 +8,11 @@ var bodyParser = require('body-parser');
 
 //The .js files
 var index = require('./routes/index');
-var getData = require('./routes/getData');
 var oauth2 = require('./lib/oauth2');
 var cookie = require('./lib/cookie');
 var statsController = require('./routes/statsController');
+var gameController = require('./routes/gameController');
+var gameServer = require('./routes/removeGameServer');  //fixme - remove me after testing
 
 
 const passport = require('passport');
@@ -71,7 +72,9 @@ app.use(oauth2.router);
 //Routes
 app.use('/', index);
 app.use('/stats',statsController);
-app.use('/',getData);
+app.use('/something',gameServer); //fixme - remove me after testing
+app.use('/deadSnake',gameController);
+
 
 
 // catch 404 and forward to error handler2

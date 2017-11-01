@@ -14,31 +14,3 @@ router.get('/', function (req, res) {
 
 module.exports = router;
 
-
-/* FOR TEST-POST
-
-var requestify = require('requestify');
-let Users = require('../models/users');
-
-router.get('/', function (req, res, next) {
-
-
-    Users.findOne({'cookie_id': "rkrDhmZA-"}, function (err, users) {
-
-        requestify.post('http://localhost:3000/test', {usersdata: users});
-    });
-
-    next();
-});
-*/
-
-/*
-In a different file, :
-
-router.post('/test', function (req,res) {
-
-    console.log(req.body);
-
-});
-
-*/

@@ -4,6 +4,9 @@
     //used - instead of = cause' - "outputs the unescaped value into the template"
     var avgSnakeLengthChartData = <%- JSON.stringify(avgSnakeLengths) %>
     var highestSnakeLengthChartData = <%- JSON.stringify(highestSnakeLengths) %>
+    var timeOfKillsChartData = <%- JSON.stringify(timeOfKills) %>
+    var avgSnakeLengthAllChartData = <%- JSON.stringify(avgSnakeLengthAll) %>
+    var highestSnakeLengthAllChartData = <%- JSON.stringify(highestSnakeLengthAll) %>
 </script>
 
 <nav class="navbar navbar-expand-sm sticky-top">
@@ -134,15 +137,17 @@
                 </div>
             </div>  <!--row-->
 
-            <h1>Graph showing HIGHEST SNAKE LENGTH per game</h1>
-            <h1>Graph showing HIGHEST KILLS per game</h1>
-            <h1>Graph showing HIGHEST USE OF BOOSTS per game</h1>
+            <h1>HIGHEST SNAKE LENGTH per game</h1>
+            <h1>HIGHEST KILLS per game</h1>
+            <h1>HIGHEST USE OF BOOSTS per game</h1>
 
-            <h1>Graph showing AVERAGE SNAKE LENGTH per game</h1>
-            <h1>Graph showing AVERAGE KILLS per game</h1>
-            <h1>Graph showing AVERAGE USE OF BOOSTS per game</h1>
+            <h1>AVERAGE SNAKE LENGTH per game</h1>
+            <h1>AVERAGE KILLS per game</h1>
+            <h1>AVERAGE USE OF BOOSTS per game</h1>
 
+        </div> <!--for ajax call-->
 
+        <!--todo Make the graphs load with the ajax call as well-->
             <h1>Graph showing AVERAGE SNAKE LENGTH graphed over 5 sec intervals</h1>
             <div id="avgSnakeLengthchartdiv"></div>
             <h1>Graph showing HIGHEST SNAKE LENGTH graphed over 5 sec intervals</h1>
@@ -150,7 +155,6 @@
             <h1>Graph showing TIME OF KILLS graphed over 5 sec intervals</h1>
             <div id="timeOfKillschartdiv"></div>
 
-        </div>
 
     </div> <!--tab-pane for profile-->
     <div class="tab-pane fade" id="global" role="tabpanel" aria-labelledby="global-tab">
@@ -231,16 +235,17 @@
 
             </div>  <!--row-->
 
-            <h1>Graph showing AVERAGE SNAKE LENGTH OF ALL USERS graphed per game</h1>
-            <h1>Graph showing AVERAGE SNAKE KILLS OF ALL USERS graphed per game</h1>
-            <h1>Graph showing AVERAGE SNAKE BOOSTS OF ALL USERS graphed per game</h1>
+            <h1>AVERAGE SNAKE LENGTH OF ALL USERS graphed per game</h1>
+            <h1>AVERAGE SNAKE KILLS OF ALL USERS graphed per game</h1>
+            <h1>AVERAGE SNAKE BOOSTS OF ALL USERS graphed per game</h1>
+
+        </div> <!--for ajax call-->
 
             <h1>Graph showing AVERAGE SNAKE LENGTH OF ALL USERS graphed over 5 sec intervals</h1>
             <div id="avgSnakeLengthAllchartdiv"></div>
             <h1>Graph showing HIGHEST SNAKE LENGTH OF ALL USERS graphed over 5 second intervals</h1>
             <div id="highestSnakeLengthAllchartdiv"></div>
 
-        </div>
     </div> <!--tab-pane for global-->
 </div>
 
