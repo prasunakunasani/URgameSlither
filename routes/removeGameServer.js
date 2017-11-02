@@ -15,7 +15,7 @@ router.get('/', function (req, res, next) {
 router.get('/', function (req, res, next) {
 
     Users.findOne({'cookie_id': "rkrDhmZA-"}, function (err, users) {
-
+        if (err) { return next(err); }
         requestify.post('http://localhost:3000/deadSnake', {usersdata: users});
         console.log('This ran...');
     });

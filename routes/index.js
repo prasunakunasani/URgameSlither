@@ -6,7 +6,7 @@ var oauth2 = require('../lib/oauth2');
 // information and expose login/logout URLs to templates. The data from the template can be used in the view
 router.use(oauth2.template);
 
-router.get('/', function (req, res) {
+router.get('/', function (req, res,next) {
 
     res.render('index', {title: 'Terrible'});
 });

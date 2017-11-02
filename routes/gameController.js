@@ -12,8 +12,8 @@ class GameController {
     }
 
     Index(req, res, next) {
+
         console.log('This ran in the gameController');
-    //   console.log(req.body);
         console.log(req.body.usersdata);
     }
 
