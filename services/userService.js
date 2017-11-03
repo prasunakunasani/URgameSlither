@@ -16,9 +16,31 @@ class UserService {
         res.send('GetUserDetails function');
     }
 
-    InsertUserDetails(req, res, next) {
-        res.send('The InsertUserDetails function of userservice. ');
+    InsertUserDetails(userDetails, next) {
 
+        console.log('The InsertUserDetails function of userservice. ');
+        Users.update({cookie_id: userDetails.cookie_id},
+            {
+                cookie_id: userDetails.cookie_id,
+                google: {
+                    profile_id: userDetails.google.profile_id,
+                    token: userDetails.token,
+                },
+                snake:
+                    {
+                        name: userDetails.name,
+                        color: userDetails.color
+                    }
+            },
+            {upsert: true}, function (err, result) {
+
+                console.log("Result of updating is: ");
+                console.log(result); //If ok:0, n:0, the nothing got inserted. If nModified:0, nothing got modified.
+                if (err)
+                    return next(err);
+                else if (result.ok == '0')
+                    return next(result);
+            });
     }
 
     UpdateUserDetails(req, res, next) {

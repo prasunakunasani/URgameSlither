@@ -9,7 +9,7 @@ var usersStatsSchema = new mongoose.Schema({
             type: String,
             required: [true, 'No cookie ID']
         },
-    cumulative_moving_average_snake_length:
+    cumulative_moving_average_snake_length: //todo - double check where/if this is being used.
         {
             type: [Number]
         },
