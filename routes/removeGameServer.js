@@ -23,7 +23,7 @@ var newUser = {
 
 var deadSnake = {
 
-    cookie_id: 'rkrDhmZA-',
+    cookie_id: 'tryingrkrDhmZA-',
     boosts: 20,
     createdOn: new Date(),
     duration: 30,

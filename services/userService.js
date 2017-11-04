@@ -1,9 +1,6 @@
 let express = require('express');
 
 let Users = require('../models/users');
-let UsersStats = require('../models/usersStats');
-let UsersSnakes = require('../models/userssnakes');
-var cookie_id = "rkrDhmZA-";
 
 class UserService {
 
@@ -17,7 +14,7 @@ class UserService {
     }
 
     InsertUserDetails(userDetails, next) {
-
+//fixme - could also do it as - If record doesn't exist, save. Else, call update function without upsert.
         console.log('The InsertUserDetails function of userservice. ');
         Users.update({cookie_id: userDetails.cookie_id},
             {
@@ -34,7 +31,7 @@ class UserService {
             },
             {upsert: true}, function (err, result) {
 
-                console.log("Result of updating is: ");
+                console.log("Result of updating user record is: ");
                 console.log(result); //If ok:0, n:0, the nothing got inserted. If nModified:0, nothing got modified.
                 if (err)
                     return next(err);

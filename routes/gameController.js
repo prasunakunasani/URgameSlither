@@ -1,8 +1,10 @@
 let express = require('express');
 let router = express.Router();
 let UserService = require('../services/userService');
+let UserSnakeService = require('../services/usersSnakesService');
 
 var userFunctions = new UserService(express);
+var userSnakeFunctions = new UserSnakeService(express);
 
 /*todo - 2) Think about all the collections that will either be created or updated once a dead snake comes in.
 http://mongoosejs.com/docs/api.html#model_Model.update
@@ -27,6 +29,7 @@ class GameController {
         userFunctions.InsertUserDetails(req.body.newUser, next);
             //todo - MAYBE a record can be created when they hit play - their cookie id and snake name and colour gets into the db.
         //create a record for userssnakes
+        userSnakeFunctions.InsertUsersSnakeData(req.body.deadSnake,next);
         //create a record for userstats if one dosn't already exist. Else, calculate: check if best snake, if yes, update.
             //calc cumulative_moving_average_snake_length
             //calc interval data averages and sums
