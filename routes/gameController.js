@@ -39,7 +39,6 @@ class GameController {
         //create a record for dailyStats if doesn't exist, else update - //fixme - wouldn't this be too much checking? Is that okay?
         //create a record for calculatedStats if doesn't exist, else update //fixme - again, maybe this can just be created and updated only...? Am I thinking too much?
     }
-
 }
 
 var gameController = new GameController(express);
