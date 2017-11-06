@@ -18,11 +18,11 @@ class GameController {
         this.express = express;
     }
 
-    Index(req, res, next) {
+    saveUserAndSnake(req, res, next) {
 
         console.log('This ran in the gameController');
-        console.log(req.body.newUser);
-        console.log(req.body.deadSnake);
+        // console.log(req.body.newUser);
+        // console.log(req.body.deadSnake);
 
         //todo - IMPORTANT - Might have to do the below in other update functions and call them here while passing in the data.
         //create a record for a user if they don't already exist - done
@@ -37,13 +37,15 @@ class GameController {
             //check if higher than highest kill, check if larger than largest snake killed, if yes, update
             //calc totals and update
         //create a record for dailyStats if doesn't exist, else update - //fixme - wouldn't this be too much checking? Is that okay?
+            //use player count coming in form Game Server
         //create a record for calculatedStats if doesn't exist, else update //fixme - again, maybe this can just be created and updated only...? Am I thinking too much?
+    res.send("Done");
     }
 }
 
 var gameController = new GameController(express);
 
-router.post('/', gameController.Index.bind(gameController));
+router.post('/saveUserAndSnake', gameController.saveUserAndSnake.bind(gameController));
 
 module.exports = router;
 

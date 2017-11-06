@@ -16,28 +16,15 @@ class UserService {
     InsertUserDetails(userDetails, next) {
 //fixme - could also do it as - If record doesn't exist, save. Else, call update function without upsert.
         console.log('The InsertUserDetails function of userservice. ');
-        Users.update({cookie_id: userDetails.cookie_id},
-            {
-                cookie_id: userDetails.cookie_id,
-                google: {
-                    profile_id: userDetails.google.profile_id,
-                    token: userDetails.token,
-                },
-                snake:
-                    {
-                        name: userDetails.name,
-                        color: userDetails.color
-                    }
-            },
-            {upsert: true}, function (err, result) {
-
-                console.log("Result of updating user record is: ");
-                console.log(result); //If ok:0, n:0, the nothing got inserted. If nModified:0, nothing got modified.
-                if (err)
-                    return next(err);
-                else if (result.ok == '0')
-                    return next(result);
-            });
+        console.log(userDetails);
+        Users.update({cookie_id: userDetails.cookie_id}, userDetails, {upsert: true}, function (err, result) {
+            console.log("Result of updating user record is: ");
+            console.log(result); //If ok:0, n:0, the nothing got inserted. If nModified:0, nothing got modified.
+            if (err)
+                return next(err);
+            else if (result.ok == '0')
+                return next(result);
+        });
     }
 
     UpdateUserDetails(req, res, next) {

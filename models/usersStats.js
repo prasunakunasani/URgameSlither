@@ -9,7 +9,7 @@ var usersStatsSchema = new mongoose.Schema({
             type: String,
             required: [true, 'No cookie ID']
         },
-    cumulative_moving_average_snake_length: //todo - double check where/if this is being used.
+    cumulative_moving_average_snake_length: //todo - double check where/if this is being used. (total length/total deaths)
         {
             type: [Number]
         },
@@ -41,13 +41,13 @@ var usersStatsSchema = new mongoose.Schema({
                     type: Number
                 }
         },
-    totals:
+    totals:  //averages on stats page are the totoals/#ofgames
         {
             boosts:
                 {
                     type: Number
                 },
-            deaths:
+            deaths:  //game played
                 {
                     type: Number
                 },
