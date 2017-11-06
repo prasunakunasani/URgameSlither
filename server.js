@@ -3,7 +3,7 @@
 var config = require('./config/config.js');
 // var spawn = require("./src/spawn.js");
 var pkg = require('./package.json');
-var WebSocket = require('ws').Server;
+var WebSocketServer = require('ws').Server;
 var Snake = require('./src/entities/snake');
 var Food = require('./src/entities/food');
 var sector = require('./src/entities/sector');
@@ -12,7 +12,8 @@ var message = require('./src/utils/message');
 var math = require('./src/utils/math');
 var Leaderboard = require('./src/subjects/leaderboard');
 var LeaderboardObserver = require('./src/observers/leaderboardObserver');
-var MessageService = require('./src/messages/messageService');
+var MessageService = require('./src/messages/messageservice');
+const MessageReceiver = require('./src/messages/messagereceiver');
 
 var loopInterval = 230;
 var counter = 0;
@@ -30,7 +31,7 @@ var leaderboard = new Leaderboard();
 console.log('[DEBUG] You are currently running on ' + pkg.version);
 console.log('[SERVER] Starting Server...');
 var server;
-server = new WebSocket({port: config['port'], path: '/game/socket'}, function () {
+server = new WebSocketServer({port: config['port'], path: '/game/socket'}, function () {
 	console.log('[SERVER] Server Started at 127.0.0.1:' + config['port'] + '! Waiting for Connections...');
 	console.log("[BOTS] Bot Status: Bot's are currently unavailable! Please try again later.");
 	//console.log('[BOTS] Creating ' + config['bots'] + ' bots!');
@@ -331,11 +332,11 @@ function updateLeaderboard(){
 	"use strict";
 	leaders = Array.prototype.slice.call(leaders).sort(function(a,b){
 		"use strict";
-		
+
 		return a.snake.length - b.snake.length;
 	});
-	
+
 	leaders = leaders.slice(0,10);
-	
+
 	leaderboard.setLeaderboard(leaders);
 }

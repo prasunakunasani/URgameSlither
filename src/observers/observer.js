@@ -1,8 +1,4 @@
 
-
-var ws = require('ws');
-
-
 class Observer
 {
 	
