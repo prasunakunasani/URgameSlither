@@ -1,19 +1,16 @@
-<% include partials/header%>
+<% include partials/header %>
 
 <div id="content">
   <div class="container-fluid">
-    <!--<div class="g-signin2 float-right" data-onsuccess="onSignIn" data-theme="dark"></div>-->
-    <!--<a class="float-left" href="#" onclick="signOut();">Sign out</a>-->
     <div>
         <% if (!profile) { %>
-      <a  href="/auth/login" >Google Log In</a>
+      <a class="loginBtn loginBtn--google" href="/auth/login">Sign in with Google</a>
         <% }else{ %>
       <span></span>
-        <span>Welcome <%=profile.displayName%> </span>
-        <a href="/auth/logout" >LOG OUT</a>
+      <a class="loginBtn loginBtn--google" href="/auth/logout">LOG OUT <%= profile.displayName %></a>
         <% } %>
     </div>
-
+    <!--For fixfox on school computers, try 0,0,11000,2000-->
     <svg viewBox="0 0 1600 300">   <!--min-x, min-y, width, height-->
       <symbol id="s-text">
         <text text-anchor="middle" x="50%" y="80%">URgame.me</text>
@@ -25,15 +22,31 @@
       </g>
     </svg>
 
-      <form action="/stats/profilestats">
-          <input type="submit" value="View UserProfile">
+    <div class="holder">
+
+      <!--todo - Add a form input for snake colours -->
+
+      <form action="#">
+        <div class="snakeInfo">
+          <input id="snakeName" class="nameField" placeholder="Snake Name" maxlength="24">
+        </div>
+        <div class="snakeColors">
+          Snake Colours:
+          <select name="snakeColor">
+            <option value="Blue">Blue</option>
+            <option value="Red">Red</option>
+          </select>
+        </div>
+        <button class="playBtn" type="submit">&nbsp;Play&nbsp;</button>
       </form>
-    <form action="/stats/globalstats">
-      <input type="submit" value="View Global">
-    </form>
-
+      <form action="/stats/profilestats">
+        <input type="submit" value="View UserProfile">
+      </form>
+      <form action="/stats/globalstats">
+        <input type="submit" value="View Global">
+      </form>
+    </div>
   </div>
-
 </div>
 
-<% include partials/footer%>
+<% include partials/footer %>
