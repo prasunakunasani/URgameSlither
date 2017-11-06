@@ -5,6 +5,7 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var config = require('./config');
 
 //The .js files
 var index = require('./routes/index');
@@ -55,8 +56,8 @@ app.use(cookieParser());
 const sessionConfig = {
     resave: false,
     saveUninitialized: false,
-    secret: "n5QL0atAVhe5rQvZuwmyczX4",
-    //secret: config.get('SECRET'),
+    //secret: "n5QL0atAVhe5rQvZuwmyczX4",
+    secret: config.get('SECRET'),
     signed: true
 };
 
