@@ -2123,8 +2123,11 @@ function GameClient() {
 
 
 	function connect() {
-		server = window.location.hostname;
-		port = 8080;
+		var server = window.location.hostname;
+		var port = 8080;
+		var cstring = "ws://" + server + ":" + port + "/game/socket";
+		if(server = "urgame.me")
+			cstring = "wss://" + server + "/game/socket";
 
 		resetGame();
 		connecting = 1;
@@ -2132,7 +2135,7 @@ function GameClient() {
 
 		testing && (console.log("connecting to " + server + ":" + port + "... "));
 		//ws = new WebSocket("ws://" + bso.ip + ":" + bso.po + "/slither");
-		ws = new WebSocket("ws://" + server + ":" + port + "/game/socket");
+		ws = new WebSocket(cstring);
 		ws.binaryType = "arraybuffer";
 		window.ws = ws;
 		ws.onmessage = function (b) {
