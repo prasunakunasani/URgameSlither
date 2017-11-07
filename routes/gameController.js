@@ -39,7 +39,7 @@ class GameController {
         //create a record for dailyStats if doesn't exist, else update - //fixme - wouldn't this be too much checking? Is that okay?
             //use player count coming in form Game Server
         //create a record for calculatedStats if doesn't exist, else update //fixme - again, maybe this can just be created and updated only...? Am I thinking too much?
-    res.send("Done");
+    res.render('game/index');
     }
 }
 

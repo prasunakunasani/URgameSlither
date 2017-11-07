@@ -73,7 +73,7 @@ app.use(oauth2.router);
 //Routes
 app.use('/', index);
 app.use('/stats',statsController);
-app.use('/sendFakeDeadSnake',gameServer); //fixme - remove me after testing
+app.use('/something',gameServer); //fixme - remove me after testing
 app.use('/game',gameController);
 
 
