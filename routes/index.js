@@ -15,7 +15,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/', function(req, res) {
 
-    res.render('game/index');
+    res.redirect('/game');
 });
 
 

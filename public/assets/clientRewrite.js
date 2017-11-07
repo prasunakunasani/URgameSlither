@@ -10,6 +10,8 @@ var spinner_shown = false;
 var ldmc = document.createElement("canvas");
 var playh = document.getElementById("playh");
 var pbdiv;
+var profilediv;
+var globaldiv;
 var btn_save_skin;
 var save_btn;
 var save_skin;
@@ -18,6 +20,8 @@ var connected = false;
 var dead_mtm = -1;
 var ui_holder_opacity = 0;
 var play_btn;
+var profile_btn;
+var global_btn;
 
 
 const GameScene = Object.freeze({
@@ -188,6 +192,8 @@ function UI() {
 	function setupUI() {
 		"use strict";
 		setupPlayBtn();
+		setupProfileBtn();
+		setupGlobalBtn();
 		setupSaveBtn();
 		initFuzzBackground();
 	}
@@ -243,6 +249,50 @@ function UI() {
 		};
 	}
 
+	function setupProfileBtn() {
+		"use strict";
+		var str = "Profile";
+		str = String.fromCharCode(160) + str + String.fromCharCode(160);
+		profile_btn = UI.makeTextBtn(str, 47, 20, 34, 1);
+		var profilediv = profile_btn.elem;
+		profilediv.style.position = "relative";
+		profilediv.style.display = "inline-block";
+		profilediv.style.marginTop = "20px";
+		profilediv.style.marginBottom = "50px";
+		profilediv.style.marginRight = "20px";
+
+		playh.lastElementChild.appendChild(profilediv);
+
+		profile_btn.elem.onclick = function () {
+			if (!profile_btn.disabled) {
+				var url = "//" + window.location.host + "/stats/profilestats";
+				window.location = url;
+			}
+
+		};
+	}
+
+	function setupGlobalBtn() {
+		"use strict";
+		var str = "Global Statistics";
+		str = String.fromCharCode(160) + str + String.fromCharCode(160);
+		global_btn = UI.makeTextBtn(str, 47, 20, 34, 1);
+		globaldiv = global_btn.elem;
+		globaldiv.style.position = "relative";
+		globaldiv.style.display = "inline-block";
+		globaldiv.style.marginTop = "20px";
+		globaldiv.style.marginBottom = "50px";
+		
+		playh.lastElementChild.appendChild(globaldiv);
+
+		global_btn.elem.onclick = function () {
+			if (!global_btn.disabled) {
+				var url = "//" + window.location.host + "/stats/globalstats";
+				window.location = url;
+			}
+
+		};
+	}
 
 	function setupPlayBtn() {
 		"use strict";
@@ -253,11 +303,13 @@ function UI() {
 		pbdiv.style.position = "relative";
 		pbdiv.style.display = "inline-block";
 		pbdiv.style.marginTop = "20px";
-		pbdiv.style.marginBottom = "50px";
+		pbdiv.style.marginBottom = "20px";
 		playh = document.getElementById("playh");
 		playh.style.opacity = 0;
 		playh.appendChild(pbdiv);
-
+		var div = document.createElement("div");
+		playh.appendChild(div);
+		
 		play_btn.elem.onclick = function () {
 			if (!play_btn.disabled) {
 				GameClient.setReadyToPlay();
@@ -1679,7 +1731,7 @@ function GameClient() {
 				}
 			b.restore();
 			b.save();
-			
+
 			b.strokeStyle = "#90C098";
 			for (var e, w, C, f = snakes.length - 1; 0 <= f; f--) c = snakes[f], e = c.xx + c.fx, w = c.yy + c.fy + 40, 0 < c.na && e >= bpx1 - 100 && w >= bpy1 && e <= bpx2 + 100 && w <= bpy2 && (c == snake && (c.fnfr++, 200 < c.fnfr && (c.na -= .004, 0 > c.na && (c.na = 0))), b.save(), b.globalAlpha = .5 * c.na * c.alive_amt * (1 - c.dead_amt), b.font = "12px Arial, Helvetica Neue, Helvetica, sans-serif", b.fillStyle = c.csw, b.textBaseline = "middle", b.textAlign = "center", h = c.xx + c.fx, u = c.yy + c.fy, h = mww2 + (h - view_xx) * gsc, u = mhh2 + (u - view_yy) * gsc, b.fillText(c.nk, h, u + 32 +
 					11 * c.sc * gsc), b.restore());
@@ -1720,9 +1772,9 @@ function GameClient() {
 						b.save();
 						b.lineJoin = "round";
 						b.lineCap = "round";
-						doiosh ? 
+						doiosh ?
 								(c.sp > c.fsp && (t = c.alive_amt * (1 - c.dead_amt) * Math.max(0,
-								Math.min(1, (c.sp - c.ssp) / (c.msp - c.ssp))), b.save(), b.strokeStyle = c.cs, b.globalAlpha = .3 * t, b.lineWidth = (D + 6) * gsc, b.stroke(), b.lineWidth = (D + 9) * gsc, b.stroke(), b.lineWidth = (D + 12) * gsc, b.stroke(), b.restore()), b.globalAlpha = 1 * c.alive_amt * (1 - c.dead_amt), b.strokeStyle = "#000000", b.lineWidth = (D + 5) * gsc) 
+										Math.min(1, (c.sp - c.ssp) / (c.msp - c.ssp))), b.save(), b.strokeStyle = c.cs, b.globalAlpha = .3 * t, b.lineWidth = (D + 6) * gsc, b.stroke(), b.lineWidth = (D + 9) * gsc, b.stroke(), b.lineWidth = (D + 12) * gsc, b.stroke(), b.restore()), b.globalAlpha = 1 * c.alive_amt * (1 - c.dead_amt), b.strokeStyle = "#000000", b.lineWidth = (D + 5) * gsc)
 								: (c.sp > c.fsp && (t = c.alive_amt * (1 - c.dead_amt) * Math.max(0, Math.min(1, (c.sp - c.ssp) / (c.msp - c.ssp))), b.save(), b.lineWidth = (D - 2) * gsc, b.shadowBlur = 30 * gsc, b.shadowColor = "rgba(" + c.rr + "," + c.gg + "," + c.bb + ", " + Math.round(1E4 * t) /
 								1E4 + ")", b.stroke(), b.stroke(), b.restore()), b.globalAlpha = .4 * c.alive_amt * (1 - c.dead_amt), b.strokeStyle = "#000000", b.lineWidth = (D + 5) * gsc, b.stroke(), b.strokeStyle = c.cs, b.lineWidth = D * gsc, b.strokeStyle = "#000000", b.globalAlpha = 1 * c.alive_amt * (1 - c.dead_amt));
 						b.stroke();
@@ -1828,7 +1880,7 @@ function GameClient() {
 						} else {
 							for (t = B - 1; 0 <= t; t--) 1 == pbu[t] && (px = pbx[t], py = pby[t], 2 <= t && (q = t - 2, 1 == pbu[q] && (e = pbx[q], w = pby[q], b.save(),
 									b.translate((e - view_xx) * gsc, (w - view_yy) * gsc), 9 > q ? (b.globalAlpha = q / 9 * A, 4 > q ? (e = H * (1 + (4 - q) * c.swell), b.drawImage(ksmc, -e, -e, 2 * e, 2 * e)) : b.drawImage(ksmc, -H, -H, 2 * H, 2 * H)) : (b.globalAlpha = A, b.drawImage(ksmc, -H, -H, 2 * H, 2 * H)), b.restore())), b.save(), b.globalAlpha = G, b.translate((px - view_xx) * gsc, (py - view_yy) * gsc), b.rotate(pba[t]), q = t % (2 * z.length), q >= z.length && (q = 2 * z.length - (q + 1)), 4 > t ? (e = D * (1 + (4 - t) * c.swell), b.drawImage(z[q], -gsc * e, -gsc * e, 2 * gsc * e, 2 * gsc * e)) : b.drawImage(z[q], -gsc * D, -gsc * D, 2 * gsc * D, 2 * gsc * D), b.restore());
-							if (c.tsp < c.fsp && (high_quality || 0 < gla)) {
+							if (c.tsp > c.fsp && (high_quality || 0 < gla)) {
 								b.save();
 								b.globalCompositeOperation = "lighter";
 								for (t = B - 1; 0 <= t; t--) 1 == pbu[t] && (px = pbx[t], py = pby[t], q = t % (2 * z.length), q >= z.length && (q = 2 * z.length - (q + 1)), b.save(), b.translate((px - view_xx) * gsc, (py - view_yy) * gsc), b.rotate(pba[t]), b.globalAlpha = G * J * gla * (.5 + .5 * Math.cos(t / 4 - c.sfr)), 4 > t ? (e = D * (1 + (4 - t) * c.swell), b.drawImage(z[q], -gsc * e, -gsc * e, 2 * gsc * e, 2 * gsc * e)) : b.drawImage(z[q], -gsc * D, -gsc * D, 2 * gsc * D, 2 * gsc * D), b.restore());
@@ -1951,7 +2003,7 @@ function GameClient() {
 				b.restore()
 			}
 			if (wumsts && 0 < rank && 0 < snake_count && playing) {
-		
+
 
 				wumsts = !1;
 				c = "Your length";
@@ -1994,8 +2046,13 @@ function GameClient() {
 		else {
 			if (b || 1 != lga) lga += .05 * c, 1 <= lga && (lga = 1), lmc2.style.opacity = lga;
 			1 != lgss && (lgss += .00375 * c, 1 <= lgss && (lgss = 1));
-			if (b || 1 != ncka) ncka += .006 * c, 1 <= ncka && (ncka = 1), nick_holder.style.opacity = Math.min(1, 6 * ncka), is_mobile || (smh.style.opacity = Math.max(0, Math.min(1, 5 * (ncka - .05)))), .01 <= ncka && (playh.style.opacity = Math.min(1,
-					5 * (ncka - .01)));
+			if (b || 1 != ncka) {
+				ncka += .006 * c;
+				1 <= ncka && (ncka = 1);
+				nick_holder.style.opacity = Math.min(1, 6 * ncka);
+				is_mobile || (smh.style.opacity = Math.max(0, Math.min(1, 5 * (ncka - .05))));
+				.01 <= ncka && (playh.style.opacity = Math.min(1, 5 * (ncka - .01)));
+			}
 			lctx.clearRect(0, 0, lw, lh);
 			for (f = 0; f < lts.length; f++) {
 				var y = lts[f],

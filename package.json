@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "start-app": "node ./bin/www",
+    "start-game": "node ./gameserver.js",
+    "dev": "concurrently --kill-others \"npm run start-app\" \"npm run start-game\""
   },
   "dependencies": {
     "body-parser": "~1.18.2",
@@ -21,6 +24,9 @@
     "serve-favicon": "~2.4.5",
     "shortid": "^2.2.8",
     "sloc": "^0.2.0",
-    "ws": "^3.2.0"
+    "ws": "^3.3.0"
+  },
+  "devDependencies": {
+    "concurrently": "^3.5.0"
   }
 }

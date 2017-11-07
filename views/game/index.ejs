@@ -1,23 +1,11 @@
-<html
-        xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>slither.io</title>
+  <title>URGame Snakes</title>
   <meta name="viewport"
         content="minimal-ui, user-scalable=no, initial-scale=0.7, maximum-scale=0.7, width=device-width">
-  <meta name="description"
-        content="The smash-hit game! Play with millions of players around the world and try to become the longest of the day!">
-  <meta property="og:description"
-        content="The smash-hit game! Play with millions of players around the world and try to become the longest of the day!">
-  <meta name="keywords"
-        content="slitherio, slither, io, snake, snakes, worm, worms, game, games, web game, html5, fun, flash, slithario">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="slither.io">
-  <meta property="og:url" content="http://slither.io/">
-  <meta property="og:site_name" content="slither.io">
-  <meta property="og:image" content="http://slither.io/s/fbthumb3.jpg">
-  <link rel="image_src" href="http://slither.io/s/fbthumb3.jpg">
   <link rel="icon" href="http://slither.io/s/favicon.png">
+  <link rel="stylesheet" href="/stylesheets/style.css">
   <style type="text/css">
 
     input.sumsginp:focus {
@@ -99,98 +87,7 @@
       user-select: none;
     }
 
-    .btnt {
-      outline: none;
-    }
 
-    .shbtn {
-      background: #e9b032;
-      text-decoration: none;
-    }
-
-    .shbtn:link {
-      background: #e9b032;
-      text-decoration: none;
-    }
-
-    .shbtn:visited {
-      background: #e9b032;
-      text-decoration: none;
-    }
-
-    .shbtn:hover {
-      background: #ffce63;
-      text-decoration: none;
-    }
-
-    .shbtn:active {
-      background: #c48700;
-      text-decoration: none;
-    }
-
-    .btn:link {
-      opacity: .7;
-      text-decoration: none;
-    }
-
-    .btn:visited {
-      opacity: .7;
-      text-decoration: none;
-    }
-
-    .btn:hover {
-      opacity: 1;
-      text-decoration: none;
-    }
-
-    .btn:active {
-      opacity: .5;
-      text-decoration: none;
-    }
-
-    .lq:link {
-      opacity: .8;
-      color: #80FF80;
-    }
-
-    .lq:visited {
-      opacity: .8;
-      color: #80FF80;
-    }
-
-    .lq:hover {
-      opacity: 1;
-      color: #80FF80;
-    }
-
-    .lq:active {
-      opacity: .5;
-      color: #80FF80;
-    }
-
-    .lq2:link {
-      opacity: .8;
-      color: #8058D0;
-      text-decoration: none;
-    }
-
-    .lq2:visited {
-      opacity: .8;
-      color: #8058D0;
-      text-decoration: none;
-    }
-
-    .lq2:hover {
-      opacity: 1;
-      color: #8058D0;
-      text-decoration: underline;
-    }
-
-    .lq2:active {
-      opacity: .5;
-      color: #8058D0;
-      text-decoration: underline;
-    }
 
 
   </style>
@@ -199,7 +96,15 @@
 <div id="title_background" style="position: fixed; left: 0px; top: 0px; width: 721px; height: 959px;">
 </div>
 <div id="login"
-     style="position: fixed; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 20; margin-top: 64px;">
+     style="position: fixed; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 20; margin-top: 2px;">
+  <div id="google-login">
+      <% if (!profile) { %>
+    <a class="loginBtn loginBtn--google" href="/auth/login">Sign in with Google</a>
+      <% }else{ %>
+    <span></span>
+    <a class="loginBtn loginBtn--google" href="/auth/logout">Logout | <%= profile.displayName %></a>
+      <% } %>
+  </div>
   <div id="logo"
        style="margin-left: auto; margin-right: auto; text-align: center; width: 450px; height: 115px; margin-top: 50px;">
     <div style="position: absolute; z-index: 999999;" id="logoih"></div>

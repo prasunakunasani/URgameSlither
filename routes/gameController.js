@@ -13,15 +13,14 @@ class GameController {
 
     Index(req, res, next) {
 
-        console.log('This ran in the gameController');
-        console.log(req.body.usersdata);
+			res.render('game/index');
     }
 
 }
 
 var gameController = new GameController(express);
 
-router.post('/', gameController.Index.bind(gameController));
+router.get('/', gameController.Index.bind(gameController));
 
 module.exports = router;
 
