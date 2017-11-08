@@ -833,7 +833,8 @@ function GameClient() {
 	var pba = new Float32Array(32767);
 	var pbu = new Uint8Array(32767);
 
-	var max_skin_cv = 43;
+	var max_skin_cv = 9;
+	var b_max_skin_cv = 10;
 
 	var bgx = 0, bgy = 0, bgx2 = 0, bgy2 = 0, fgfr = 0, px, py, lpx, lpy, ax, ay, lax, lay, pax, pay, fx, fy, fs,
 			dfa = [];
@@ -4129,7 +4130,7 @@ function GameClient() {
 				var b = snake.rcv;
 				b--;
 				0 > b && (b = max_skin_cv);
-				gw2k16 || 42 == b && b--;
+				gw2k16 || b_max_skin_cv == b && b--;
 				setSkin(snake, b)
 			}
 			return !1
@@ -4138,8 +4139,8 @@ function GameClient() {
 			if (playing && null != snake) {
 				var b = snake.rcv;
 				b++;
-				gw2k16 || 42 == b && b++;
-				b > max_skin_cv && (b = 0);
+				gw2k16 || 3 == b && b++;
+				b > b_max_skin_cv && (b = 0);
 				setSkin(snake, b)
 			}
 			return !1
@@ -4148,7 +4149,7 @@ function GameClient() {
 			if (!playing && -1 == dead_mtm) {
 				resetGame();
 				choosing_skin = !0;
-				pskh.style.opacity = 0;
+				pskh.style.opacity = 0;rr
 				nskh.style.opacity = 0;
 				save_skin.style.opacity = 0;
 				pskh.style.display = "inline";
@@ -4243,8 +4244,8 @@ function GameClient() {
 		transform(lmc2, "scale(.5, .5)");
 		transformOrigin(lmc2, "0% 0%");
 		lmch.appendChild(lmc2);
-		logo.appendChild(lmch);
-
+		//logo.appendChild(lmch);
+		//this hides the slither.io logo
 
 		var showlogo_iv = -1;
 		if (is_safari || is_mobile) {
