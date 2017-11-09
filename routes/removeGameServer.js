@@ -8,7 +8,7 @@ var requestify = require('requestify');
 
 var newUser = {
 
-    cookie_id: 'coffee',
+    cookie_id: 'horse',
     google:
         {
             profile_id: null,
@@ -23,7 +23,7 @@ var newUser = {
 
 var deadSnake = {
 
-    cookie_id: 'coffee',
+    cookie_id: 'horse',
     boosts: 20,
     createdOn: new Date(),
     duration: 30,

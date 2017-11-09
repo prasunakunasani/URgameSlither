@@ -9,10 +9,9 @@ var usersStatsSchema = new mongoose.Schema({
             type: String,
             required: [true, 'No cookie ID']
         },
-    cumulative_moving_average_snake_length: //todo- (total length/total deaths) per game?
+    cumulative_moving_average_snake_length:
         {
-            type: [Number],
-            default: [0]
+            type: [Number]
         },
     interval_data:
         {
@@ -38,11 +37,13 @@ var usersStatsSchema = new mongoose.Schema({
         {
             highest_kills:
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
             largest_snake_killed_length:
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 }
         },
     totals:  //averages on stats page are the totoals/#ofgames

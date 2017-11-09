@@ -7,34 +7,41 @@ var usersSnakesSchema = new mongoose.Schema({
         },
     boosts:
         {
-            type: Number
+            type: Number,
+            default: 0
         },
     createdOn:
         {
-            type: Date
+            type: Date,
+            default: Date.now()
         },
     duration:
         {
-            type: Number
+            type: Number,
+            default: 0
         },
     interval_data:
         {
             length:
                 {
-                    type: [Number]
+                    type: [Number],
+                    default: [0]
                 },
             kills:
                 {
-                    type: [Number]
+                    type: [Number],
+                    default: [0]
                 }
         },
     kills:
         {
-            type: Number
+            type: Number,
+            default: 0
         },
     length:
         {
-            type: Number
+            type: Number,
+            default: 0
         }
 });
 
