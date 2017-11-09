@@ -29,6 +29,7 @@ var usersSchema = new mongoose.Schema({
         }
 });
 
+
 //mongoose.model(modelName,schema);
 // could've done let users = module.exports = mongoose.model('Player',usersSchema);
 //The modelName becomes the database name (in lowercase with an s added if it's not plural already).

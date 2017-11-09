@@ -10,6 +10,8 @@ class UsersSnakesService {
 
     InsertUsersSnakeData(snakeDetails, next) {
 
+        //fixme - see if this can be done shorter using mongoose Insert instead.
+
         var saveSnakeDetails = new UsersSnakes({
 
             cookie_id: snakeDetails.cookie_id,
@@ -26,12 +28,12 @@ class UsersSnakesService {
 
         saveSnakeDetails.save(function (err) {
             if (err) return next(err);
-            console.log('Player saved successfully!');
+            console.log('New Snake saved successfully!');
         });
     }
 
     InsertUsersStatsData(req, res, next) {
-        res.send('Insert');
+        console.log('User stats record');
     }
 
 }

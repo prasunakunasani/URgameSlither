@@ -9,25 +9,29 @@ var usersStatsSchema = new mongoose.Schema({
             type: String,
             required: [true, 'No cookie ID']
         },
-    cumulative_moving_average_snake_length: //todo - double check where/if this is being used. (total length/total deaths)
+    cumulative_moving_average_snake_length: //todo- (total length/total deaths) per game?
         {
-            type: [Number]
+            type: [Number],
+            default: [0]
         },
     interval_data:
         {
             averages:
                 {
-                    type: [Number]
+                    type: [Number],
+                    default: [0]
                 },
             sums:
                 {
-                    type: [Number]
+                    type: [Number],
+                    default: [0]
                 }
 
         },
     lastModifiedOn:
         {
-            type: Date
+            type: Date,
+            default: Date.now()
         },
 
     records:
@@ -45,23 +49,28 @@ var usersStatsSchema = new mongoose.Schema({
         {
             boosts:
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
             deaths:  //game played
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
             duration:
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
             kills:
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
             length:
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 }
 
         }

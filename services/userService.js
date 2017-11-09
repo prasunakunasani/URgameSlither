@@ -1,6 +1,7 @@
 let express = require('express');
 
 let Users = require('../models/users');
+let UsersStats = require('../models/usersStats');
 
 class UserService {
 
@@ -9,30 +10,86 @@ class UserService {
         this.foo = 10;
     }
 
-    GetUserDetails(req, res, next) {
-        res.send('GetUserDetails function');
-    }
-
     InsertUserDetails(userDetails, next) {
-//fixme - could also do it as - If record doesn't exist, save. Else, call update function without upsert.
-        console.log('The InsertUserDetails function of userservice. ');
-        console.log(userDetails);
-        Users.update({cookie_id: userDetails.cookie_id}, userDetails, {upsert: true}, function (err, result) {
-            console.log("Result of updating user record is: ");
-            console.log(result); //If ok:0, n:0, the nothing got inserted. If nModified:0, nothing got modified.
-            if (err)
-                return next(err);
-            else if (result.ok == '0')
-                return next(result);
+
+        Users.count({}, function (err, initCount) {
+
+            Users.update({cookie_id: userDetails.cookie_id}, userDetails, {upsert: true}, function (err, result) {
+                if (err) return next(err);
+                else if (result.ok == '0') return next(JSON.stringify(result));
+                console.log("Done creating a User record");
+
+                Users.count({}, function (err, count) {
+                    if (count - initCount > 0) {
+                    }
+                });
+            });
         });
+
+        console.log('The InsertUserDetails function ran');
     }
 
-    UpdateUserDetails(req, res, next) {
-        res.send('The UpdateUserDetails function of userservice. ');
-    }
+    UpdateUsersStats(snakeDetails, next) {
 
-    UpdateUsersStats(req, res, next) {
-        res.send('The UpdateUsersStats function of userservice. ');
+        UsersStats.update({cookie_id: snakeDetails.cookie_id}, {}, {
+            upsert: true,
+            setDefaultsOnInsert: true
+        }, function (err, result) {
+            if (err) return next(err);
+            else if (result.ok == '0') return next(JSON.stringify(result));
+            console.log("Done creating a UserStats record");
+
+            UsersStats.findOne({cookie_id: snakeDetails.cookie_id}, function (err, userStatsRecord) {
+
+                var tempRecord = {
+
+                    totals:
+                        {
+                            boosts: 0,
+                            deaths:0,
+                            duration:0,
+                            kills:0,
+                            length:0
+                        }
+                }
+
+                //update best snake
+
+                // console.log("Here, trying to use best_snake");
+                // if (snakeDetails.length > userStatsRecord.best_snake.length)
+                // {
+                //     console.log("The new snake is bigger!!");
+                //     tempRecord.best_snake = snakeDetails;
+                // }
+
+                //  update totals
+                tempRecord.totals.boosts = userStatsRecord.totals.boosts + snakeDetails.boosts;
+                tempRecord.totals.deaths = userStatsRecord.totals.deaths + 1;
+                tempRecord.totals.duration = userStatsRecord.totals.duration + snakeDetails.duration;
+                tempRecord.totals.kills = userStatsRecord.totals.kills + snakeDetails.kills;
+                tempRecord.totals.length = userStatsRecord.totals.length + snakeDetails.length;
+
+                //update cummulative_moving_average_snake_length
+
+
+                //update interval_data
+
+                //update records
+                //check if higher than highest kill, check if larger than largest snake killed, if yes, update
+
+
+                //update last modified date
+
+                UsersStats.findOneAndUpdate({cookie_id: snakeDetails.cookie_id}, tempRecord, function (err, result) {
+
+                    if (err) return next(err);
+                    else if (result.ok == '0') return next(JSON.stringify(result));
+
+                });
+            });
+
+        });
+        console.log('The UpdateUsersStats function ran.');
     }
 
 }

@@ -8,7 +8,7 @@ var requestify = require('requestify');
 
 var newUser = {
 
-    cookie_id: 'twooone-',
+    cookie_id: 'coffee',
     google:
         {
             profile_id: null,
@@ -16,14 +16,14 @@ var newUser = {
         },
     snake:
         {
-            name: 'snake',
+            name: 'bigSnake',
             color: 'Blue'
         }
 };
 
 var deadSnake = {
 
-    cookie_id: 'tryingrkrDhmZA-',
+    cookie_id: 'coffee',
     boosts: 20,
     createdOn: new Date(),
     duration: 30,
@@ -38,7 +38,6 @@ var deadSnake = {
 
 router.get('/', function (req, res, next) {
         requestify.post('http://localhost:3000/game/saveUserAndSnake', {newUser: newUser, deadSnake: deadSnake});
-        console.log('Snake just died so sending data...');
         res.send("Post request sent");
 });
 
