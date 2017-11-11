@@ -17,51 +17,61 @@ var usersStatsSchema = new mongoose.Schema({
         {
             averages:
                 {
-                    type: [Number]
+                    type: [Number],
+                    default: [0]
                 },
             sums:
                 {
-                    type: [Number]
+                    type: [Number],
+                    default: [0]
                 }
 
         },
     lastModifiedOn:
         {
-            type: Date
+            type: Date,
+            default: Date.now()
         },
 
     records:
         {
             highest_kills:
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
             largest_snake_killed_length:
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 }
         },
-    totals:
+    totals:  //averages on stats page are the totoals/#ofgames
         {
             boosts:
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
-            deaths:
+            deaths:  //game played
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
             duration:
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
             kills:
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
             length:
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 }
 
         }

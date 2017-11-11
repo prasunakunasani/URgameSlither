@@ -25,10 +25,6 @@ var calculatedStatsSchema = new mongoose.Schema({
                     length:
                         {
                             type: Number
-                        },
-                    uniques:
-                        {
-                            type: Number
                         }
                 }
         }

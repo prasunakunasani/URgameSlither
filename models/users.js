@@ -27,7 +27,8 @@ var usersSchema = new mongoose.Schema({
                     type: String
                 }
         }
-});
+},{timestamps: true});
+
 
 //mongoose.model(modelName,schema);
 // could've done let users = module.exports = mongoose.model('Player',usersSchema);

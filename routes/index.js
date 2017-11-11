@@ -7,13 +7,13 @@ var oauth2 = require('../lib/oauth2');
 router.use(oauth2.template);
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
 
     //console.log(req);
     next();
 });
 
-router.get('/', function(req, res) {
+router.get('/', function (req, res) {
 
     res.redirect('/game');
 });

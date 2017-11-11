@@ -1,9 +1,12 @@
 let express = require('express');
 let router = express.Router();
+let UserService = require('../services/userService');
+let UserSnakeService = require('../services/usersSnakesService');
+let StatsService = require('../services/statsService');
 
-//todo - 2) Do the appropriate calculations based on GameServer data and save them to database
-//todo - 2) In diagram, Chris wrote: Index(), SaveUserAndSnake(u: Users, s: UsersSnake, currentPlayerCount: int)
-//todo - 3) Somehow, once this controller is update, the other Services need to update date based on each dead snake
+var userFunctions = new UserService(express);
+var userSnakeFunctions = new UserSnakeService(express);
+var globalFunctions = new StatsService(express);
 
 class GameController {
 
@@ -13,47 +16,26 @@ class GameController {
 
     Index(req, res, next) {
 
-			res.render('game/index');
+        res.render('game/index');
     }
 
+    saveUserAndSnake(req, res, next) {
+
+        userSnakeFunctions.InsertUsersSnakeData(req.body.deadSnake, next);
+        userFunctions.InsertUserDetails(req.body.newUser, next);
+        userFunctions.UpdateUsersStats(req.body.deadSnake,next);
+        globalFunctions.UpdateDailyStats(req.body.deadSnake, req.body.currentPlayerCount,next);
+        globalFunctions.UpdateCalculatedStats(req.body.deadSnake,next);
+
+        //create a record for dailyStats if doesn't exist, else update - //fixme - wouldn't this be too much checking? Is that okay?
+        //use player count coming in form Game Server
+        //create a record for calculatedStats if doesn't exist, else update //fixme - again, maybe this can just be created and updated only...? Am I thinking too much?
+    }
 }
 
 var gameController = new GameController(express);
 
 router.get('/', gameController.Index.bind(gameController));
+router.post('/saveUserAndSnake', gameController.saveUserAndSnake.bind(gameController));
 
 module.exports = router;
-
-
-/* FOR TEST-POST
-
-var requestify = require('requestify');
-let Users = require('../models/users');
-
-router.get('/', function (req, res, next) {
-
-    Users.findOne({'cookie_id': "rkrDhmZA-"}, function (err, users) {
-
-        requestify.post('http://localhost:3000/test', {usersdata: users});
-    });
-
-    next();
-});
-*/
-
-/*
-In a different file, :
-
-router.post('/test', function (req,res) {
-
-    console.log(req.body);
-
-});
-
-*/
-
-/*
-//todo - ask Chris
-The requestify posts the data to the application server and the console.log in the app server gets the data.
-What is the currentPlayerCount? what is it used for  in the Game Controller?
- */
