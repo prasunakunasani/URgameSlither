@@ -2,16 +2,11 @@ let express = require('express');
 let router = express.Router();
 let UserService = require('../services/userService');
 let UserSnakeService = require('../services/usersSnakesService');
-let Users = require('../models/users');
+let StatsService = require('../services/statsService');
 
 var userFunctions = new UserService(express);
 var userSnakeFunctions = new UserSnakeService(express);
-
-var newUserCreated = false;
-
-//todo - 2) Do the appropriate calculations based on GameServer data and save them to database
-//todo - 2) In diagram, Chris wrote: Index(), SaveUserAndSnake(u: Users, s: UsersSnake, currentPlayerCount: int)
-//todo - 3) Somehow, once this controller is update, the other Services need to update date based on each dead snake
+var globalFunctions = new StatsService(express);
 
 class GameController {
 
@@ -29,14 +24,14 @@ class GameController {
         userSnakeFunctions.InsertUsersSnakeData(req.body.deadSnake, next);
         userFunctions.InsertUserDetails(req.body.newUser, next);
         userFunctions.UpdateUsersStats(req.body.deadSnake,next);
-
+        globalFunctions.UpdateDailyStats(req.body.deadSnake, req.body.currentPlayerCount,next);
+        globalFunctions.UpdateCalculatedStats(req.body.deadSnake,next);
 
         //create a record for dailyStats if doesn't exist, else update - //fixme - wouldn't this be too much checking? Is that okay?
         //use player count coming in form Game Server
         //create a record for calculatedStats if doesn't exist, else update //fixme - again, maybe this can just be created and updated only...? Am I thinking too much?
     }
 }
-
 
 var gameController = new GameController(express);
 

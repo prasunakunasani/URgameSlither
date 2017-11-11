@@ -36,8 +36,10 @@ var deadSnake = {
     length: 30
 };
 
+var currentPlayerCount = 2;
+
 router.get('/', function (req, res, next) {
-        requestify.post('http://localhost:3000/game/saveUserAndSnake', {newUser: newUser, deadSnake: deadSnake});
+        requestify.post('http://localhost:3000/game/saveUserAndSnake', {newUser: newUser, deadSnake: deadSnake, currentPlayerCount: currentPlayerCount});
         res.send("Post request sent");
 });
 

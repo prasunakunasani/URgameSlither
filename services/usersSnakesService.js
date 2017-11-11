@@ -28,12 +28,7 @@ class UsersSnakesService {
 
         saveSnakeDetails.save(function (err) {
             if (err) return next(err);
-            console.log('New Snake saved successfully!');
         });
-    }
-
-    InsertUsersStatsData(req, res, next) {
-        console.log('User stats record');
     }
 
 }

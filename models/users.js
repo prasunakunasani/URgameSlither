@@ -27,7 +27,7 @@ var usersSchema = new mongoose.Schema({
                     type: String
                 }
         }
-});
+},{timestamps: true});
 
 
 //mongoose.model(modelName,schema);

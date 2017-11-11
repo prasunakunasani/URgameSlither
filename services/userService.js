@@ -15,15 +15,12 @@ class UserService {
         Users.update({cookie_id: userDetails.cookie_id}, userDetails, {upsert: true}, function (err, result) {
             if (err) return next(err);
             else if (result.ok == '0') return next(JSON.stringify(result));
-            console.log("Done creating a User record");
-
         });
-
-        console.log('The InsertUserDetails function ran');
     }
 
     UpdateUsersStats(snakeDetails, next) {
 
+        //creating a user stats record if one doesn't exist already
         UsersStats.update({cookie_id: snakeDetails.cookie_id}, {}, {
             upsert: true,
             setDefaultsOnInsert: true
@@ -32,11 +29,10 @@ class UserService {
             if (err) return next(err);
             else if (result.ok == '0') return next(JSON.stringify(result));
 
-            console.log("Done creating a UserStats record");
-
+            //Now, find the created/exisiting record with this cookie_id
             UsersStats.findOne({cookie_id: snakeDetails.cookie_id}, function (err, userStatsRecord) {
 
-               // console.log(userStatsRecord);
+                // console.log(userStatsRecord);
 
                 var tempRecord = {
                     cumulative_moving_average_snake_length: userStatsRecord.cumulative_moving_average_snake_length,
@@ -62,9 +58,7 @@ class UserService {
                 };
 
                 //update best snake
-                if (snakeDetails.length > userStatsRecord.best_snake.length)
-                {
-                    console.log("The new snake is bigger!!");
+                if (snakeDetails.length > userStatsRecord.best_snake.length) {
                     tempRecord.best_snake = snakeDetails;
                 }
 
@@ -89,7 +83,7 @@ class UserService {
 
                 for (var i = 0; i < tempRecord.interval_data.sums.length; i++) {
                     //adding 1 to the death because' for the first record, the deaths haven't been calculated yet.
-                        tempRecord.interval_data.averages[i] = tempRecord.interval_data.sums[i]/(userStatsRecord.totals.deaths+1);
+                    tempRecord.interval_data.averages[i] = tempRecord.interval_data.sums[i] / (userStatsRecord.totals.deaths + 1);
                 }
 
                 //update records
@@ -101,6 +95,7 @@ class UserService {
                 //update last modified date
                 tempRecord.lastModifiedOn = new Date();
 
+                //save the new calculate data into the cookie_id record.
                 UsersStats.findOneAndUpdate({cookie_id: snakeDetails.cookie_id}, tempRecord, function (err, result) {
 
                     if (err) return next(err);
@@ -110,9 +105,7 @@ class UserService {
             });
 
         });
-        console.log('The UpdateUsersStats function ran.');
     }
-
 }
 
 module.exports = UserService;

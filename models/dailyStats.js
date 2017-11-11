@@ -4,7 +4,8 @@ var dailyStatsSchema = new mongoose.Schema({
 
     createdOn:
         {
-            type: Date
+            type: Date,
+            default: Date.now()
         },
     interval_data:
         {
@@ -32,27 +33,33 @@ var dailyStatsSchema = new mongoose.Schema({
         {
             boosts:
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
             deaths:
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
             duration:
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
             kills:
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
             length:
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
             unique_users:
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 }
 
         }
