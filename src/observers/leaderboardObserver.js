@@ -1,15 +1,15 @@
-var Observer = require('./observer');
-var Leaderboard = require('../subjects/leaderboard');
+const Observer = require("./observer");
+const Leaderboard = require("../subjects/leaderboard");
 
 class LeaderboardObserver extends Observer{
 	
-	constructor(conn, id){
-		super(conn,id);
+	constructor(client, id){
+		super(client,id);
 	}
 	
 	update(leaderboard){
 		if( Object.keys(leaderboard.leaders).length === 0){
-			this.conn.send(JSON.stringify("no players"));
+			this.client.send(JSON.stringify("no players"));
 			return;
 		}
 			
@@ -18,7 +18,7 @@ class LeaderboardObserver extends Observer{
 			b.push({name: key.snake.name, length: key.snake.length});
 		});
 
-		this.conn.send(JSON.stringify(b));
+		this.client.send(JSON.stringify(b));
 	}
 }
 

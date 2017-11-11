@@ -22,7 +22,7 @@ var ui_holder_opacity = 0;
 var play_btn;
 var profile_btn;
 var global_btn;
-
+var vfr;
 
 const GameScene = Object.freeze({
 	MAIN_MENU: Symbol('MAIN_MENU'),
@@ -149,12 +149,12 @@ function UI() {
 		"use strict";
 		(doTitleFade.title_fade_ratio) || (doTitleFade.title_fade_ratio = 0);
 		doTitleFade.title_fade_ratio += title_fade_rate * frame;
-		var fr = update.title_fade_ratio;
+		var fr = doTitleFade.title_fade_ratio;
 		//login_fade_rate += .05 * f;
 		//choosing_skin && (login_fade_rate += .06 * f);
 		if (1 <= fr) {
 			save_skin.style.opacity = 1;
-			update.title_fade_ratio = 0;
+			doTitleFade.title_fade_ratio = 0;
 			title_fadout = false;
 		}
 		save_skin.style.opacity = fr;
@@ -282,7 +282,7 @@ function UI() {
 		globaldiv.style.display = "inline-block";
 		globaldiv.style.marginTop = "20px";
 		globaldiv.style.marginBottom = "50px";
-		
+
 		playh.lastElementChild.appendChild(globaldiv);
 
 		global_btn.elem.onclick = function () {
@@ -309,7 +309,7 @@ function UI() {
 		playh.appendChild(pbdiv);
 		var div = document.createElement("div");
 		playh.appendChild(div);
-		
+
 		play_btn.elem.onclick = function () {
 			if (!play_btn.disabled) {
 				GameClient.setReadyToPlay();
@@ -2126,7 +2126,7 @@ function GameClient() {
 		var server = window.location.hostname;
 		var port = 8080;
 		var cstring = "ws://" + server + ":" + port + "/game/socket";
-		if(server = "urgame.me")
+		if (server === "urgame.me")
 			cstring = "wss://" + server + "/game/socket";
 
 		resetGame();
@@ -2144,12 +2144,13 @@ function GameClient() {
 				this.counter = 0;
 			}
 			this.counter++;
-			console.log(this.counter);
+			//console.log(this.counter);
+
 
 			if (ws == this) {
 				b = new Uint8Array(b.data);
 				var packet = b;
-				console.log(b[0]);
+				//console.log("b[0] is " + b[0]);
 				rdps += packet.length;
 
 				if (testing) {
@@ -2460,7 +2461,13 @@ function GameClient() {
 						e = e.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
 						0 < F && (b = "", 0 < e.length && (b += "<span style='font-size:17px;'><b><i><span style='opacity: .5;'>&quot;</span>" + e + "<span style='opacity: .5;'>&quot;</span></i></b></span><BR><div style='height: 5px;'></div>"), 0 < q.length ? (b = 0 < e.length ? b + ("<i><span style='opacity: .5;'>- </span><span style='opacity: .75;'><b>" + q + "</b></span><span style='opacity: .5;'>, today's longest</span></i>") : "<i><span style='opacity: .5;'>Today's longest was </span><span style='opacity: .75;'><b>" + q + "</b></span></i>", b += "<br><i><span style='opacity: .5;'>with a length of </span><span style='opacity: .65;'><b>" +
 								F + "</b></span></i>") : b = 0 < e.length ? b + "<i><span style='opacity: .5;'>- </span><span style='opacity: .5;'>today's longest</span></i>" + ("<br><i><span style='opacity: .5;'>with a length of </span><span style='opacity: .65;'><b>" + F + "</b></span></i>") : b + ("<i><span style='opacity: .5;'>Today's longest: </span><span style='opacity: .75;'><b>" + F + "</b></span></i>"), vcm.innerHTML = b)
-					} else if ("p" == command) wfpr = !1, lagging && (etm *= lag_mult, lagging = !1);
+					} else if ("p" == command) {
+						wfpr = false;
+						if (lagging) {
+							etm *= lag_mult;
+							lagging = false;
+						}
+					}
 					else if ("u" == command) {
 						q = asmc.getContext("2d");
 						q.clearRect(0, 0, 80, 80);
@@ -2488,8 +2495,7 @@ function GameClient() {
 								H = [];
 								K = (b[c] << 16 | b[c + 1] << 8 | b[c + 2]) / 5;
 								c += 3;
-								N = (b[c] <<
-										16 | b[c + 1] << 8 | b[c + 2]) / 5;
+								N = (b[c] << 16 | b[c + 1] << 8 | b[c + 2]) / 5;
 								c += 3;
 								e = b[c];
 								c++;
@@ -2501,6 +2507,9 @@ function GameClient() {
 									efs: [],
 									ems: []
 								}), E.eiu = 0, E.xx = e, E.yy = F, E.fx = 0, E.fy = 0, E.da = 0, E.ebx = e - q, E.eby = F - O, H.push(E);
+								//t = id
+								//K = tailx
+								//N = taily
 								f = newSnake(t, K, N, y, z, H);
 								null == snake ? (view_xx = e, view_yy = F, snake = f, snake.md = !1, snake.wmd = !1, f.nk = my_nick) : (f.nk = command, gdnm(command) ||
 								(f.nk = ""));
@@ -2676,13 +2685,30 @@ function GameClient() {
 	oef = function () {
 		UI.update();
 
+
 		var b = Date.now();
 		vfr = (b - ltm) / 8;
 		5 < vfr && (vfr = 5);
 		1.56 > vfr && (vfr = 1.56);
 		avfr = vfr;
 		ltm = b;
-		choosing_skin || (lagging || wfpr && 420 < b - last_ping_mtm && (ready_to_play || (lagging = !0)), lagging ? (lag_mult *= .85, .01 > lag_mult && (lag_mult = .01)) : 1 > lag_mult && (lag_mult += .05, 1 <= lag_mult && (lag_mult = 1)));
+		if (!choosing_skin) {
+			if (!lagging) {
+				if (wfpr && 420 < b - last_ping_mtm) {
+					if (!ready_to_play) lagging = true;
+				}
+			}
+			if (lagging) {
+				lag_mult *= .85;
+				if (.01 > lag_mult) lag_mult = .01;
+			} else {
+				if (1 > lag_mult) {
+					lag_mult += .05;
+					if (1 <= lag_mult) lag_mult = 1;
+				}
+			}
+		}
+
 		120 < vfr && (vfr = 120);
 		vfr *= lag_mult;
 		etm *= lag_mult;
@@ -2739,7 +2765,9 @@ function GameClient() {
 		//Snake wiggle for choosing skin snake
 		if (choosing_skin) {
 			for (q = snakes.length - 1; 0 <= q; q--)
-				for (e = snakes[q], u = e.pts.length - 1; 0 <= u; u--) e.pts[u].yy = game_radius / 2 + 15 * Math.cos(u / 4 + fr / 19) * (1 - u / e.pts.length);
+				for (e = snakes[q], u = e.pts.length - 1; 0 <= u; u--) {
+					e.pts[u].yy = game_radius / 2 + 15 * Math.cos(u / 4 + fr / 19) * (1 - u / e.pts.length);
+				}
 			view_xx -= vfr
 		}
 		playing && (high_quality ? (1 > gla && (gla += .0075 * vfr, 1 < gla && (gla = 1)), 1 < qsm && (qsm -= 4E-5 * vfr, 1 > qsm && (qsm = 1))) : (0 < gla && (gla -= .0075 * vfr, 0 > gla && (gla = 0)), qsm < mqsm && (qsm += 4E-5 * vfr, qsm > mqsm && (qsm = mqsm))));
@@ -2760,9 +2788,9 @@ function GameClient() {
 			}
 			//Fade out of change skin screen
 			if (-2 == login_iv) {
-				login_fade_rate -= .004 * vfr;
+				login_fade_rate -= .4 * vfr;
 				if (choosing_skin)
-					login_fade_rate -= .007 * vfr;
+					login_fade_rate -= .7 * vfr;
 
 				lb_fr = login_fade_rate;
 				//If Negative login_fade_rate
@@ -2867,6 +2895,8 @@ function GameClient() {
 				f = mamu * vfr * e.scang * e.spang;
 				b = e.sp * vfr / 4;
 				b > e.msl && (b = e.msl);
+
+				//Dont know what this does
 				if (!e.dead) {
 					e.tsp != e.sp && (e.tsp < e.sp ? (e.tsp += .3 * vfr, e.tsp > e.sp && (e.tsp = e.sp)) : (e.tsp -= .3 * vfr, e.tsp < e.sp && (e.tsp = e.sp)));
 					e.tsp > e.fsp && (e.sfr += (e.tsp - e.fsp) * vfr * .021);
@@ -2876,6 +2906,7 @@ function GameClient() {
 					else 0 == e.fltg && (e.fltg = -1, e.fl = 0);
 					e.cfl = e.tl + e.fl
 				}
+
 				if (1 == e.dir) {
 					e.ang -= f;
 					if (0 > e.ang || e.ang >= pi2) e.ang %= pi2;

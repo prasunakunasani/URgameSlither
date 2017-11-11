@@ -20,6 +20,7 @@ b += message.writeInt16(b, arr, config['sectorSize']);
 
 b += message.writeInt16(b, arr, 144);
 
+//Spangdv is 4.8
 b += message.writeInt8(b, arr, 4.8 * 10);
 
 b += message.writeInt16(b, arr, 5.39 * 100);

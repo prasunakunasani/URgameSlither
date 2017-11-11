@@ -1,4 +1,4 @@
-//exports.direction = require('./direction');
+exports.direction = require('./direction');
 exports.position = require('./position');
 exports.movement = require('./movement');
 exports.initial = require('./initial');
@@ -12,4 +12,4 @@ exports.minimap = require('./minimap');
 exports.eat = require('./eat');
 exports.end = require('./end');
 exports.increase = require('./increase');
-
+exports.removeSnake = require('./removeSnake');
