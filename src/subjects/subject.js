@@ -9,10 +9,11 @@ class Subject{
 	
 	attach(observer){
 		this._observers.push(observer);
+		this.notifyObservers();
 	}
 	
 	detach(observer){
-		this._observers.forEach(o =>{
+		this._observers.forEach((o,i) =>{
 			if(o === observer){
 				this._observers.splice(i,1);
 				return true;

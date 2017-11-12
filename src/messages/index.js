@@ -12,4 +12,6 @@ exports.minimap = require('./minimap');
 exports.eat = require('./eat');
 exports.end = require('./end');
 exports.increase = require('./increase');
-exports.removeSnake = require('./removeSnake');
+exports.removeSnake = require('./removesnake');
+exports.fullness = require('./fullness');
+exports.decrease = require('./decrease');

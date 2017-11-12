@@ -33,9 +33,11 @@ class Game extends EventEmitter {
 	clientClose(id) {
 		let snake = this._snakes[id];
 		if (snake !== undefined) {
+			console.log(id + " removed snake");
 			this._removeSnake(id);
 
 		}
+
 		let lo = this._leaderboardObservers.get(id);
 		if (lo !== undefined) {
 			this._leaderboard.detach(lo);
@@ -63,20 +65,36 @@ class Game extends EventEmitter {
 	}
 
 	_updateLeaderboard() {
-		if (this._snakes.length <= 0) return;
+		this._snakes.filter(function(e){
+			return e;
+		});
+		if (Object.keys(this._snakes).length <= 0) {
+			this._leaderboard.setLeaderboard(JSON.stringify([{name:"No one is playing",score:0},{name:"test",score:5}]));
+			return;
+		}
 
 		let topSnakes = Array.from(this._snakes);
 
 		topSnakes.sort(function (a, b) {
 			return b.length - a.length;
 		});
+		
 		topSnakes = topSnakes.filter(function (e) {
 			return e
 		});
+		
+		this.emit("leaderboard", topSnakes);
+		
 		topSnakes.slice(0, 10);
 
-		this._leaderboard.setLeaderboard(JSON.stringify(topSnakes));
-		this.emit("leaderboard", topSnakes, Object.keys(this._snakes).length);
+		var cleanSnakes = [];
+		for (var i = 0; i < topSnakes.length; i++) {
+			cleanSnakes[i] = {name: topSnakes[i].name, score: topSnakes[i].getScore()};
+		}
+
+		console.log("snakes count " + Object.keys(this._snakes).length);
+		this._leaderboard.setLeaderboard(JSON.stringify(cleanSnakes));
+		
 	}
 
 
@@ -119,7 +137,7 @@ class Game extends EventEmitter {
 		this.emit("snakeRemoved", this._snakes[id]);
 
 		delete this._snakes[id];
-		
+
 	}
 
 	_killSnake(id) {
@@ -129,6 +147,7 @@ class Game extends EventEmitter {
 	}
 
 	_newLeaderboardObserver(client, data) {
+		console.log(client.id + " attached");
 		let lo = new LeaderboardObserver(client, client.id);
 		this._leaderboardObservers.set(client.id, lo);
 		this._leaderboard.attach(lo);
@@ -219,7 +238,7 @@ class Game extends EventEmitter {
 	}
 
 	_newSnakeMessage(client, data) {
-		// setMscps(411);
+
 		let skin = message.readInt8(2, data);
 		let name = message.readString(3, data, data.byteLength);
 
@@ -233,7 +252,8 @@ class Game extends EventEmitter {
 		this._snakes[client.id] = snake;
 
 		this.emit('newClientSnake', client, snake, this._world.foods);
-		console.log((snake.name === '' ? '[DEBUG] An unnamed snake' : '[DEBUG] A new snake called ' + snake.name) + ' has connected!');
+		console.log(client.id + " new snake");
+		//console.log((snake.name === '' ? '[DEBUG] An unnamed snake' : '[DEBUG] A new snake called ' + snake.name) + ' has connected!');
 	}
 }
 
@@ -259,5 +279,4 @@ setMscps(mscps) {
 }
 
 
-module
-		.exports = Game
+module.exports = Game;

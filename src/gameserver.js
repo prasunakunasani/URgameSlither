@@ -47,7 +47,7 @@ class GameServer {
 		}
 		client.on('message', this.onMessage.bind(this,client));
 		client.on('error', this.onError.bind(this));
-		client.on('close', this.onClose.bind(this));
+		client.on('close', this.onClose.bind(this, client));
 	}
 
 	onMessage(client, data) {
@@ -55,6 +55,7 @@ class GameServer {
 	}
 
 	onClose(client) {
+		console.log(client.id + " closing client");
 		console.log('[DEBUG] Connection closed.');
 		this._game.clientClose(client.id);
 		delete this._clients[client.id];

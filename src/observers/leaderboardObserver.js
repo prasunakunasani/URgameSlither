@@ -8,17 +8,10 @@ class LeaderboardObserver extends Observer{
 	}
 	
 	update(leaderboard){
-		if( Object.keys(leaderboard.leaders).length === 0){
-			this.client.send(JSON.stringify("no players"));
-			return;
-		}
-			
-		var b = [];
-		leaderboard.leaders.forEach(function(key, index){
-			b.push({name: key.snake.name, length: key.snake.length});
-		});
+		var s = leaderboard.getLeaderboard();
 
-		this.client.send(JSON.stringify(b));
+		if(this._client.readyState == 1 )
+			this._client.send(s);
 	}
 }
 

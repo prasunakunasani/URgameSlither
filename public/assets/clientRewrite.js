@@ -1,11 +1,10 @@
 var testing;
 localStorage.edttsg = "1"
-testing = true;
 if (window.location.href.indexOf("/testing")) {
 	testing = true;
 }
 
-
+testing = false;
 var spinner_shown = false;
 var ldmc = document.createElement("canvas");
 var playh = document.getElementById("playh");
@@ -40,8 +39,8 @@ const Fade = Object.freeze({
 class SceneBuilder {
 
 	buildMainMenuScene() {
-		let scene = new Scene();
-		let login = document.getElementById("login");
+		var scene = new Scene();
+		var login = document.getElementById("login");
 		login.resize = function () {
 			var w = Window.width;
 			var h = Window.height;
@@ -557,9 +556,9 @@ function UI() {
 
 function GameClient() {
 
-	let MainMenuScene = new Scene();
-	let SkinMenuScene = new Scene();
-	let GameScene = new Scene();
+	var MainMenuScene = new Scene();
+	var SkinMenuScene = new Scene();
+	var GameScene = new Scene();
 
 
 	var ready_to_play = false;
@@ -1399,6 +1398,7 @@ function GameClient() {
 		return os["s" + e.id] = e
 	}
 
+	//This makes the snake look long
 	function snl(b) {
 		var f = b.tl;
 		b.tl = b.sct + b.fam;
@@ -1735,6 +1735,8 @@ function GameClient() {
 			b.strokeStyle = "#90C098";
 			for (var e, w, C, f = snakes.length - 1; 0 <= f; f--) c = snakes[f], e = c.xx + c.fx, w = c.yy + c.fy + 40, 0 < c.na && e >= bpx1 - 100 && w >= bpy1 && e <= bpx2 + 100 && w <= bpy2 && (c == snake && (c.fnfr++, 200 < c.fnfr && (c.na -= .004, 0 > c.na && (c.na = 0))), b.save(), b.globalAlpha = .5 * c.na * c.alive_amt * (1 - c.dead_amt), b.font = "12px Arial, Helvetica Neue, Helvetica, sans-serif", b.fillStyle = c.csw, b.textBaseline = "middle", b.textAlign = "center", h = c.xx + c.fx, u = c.yy + c.fy, h = mww2 + (h - view_xx) * gsc, u = mhh2 + (u - view_yy) * gsc, b.fillText(c.nk, h, u + 32 +
 					11 * c.sc * gsc), b.restore());
+
+			//Checks if a snake should be drawn
 			for (f = snakes.length - 1; 0 <= f; f--)
 				for (c = snakes[f], c.iiv = !1, t = c.pts.length - 1; 0 <= t; t--)
 					if (A = c.pts[t], px = A.xx + A.fx, py = A.yy + A.fy, px >= bpx1 && py >= bpy1 && px <= bpx2 && py <= bpy2) {
@@ -1801,6 +1803,9 @@ function GameClient() {
 						0 > n && (n += .25);
 						n = .25 - n;
 						G += 1 - .25 * Math.ceil((c.chl + c.fchl) / .25);
+
+						//Fixme snake length
+						
 						ax = px;
 						ay = py;
 						c.sep != c.wsep && (c.sep < c.wsep ? (c.sep += .01, c.sep >= c.wsep && (c.sep = c.wsep)) :
@@ -2025,6 +2030,7 @@ function GameClient() {
 
 				var s = "" + '<span style="font-size: 14px;"><span style="opacity: .4;">' + c + ': </span><span style="opacity: .8; font-weight: bold;">';
 				s += Math.floor(15 * (fpsls[snake.sct] + snake.fam / fmlts[snake.sct] - 1) - 5) / 1 + "</span></span>";
+				console.log(snake.sct + snake.fam);
 				s += '<BR><span style="opacity: .3;">' + J + ': </span><span style="opacity: .35;">' + rank + '</span><span style="opacity: .3;"> ';
 				s += f + ' </span><span style="opacity: .35;">' + snake_count + "</span>";
 				lbf.innerHTML = s;
@@ -2290,7 +2296,7 @@ function GameClient() {
 							4 <= q && (f.fam = (b[c] << 16 | b[c + 1] << 8 | b[c + 2]) / 16777215);
 							for (q = 0; q < f.pts.length; q++)
 								if (!f.pts[q].dying) {
-									f.pts[q].dying = !0;
+									f.pts[q].dying = true;
 									f.sct--;
 									f.sc = Math.min(6, 1 + (f.sct - 2) / 106);
 									f.scang = .13 + .87 * Math.pow((7 - f.sc) / 6, 2);
@@ -2311,10 +2317,9 @@ function GameClient() {
 							if (f = os["s" + t]) {
 								if (y) f.sct++;
 								else
-									for (q =
-													 0; q < f.pts.length; q++)
+									for (q = 0; q < f.pts.length; q++)
 										if (!f.pts[q].dying) {
-											f.pts[q].dying = !0;
+											f.pts[q].dying = true;
 											break
 										}
 								var E = f.pts[f.pts.length - 1],
@@ -2541,8 +2546,23 @@ function GameClient() {
 									b[c], c++, e = b[c] << 8 | b[c + 1], c += 2, F = b[c] << 8 | b[c + 1], c += 2, q = b[c] / 5, c++, t = F * game_radius * 3 + e, q = newFood(t, e, F, q, !0, y), command || (command = !0, u = Math.floor(e / sector_size), E = Math.floor(F / sector_size)), q.sx = u, q.sy = E;
 						else
 							for (u = b[c] << 8 | b[c + 1], c += 2, E = b[c] << 8 | b[c + 1], c += 2; c < f;) t = b[c] << 16 | b[c + 1] << 8 | b[c + 2], c += 3, y = b[c], c++, e = sector_size * (u + b[c] / 255), c++, F = sector_size * (E + b[c] / 255), c++, q = b[c] / 5, c++, q = newFood(t, e, F, q, !0, y), q.sx = u, q.sy = E;
-					else if ("b" == command || "f" == command) 4 <= protocol_version ? (y = b[c], c++, 4 < q && (e = b[c] << 8 | b[c + 1], c += 2, F = b[c] << 8 | b[c + 1], t = F *
-							game_radius * 3 + e, q = b[c + 2] / 5, q = newFood(t, e, F, q, "b" == command, y), q.sx = Math.floor(e / sector_size), q.sy = Math.floor(F / sector_size))) : (t = b[c] << 16 | b[c + 1] << 8 | b[c + 2], c += 3, 4 < q && (y = b[c], c++, u = b[c] << 8 | b[c + 1], c += 2, E = b[c] << 8 | b[c + 1], c += 2, e = sector_size * (u + b[c] / 255), c++, F = sector_size * (E + b[c] / 255), c++, q = b[c] / 5, q = newFood(t, e, F, q, "b" == command, y), q.sx = u, q.sy = E));
+					else if ("b" == command || "f" == command) {
+						y = b[c];
+						c++;
+						if (4 < q) {
+							e = b[c] << 8 | b[c + 1];
+							c += 2;
+							F = b[c] << 8 | b[c + 1];
+							t = F *
+									game_radius * 3 + e;
+							q = b[c + 2] / 5;
+							q = newFood(t, e, F, q, "b" == command, y);
+							q.sx = Math.floor(e / sector_size);
+							q.sy = Math.floor(F / sector_size);
+						}
+
+					}
+
 					else if ("c" == command) {
 						if (4 <= protocol_version) {
 							//Food_x
@@ -2900,11 +2920,19 @@ function GameClient() {
 				if (!e.dead) {
 					e.tsp != e.sp && (e.tsp < e.sp ? (e.tsp += .3 * vfr, e.tsp > e.sp && (e.tsp = e.sp)) : (e.tsp -= .3 * vfr, e.tsp < e.sp && (e.tsp = e.sp)));
 					e.tsp > e.fsp && (e.sfr += (e.tsp - e.fsp) * vfr * .021);
-					if (0 < e.fltg)
-						for (h = vfrb, h > e.fltg && (h = e.fltg), e.fltg -= h, qq = 0; qq < h; qq++) e.fl = e.fls[e.flpos],
-								e.fls[e.flpos] = 0, e.flpos++, e.flpos >= lfc && (e.flpos = 0);
-					else 0 == e.fltg && (e.fltg = -1, e.fl = 0);
+					//If longer than last time
+					if (0 < e.fltg) {
+						for (h = vfrb, h > e.fltg && (h = e.fltg), e.fltg -= h, qq = 0; qq < h; qq++) {
+							e.fl = e.fls[e.flpos];
+							e.fls[e.flpos] = 0;
+							e.flpos++;
+							e.flpos >= lfc && (e.flpos = 0);
+						}
+					}	else {
+						0 == e.fltg && (e.fltg = -1, e.fl = 0);
+					}
 					e.cfl = e.tl + e.fl
+					
 				}
 
 				if (1 == e.dir) {
@@ -2925,8 +2953,7 @@ function GameClient() {
 					0 > h && (e.ang = e.wang, e.dir = 0)
 				} else e.ang = e.wang;
 				1 != e.ehl && (e.ehl += .03 * vfr, 1 <= e.ehl && (e.ehl = 1));
-				f = e.pts[e.pts.length -
-				1];
+				f = e.pts[e.pts.length - 1];
 				e.wehang = Math.atan2(e.yy + e.fy - f.yy - f.fy + f.eby * (1 - e.ehl), e.xx + e.fx - f.xx - f.fx + f.ebx * (1 - e.ehl));
 				e.dead || e.ehang == e.wehang || (h = (e.wehang - e.ehang) % pi2, 0 > h && (h += pi2), h > Math.PI && (h -= pi2), 0 > h ? e.edir = 1 : 0 < h && (e.edir = 2));
 				if (1 == e.edir) {
@@ -2948,6 +2975,8 @@ function GameClient() {
 					0 > h && (e.ehang = e.wehang, e.edir = 0)
 				}
 				e.dead || (e.xx += Math.cos(e.ang) * b, e.yy += Math.sin(e.ang) * b, e.chl += b / e.msl);
+
+				//TODO This does the smoothing
 				if (0 < vfrb) {
 					for (u = e.pts.length - 1; 0 <= u; u--) f = e.pts[u], f.dying && (f.da += .0015 * vfrb, 1 < f.da && (e.pts.splice(u, 1), f.dying = !1, points_dp.add(f)));
 					for (u = e.pts.length - 1; 0 <= u; u--)
@@ -2959,6 +2988,7 @@ function GameClient() {
 							f.fy = fy
 						}
 				}
+
 				b = Math.cos(e.eang) * e.pma;
 				h = Math.sin(e.eang) * e.pma;
 				e.rex < b && (e.rex += vfr / 6, e.rex >= b && (e.rex = b));

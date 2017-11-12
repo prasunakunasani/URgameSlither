@@ -13,6 +13,7 @@ class Leaderboard extends Subject {
 	}
 
 	detach(observer) {
+		console.log("trying to detach from leaderboard");
 		let success = super.detach(observer);
 		if (success)
 			console.log("unregistered from leaderboard");

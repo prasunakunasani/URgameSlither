@@ -8,7 +8,7 @@ exports.build = function (snake) {
 		message.writeInt16(3, arr, snake.id);
 		message.writeInt8(5, arr, snake.direction.angle * 256 / (2 * Math.PI));
 		message.writeInt8(6, arr, snake.direction.angle * 256 / (2 * Math.PI));
-		message.writeInt8(7, arr, snake.speed * 18);
+		message.writeInt8(7, arr, snake.speed *18);
 		return arr;
 	};
 
