@@ -8,7 +8,7 @@ var c = {
 	food: 1000,
 	maxFoodColors: 8,
 	minFoodSize: 15,
-	maxFoodSize: 250,
+	maxFoodSize: 47,
 	foodPerSpawn: 1000, // Not Implemented
 	gameRadius: 2000,//21600,
 	sectorSize: 300,
@@ -16,7 +16,8 @@ var c = {
 	snakeUpdateRate: 150,
 	leaderboardUpdateRate: 4000,
 	nsp1: 5.39,
-	nsp2: 0.4
+	nsp2: 0.4,
+	maxSpeed: 14
 };
 
 

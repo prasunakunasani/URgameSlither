@@ -25,8 +25,8 @@ exports.build = function (rank, players, top) {
         "use strict";
       //length formula
       //Math.floor(15 * (fpsls[K] + u / fmlts[K] - 1) - 5) / 1
-			b += message.writeInt16(b, arr, snake._sct);
-			b += message.writeInt24(b, arr, snake._fam);
+			b += message.writeInt16(b, arr, snake.sct);
+			b += message.writeInt24(b, arr, snake.fam);
 			b += message.writeInt8(b, arr, math.randomInt(0, 8));
 			b += message.writeInt8(b, arr, snake.name.length);
 			b += message.writeString(b, arr, snake.name);

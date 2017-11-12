@@ -9,25 +9,12 @@ class Snake extends EventEmitter {
 		this._name = name;
 		this._color = color;
 		this._head = position;
-		this.init();
 		this._boost = false;
+		this.init();
 	}
+	
 
-	get id() {
-		return this._id;
-	}
 
-	get head() {
-		return this._head;
-	}
-
-	get name() {
-		return this._name;
-	}
-
-	get body() {
-		return this._body;
-	}
 
 	init() {
 		this._speed = 1.79;
@@ -72,13 +59,83 @@ class Snake extends EventEmitter {
 
 	}
 
+	//FIXME MOOVE THE SNAKE PARTS
+	update(deltaTime) {
+		//console.log(deltaTime - config['snakeUpdateRate']);
+
+		var sc = Math.min(6, 1 + (this._sct - 2) / 106);
+		var baseSpeed = config["nsp1"] + config["nsp2"];
+		var scale = baseSpeed/ (config["nsp1"] + config["nsp2"] * sc + 0.1);
+
+
+		if (this._boost && this._length > 2) {
+			this._speed += 1.45;
+			if(this._speed > config["maxSpeed"]) this._speed = config["maxSpeed"];
+		}else{
+			this._speed -= 1.95;
+			if(this._speed < baseSpeed) this._speed = baseSpeed;
+		}
+		var sizeChange = baseSpeed - this._speed;
+		if(sizeChange !== 0)
+			this.increaseSize(sizeChange*4);
+		let distance = scale * deltaTime / 8 * this._speed / 4;
+
+		this._head.x += Math.cos(this._direction.angle) * distance;
+		this._head.y += Math.sin(this._direction.angle) * distance;
+		this.emit('update', this);
+
+
+		//Speed stuff
+
+		// f.scang = .13 + .87 * Math.pow((7 - f.sc) / 6, 2);
+		// 
+	}
+
+
+	//TODO FIX
+	increaseSize(amount) {
+
+		var fmlts = config["fmlts"];
+		amount = fmlts[this._sct] * amount;
+
+		this._fam += amount/200;
+		if (this._fam > 1) {
+			this._fam -= 1;
+			this._sct += 1;
+			this.emit("increase", this);
+			//TODO ADD PARTS 
+			// if (client.snake.fam / 16777215 >= 1) {
+			// 	client.snake.fam = 16777215;
+			// 	var newparts = client.snake.parts[client.snake.parts.length - 1];
+			// 	client.snake.parts.push(newparts);
+			// 	client.snake.sct++;
+			// 	broadcast(messages.increase.build(client.snake));
+			// 	client.snake.fam = 0;
+			// }
+		} else if(this._fam < 0){
+			if (this._sct > 2) 	{
+				this._sct -= 1;
+				this._fam += 1;
+				console.log("decreasing");
+				this.emit("decrease", this);
+			}else{
+				this._fam = 0;
+				this.emit("fam", this);
+			}
+		}	else	{
+			this.emit("fam", this);
+		}
+		this._length = this._sct + this._fam;
+		//console.log("sct:" + this._sct + " fam: " + this._fam);
+	}
+	
+	
 	getScore() {
 		var fpsls = config["fpsls"];
 		var fmlts = config["fmlts"];
 		var a = Math.floor(15 * (fpsls[this._sct] + this._fam / fmlts[this._sct] - 1) - 5) / 1;
 		return a;
 	}
-
 
 	setBoost(enabled) {
 		this._boost = enabled;
@@ -108,70 +165,42 @@ class Snake extends EventEmitter {
 		return this._spang;
 	}
 
-	//FIXME MOOVE THE SNAKE PARTS
-	update(deltaTime) {
-		//console.log(deltaTime - config['snakeUpdateRate']);
-		
-		var sc = Math.min(6, 1 + (this._sct - 2) / 106);
-		var ssp = config["nsp1"] + config["nsp2"] * sc + 0.1;
-		console.log(ssp);
-		let rate =   deltaTime / ssp;
-
-		//speed goes from 5.79 to 14
-		
-		var mult = 1;
-		if (this._boost && this._length > 2) {
-			mult = 2;
-			this.increaseSize(-25);
-			this.emit("fam", this);
-		}
-		rate *= mult;
-		this._speed = mult * ssp / 1.79;
-		let distance =  rate;
-		this._head.x += Math.cos(this._direction.angle) * distance;
-		this._head.y += Math.sin(this._direction.angle) * distance;
-		this.emit('update', this);
-		
-		
-		//Speed stuff
-		
-		// f.scang = .13 + .87 * Math.pow((7 - f.sc) / 6, 2);
-		// 
+	get skin(){
+		return this._color;
 	}
 
-
-	//TODO FIX
-	increaseSize(amount) {
-		this._fam += amount / 200;
-		if (this._fam > 1) {
-			this._fam -= 1;
-			this._sct += 1;
-			this.emit("increase", this);
-			//TODO ADD PARTS 
-			// if (client.snake.fam / 16777215 >= 1) {
-			// 	client.snake.fam = 16777215;
-			// 	var newparts = client.snake.parts[client.snake.parts.length - 1];
-			// 	client.snake.parts.push(newparts);
-			// 	client.snake.sct++;
-			// 	broadcast(messages.increase.build(client.snake));
-			// 	client.snake.fam = 0;
-			// }
-		} else if(this._fam < 0){
-			if (this._sct > 2) 	{
-				this._sct -= 1;
-				this._fam += 1;
-				console.log("decreasing");
-				this.emit("decrease", this);
-			}else{
-				this._fam = 0;
-				this.emit("fam", this);
-			}
-		}	else	{
-			this.emit("fam", this);
-		}
-		this._length = this._sct + this._fam;
-		console.log("sct:" + this._sct + " fam: " + this._fam);
+	get D(){
+		return this._D;
 	}
+
+	get X(){
+		return this._X;
+	}
+
+	get cookie_id(){
+		return this._cookie_id;
+	}
+
+	get color(){
+		return this._color;
+	}
+
+	get id() {
+		return this._id;
+	}
+
+	get head() {
+		return this._head;
+	}
+
+	get name() {
+		return this._name;
+	}
+
+	get body() {
+		return this._body;
+	}
+
 
 }
 

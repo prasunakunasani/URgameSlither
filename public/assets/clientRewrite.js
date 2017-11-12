@@ -22,6 +22,8 @@ var play_btn;
 var profile_btn;
 var global_btn;
 var vfr;
+var snake = null;
+
 
 const GameScene = Object.freeze({
 	MAIN_MENU: Symbol('MAIN_MENU'),
@@ -704,7 +706,7 @@ function GameClient() {
 			lsym = 0,
 			my_nick = "",
 			gw2k16 = !1;
-	var snake = null;
+	//var snake = null;
 
 	var mscps = 0,
 			fmlts = [],
@@ -1755,6 +1757,7 @@ function GameClient() {
 							G = c.cfl,
 							A = c.pts[c.pts.length - 1];
 
+					//Mobile renderer
 					if (1 == render_mode) {
 						b.save();
 						b.beginPath();
@@ -1790,6 +1793,7 @@ function GameClient() {
 								"round", b.globalCompositeOperation = "lighter", b.lineWidth = (D - 3) * gsc, b.globalAlpha = z, b.strokeStyle = "#FFCC99", b.stroke(), b.restore());
 						b.restore()
 					}
+					//Pc renderer
 					if (2 == render_mode) {
 						var D = .5 * D,
 								I, M, y, E, H, K, N, F;
@@ -1805,7 +1809,7 @@ function GameClient() {
 						G += 1 - .25 * Math.ceil((c.chl + c.fchl) / .25);
 
 						//Fixme snake length
-						
+
 						ax = px;
 						ay = py;
 						c.sep != c.wsep && (c.sep < c.wsep ? (c.sep += .01, c.sep >= c.wsep && (c.sep = c.wsep)) :
@@ -1855,14 +1859,17 @@ function GameClient() {
 							J = .37 * A;
 							L = Math.pow(A, .5);
 							y = gsc * D * (1 + .9375 * L);
+
 							w = per_color_imgs[c.cv].kfmc;
 							b.save();
 							b.globalCompositeOperation = "lighter";
-							if (c.rbcs)
+							if (c.rbcs) {
 								for (K = c.rbcs, O = K.length, t = B - 1; 0 <= t; t--) 1 == pbu[t] && (px = pbx[t], py = pby[t], w = per_color_imgs[K[t % O]], w = w.kfmc, b.save(), b.globalAlpha = G * L * .38 * (.6 + .4 * Math.cos(t / 4 - 1.15 * c.sfr)), b.translate((px - view_xx) * gsc, (py - view_yy) * gsc), 4 > t ? (e = y * (1 + (4 - t) * c.swell),
 										b.drawImage(w, -e, -e, 2 * e, 2 * e)) : b.drawImage(w, -y, -y, 2 * y, 2 * y), b.restore());
-							else
+							}
+							else {
 								for (t = B - 1; 0 <= t; t--) 1 == pbu[t] && (px = pbx[t], py = pby[t], b.save(), b.globalAlpha = G * L * .38 * (.6 + .4 * Math.cos(t / 4 - 1.15 * c.sfr)), b.translate((px - view_xx) * gsc, (py - view_yy) * gsc), 4 > t ? (e = y * (1 + (4 - t) * c.swell), b.drawImage(w, -e, -e, 2 * e, 2 * e)) : b.drawImage(w, -y, -y, 2 * y, 2 * y), b.restore());
+							}
 							b.restore();
 							A = 1 - A
 						}
@@ -2030,7 +2037,7 @@ function GameClient() {
 
 				var s = "" + '<span style="font-size: 14px;"><span style="opacity: .4;">' + c + ': </span><span style="opacity: .8; font-weight: bold;">';
 				s += Math.floor(15 * (fpsls[snake.sct] + snake.fam / fmlts[snake.sct] - 1) - 5) / 1 + "</span></span>";
-				console.log(snake.sct + snake.fam);
+				//console.log(snake.sct + snake.fam);
 				s += '<BR><span style="opacity: .3;">' + J + ': </span><span style="opacity: .35;">' + rank + '</span><span style="opacity: .3;"> ';
 				s += f + ' </span><span style="opacity: .35;">' + snake_count + "</span>";
 				lbf.innerHTML = s;
@@ -2273,6 +2280,7 @@ function GameClient() {
 											: "3" == command && (M = b[c] / 18));
 
 						if (f = os["s" + t]) {
+							if (snake == f) console.log(M);
 							-1 != u && (f.dir = u);
 							anguc++;
 							if (-1 != z) {
@@ -2928,11 +2936,11 @@ function GameClient() {
 							e.flpos++;
 							e.flpos >= lfc && (e.flpos = 0);
 						}
-					}	else {
+					} else {
 						0 == e.fltg && (e.fltg = -1, e.fl = 0);
 					}
 					e.cfl = e.tl + e.fl
-					
+
 				}
 
 				if (1 == e.dir) {
@@ -3768,7 +3776,7 @@ function GameClient() {
 
 			o.cs = "#" + rs + gs + bs;
 			var sz = 62;
-
+			kfmc = document.createElement("canvas");
 			kfmc.width = kfmc.height = sz;
 			context = kfmc.getContext("2d");
 			map = context.getImageData(0, 0, sz, sz);

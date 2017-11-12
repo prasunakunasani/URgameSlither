@@ -1,12 +1,12 @@
-const World = require("./entities/world");
-const Leaderboard = require("./subjects/leaderboard");
-const Snake = require("./entities/snake");
-const LeaderboardObserver = require("./observers/leaderboardObserver");
-const Position = require("./entities/position");
+const World = require("./world");
+const Leaderboard = require("../subjects/leaderboard");
+const Snake = require("./snake");
+const LeaderboardObserver = require("../observers/leaderboardObserver");
+const Position = require("./position");
 
 const EventEmitter = require('events');
-const config = require('../config/config');
-const message = require('./utils/message');
+const config = require('../../config/config');
+const message = require('../utils/message');
 
 class Game extends EventEmitter {
 	constructor() {
@@ -181,11 +181,11 @@ class Game extends EventEmitter {
 			snake.direction.y = y * 127 * speed;
 			snake.direction.angle = radians;
 		} else if (value === 253) {
-			console.log('Snake in speed mode');
+			//console.log('Snake in speed mode');
 			snake.setBoost(true);
 			//snake.speed *= 3;
 		} else if (value === 254) {
-			console.log('Snake in normal mode');
+		//	console.log('Snake in normal mode');
 			//snake.speed = 1.79;
 			snake.setBoost(false);
 			// killPlayer(conn.id, 1);
@@ -241,7 +241,7 @@ class Game extends EventEmitter {
 
 		let skin = message.readInt8(2, data);
 		let name = message.readString(3, data, data.byteLength);
-
+	console.log(skin);
 		//TODO random position in world
 		//id cooke name color position
 		let snake = new Snake(client.id, 'asdf', name, skin, new Position(
