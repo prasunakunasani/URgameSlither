@@ -82,7 +82,7 @@ class NetworkSystem {
 	}
 
 
-	_newClientSnake(client, snake, foods) {
+	_newClientSnake(client,snakes, snake, foods) {
 		console.log("new snake");
 		this.addClient(client.id, client);
 
@@ -95,8 +95,15 @@ class NetworkSystem {
 		this._send(client.id, messages.initial);
 		this._send(client.id, messages.food.build(foods));
 
-
 		this._broadcast(messages.snake.build(snake));
+		
+		
+		snakes.forEach(s=>{
+			if(s.id !== client.id)
+				this._send(client.id,messages.snake.build(s));
+		});
+		
+	
 		//	this._broadcast(messages.snake.build(snake));
 	}
 
@@ -114,15 +121,13 @@ class NetworkSystem {
 	}
 
 	_snakeUpdate(snake) {
-		this._broadcast(messages.position.build(snake));
 		this._broadcast(messages.direction.build(snake));
-
+		this._broadcast(messages.position.build(snake));
 	}
 
 	_snakeUpdateSmall(snake) {
-		this._broadcast(messages.movement.build(snake));
 		this._broadcast(messages.direction.build(snake));
-
+		this._broadcast(messages.movement.build(snake));
 	}
 
 	_snakeDecrease(snake) {

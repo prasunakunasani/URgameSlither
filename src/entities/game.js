@@ -12,6 +12,8 @@ class Game extends EventEmitter {
 	constructor() {
 		super();
 		this._lastUpdate = Date.now();
+		this._lastUpdateSnakes = Date.now();
+		this._count = 0;
 		this._world = new World();
 		this._snakes = [];
 		this._leaderboard = new Leaderboard();
@@ -26,7 +28,7 @@ class Game extends EventEmitter {
 
 	startGame() {
 		setInterval(this._update.bind(this), config["gameUpdateRate"]);
-		setInterval(this._updateBoost.bind(this), config["snakeUpdateRate"]);
+		setInterval(this._updateSnakes.bind(this), config["snakeUpdateRate"]);
 		setInterval(this._updateLeaderboard.bind(this), config["leaderboardUpdateRate"]);
 	}
 
@@ -48,10 +50,31 @@ class Game extends EventEmitter {
 
 	}
 
-	_updateBoost() {
-		this._snakes.forEach(snake => {
-			snake.updateBoost();
-		});
+	_updateSnakes() {
+		let now = Date.now();
+		let deltaTime = now - this._lastUpdateSnakes;
+		this._lastUpdateSnakes = now;
+		
+
+		this._count += 1;
+		this._count %= 12;
+		
+		if(this._count % 5 == 0)
+		{
+			this._snakes.forEach(snake => {
+				snake.update(deltaTime, this._count);
+			});
+		}else if (this._count % 12 == 0 ){
+			this._snakes.forEach(snake => {
+				snake.update(deltaTime, this._count);
+			});
+		}
+		if(this._count % 4 == 0){
+			this._snakes.forEach(snake => {
+				snake.updateDirection(deltaTime);
+			});
+		}
+		
 	}
 
 	_update() {
@@ -62,10 +85,6 @@ class Game extends EventEmitter {
 		// for(let snake of this._snakes.values()){
 		// 	snake.update(deltaTime);
 		// }
-		this._snakes.forEach(snake => {
-			snake.update(deltaTime);
-		});
-
 		this.detectCollisions();
 
 		this._world.update(deltaTime);
@@ -257,8 +276,8 @@ class Game extends EventEmitter {
 		));
 
 		this._snakes[client.id] = snake;
-
-		this.emit('newClientSnake', client, snake, this._world.foods);
+	
+		this.emit('newClientSnake', client, this._snakes, snake, this._world.foods);
 		console.log(client.id + " new snake");
 		//console.log((snake.name === '' ? '[DEBUG] An unnamed snake' : '[DEBUG] A new snake called ' + snake.name) + ' has connected!');
 	}

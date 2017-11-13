@@ -12,13 +12,14 @@ var c = {
 	foodPerSpawn: 1000, // Not Implemented
 	gameRadius: 2000,//21600,
 	sectorSize: 300,
-	gameUpdateRate: 230,
-	snakeUpdateRate: parseInt(230 * 8/14),
+	gameUpdateRate: 100,
+	snakeUpdateRate: 20,
 	leaderboardUpdateRate: 4000,
 	nsp1: 5.39,
 	nsp2: 0.4,
 	maxSpeed: 14,
-	snakeStartSize: 20
+	snakeStartSize: 20,
+	spangdv: 4.8
 };
 
 

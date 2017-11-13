@@ -15,7 +15,9 @@ class Snake extends EventEmitter {
 
 
 	init() {
+		this._count = 0;
 		this._speed = 1.79;
+		this._actualSpeed = 5.79;
 		this._body = this._head; // This is why the snake dies when it reach's half way
 
 		//Direction angle
@@ -58,88 +60,122 @@ class Snake extends EventEmitter {
 
 	}
 
-	updateBoost() {
-		if (this._boost && this._length > 2) {
-			this._updateAngle();
-			var sc = Math.min(6, 1 + (this._sct - 2) / 106);
-			var baseSpeed = config["nsp1"] + config["nsp2"];
-			var scale = 1;//baseSpeed / (config["nsp1"] + config["nsp2"] * sc + 0.1);
-			
-			this._speed += 1.45;
-			if (this._speed > config["maxSpeed"]) this._speed = config["maxSpeed"];
-			var sizeChange = baseSpeed - this._speed;
-			if (sizeChange !== 0)
-				this.increaseSize(sizeChange * 4);
-			
-			let distance = scale * config["snakeUpdateRate"] / 8 * this._speed / 4;
-			this._direction.x = parseInt(Math.cos(this._direction.angle) * distance);
-			this._direction.y = parseInt(Math.sin(this._direction.angle) * distance);
-			this._head.x += this._direction.x;
-			this._head.y += this._direction.y;
-			
-			console.log(distance);
-			this.emit('update', this);
-		}
+	updateDirection(deltaTime){
+		this._updateDirection(deltaTime);
 	}
 
 	//FIXME MOOVE THE SNAKE PARTS
-	update(deltaTime) {
-		//console.log(deltaTime - config['snakeUpdateRate']);
-		if (!this._boost || (this._boost && this._length <= 2)) {
-			this._updateAngle();
-			var sc = Math.min(6, 1 + (this._sct - 2) / 106);
-			var baseSpeed = config["nsp1"] + config["nsp2"];
-			var scale = 1;//baseSpeed / (config["nsp1"] + config["nsp2"] * sc + 0.1);
+	update(deltaTime, count) {
+	
+		this._update(deltaTime, count);
+		
+		
+	}
 
-
+	_updatePosition(deltaTime) {
+		var sc = Math.min(6, 1 + (this._sct - 2) / 106);
+		var baseSpeed = config["nsp1"] + config["nsp2"];
+		var scale = 1;//baseSpeed / (config["nsp1"] + config["nsp2"] * sc + 0.1);
+	
+		if (this._boost && this._length > 2) {
+			this._speed += 1.45;
+		
+			if (this._speed > config["maxSpeed"]) this._speed = config["maxSpeed"];
+		} else {
 			this._speed -= 1.95;
 			if (this._speed < baseSpeed) this._speed = baseSpeed;
-			
-			let distance = scale * config["gameUpdateRate"] / 8 * this._speed / 4;
-			this._direction.x = parseInt(Math.cos(this._direction.angle) * distance);
-			this._direction.y = parseInt(Math.sin(this._direction.angle) * distance);
-			this._head.x += this._direction.x;
-			this._head.y += this._direction.y;
+		}
 
-			
-			if (Math.abs(this._xOff) < 80 && Math.abs(this._yOff) < 80) {
-				this.emit('updateSmall', this);
-			} else {
-				this.emit('update', this);
+		var sizeChange = baseSpeed - this._speed;
+		if (sizeChange !== 0)
+			this.increaseSize(sizeChange * 4);
+
+		let distance = scale * deltaTime / 8 * this._speed / 4;
+		this._direction.x = Math.cos(this._direction.angle) * distance;
+		this._direction.y = Math.sin(this._direction.angle) * distance;
+		this._head.x += this._direction.x;
+		this._head.y += this._direction.y;
+
+		this._updateParts();
+		this.emit('update', this);
+	}
+	
+	_updateParts(){
+		this._parts.forEach(p=>{
+			p.x = this._head.x;
+			p.y = this._head.y;
+		})
+	}
+	
+	
+	_update(deltaTime, count) {
+		if (this._boost && this._length > 2) {
+			if(count % 5 == 0){
+				console.log(this._count);
+				this._updatePosition(deltaTime*5);
 			}
+			
+		} else {
+			if(this.isTurning()){
+				if(count % 5 == 0){
+					this._updatePosition(deltaTime*5);
+				}
+				if (count % 12 == 0)
+					this._updatePosition(deltaTime*5);
+			}else{
+				if (count % 12 == 0)
+					this._updatePosition(deltaTime*2.4*5);
+			}
+			
 		}
 	}
 
-	
-	_update(){
-		
+	isTurning(){
+		return this._direction.angle != this._direction.expectedAngle
 	}
-	_updateAngle(){
-		if(this._direction.angle == this._direction.expectedAngle) return;
-		var degrees = this._direction.expectedAngle * (180/Math.PI) ;
-		var degreesOld = this._direction.angle * (180/Math.PI);
-		var maxDegrees = 90;
-		var diff = degreesOld - degrees;
 
-		if(Math.abs(diff) < maxDegrees || Math.abs(diff) > 360 - maxDegrees) {
+	_updateDirection(deltaTime) {
+		if (this._direction.angle == this._direction.expectedAngle) {
+			return;
+		}
+		var rads = this._direction.expectedAngle;
+		var radsOld = this._direction.angle;
+		var maxRads = Math.PI / 6 * deltaTime/config["snakeUpdateRate"] ;
+		
+		var diff = radsOld - rads;
+
+		if (Math.abs(diff) < maxRads || Math.abs(diff) > Math.PI * 2 - maxRads) {
+
 			this._direction.angle = this._direction.expectedAngle;
 			return;
 		}
-		
-		if(degreesOld > degrees){
-			if(diff - 180 > 0)  degreesOld += maxDegrees;
-			if(diff - 180 < 0) degreesOld -= maxDegrees;
-		}else if (degreesOld < degrees){
-			if(diff + 180 > 0) degreesOld += maxDegrees;
-			if(diff + 180 < 0) degreesOld -= maxDegrees;
+
+		//This makes sure to turn in correct direction
+		if (radsOld > rads) {
+			if (diff - Math.PI > 0) radsOld += maxRads;
+			if (diff - Math.PI < 0) radsOld -= maxRads;
+		} else if (radsOld < rads) {
+			if (diff + Math.PI > 0) radsOld += maxRads;
+			if (diff + Math.PI < 0) radsOld -= maxRads;
 		}
-		
-		if(degreesOld < 0) degreesOld += 360;
-		if(degreesOld > 360) degreesOld -= 360;
-		
-		var rad = degreesOld * Math.PI / 180;
+
+		if (radsOld < 0) radsOld += Math.PI * 2;
+		if (radsOld > Math.PI * 2) radsOld -= Math.PI * 2;
+
+		if (radsOld < 0) throw "weird angle";
+		if (radsOld > Math.PI * 2) throw "weird angle";
+
+		var rad = radsOld;
 		this._direction.angle = rad;
+
+		this.emit("direction", this);
+
+		this.scang = 0.13 + 0.87 * Math.pow((7 - this._sc) / 6, 2);
+		this._spang = Math.max(this._speed / this._spangdv, 1);
+		//this._direction.angle = ((0.033 * 1e3) * rad * this.scang * this.spang)
+
 	}
+
 
 	//TODO FIX
 	increaseSize(amount) {
@@ -192,21 +228,22 @@ class Snake extends EventEmitter {
 	}
 
 
-	turn(radians){
+	turn(radians) {
 		var old = this._direction.expectedAngle;
 		old += radians;
-		
-		if(old > Math.PI*2) old -= Math.PI*2;
-		if(old < 0) old += Math.PI*2;
+
+		if (old > Math.PI * 2) old -= Math.PI * 2;
+		if (old < 0) old += Math.PI * 2;
 		this._direction.expectedAngle = this._direction.angle + radians;
-	
+
 	}
+
 	setExpectedAngle(radians) {
-		var degrees = radians * (180/Math.PI) ;
-	//	console.log(degrees);
+		var degrees = radians * (180 / Math.PI);
+		//	console.log(degrees);
 		this._direction.expectedAngle = radians;
 		return;
-		
+
 
 	}
 
