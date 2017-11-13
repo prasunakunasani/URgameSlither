@@ -42,7 +42,7 @@
 
 		ws.onmessage = function (event) {
 
-			console.log("here");
+	
 			makeLeaderboard(event.data);
 
 		}
@@ -57,7 +57,7 @@
 
 		this.waitForConnection = function (callback, interval) {
 			if (ws.readyState === 1) {
-				console.log("connected");
+				console.log("leaderboard connected");
 				callback();
 			} else {
 				var that = this;
@@ -69,9 +69,9 @@
 		this.send(new Uint8Array([224, 1]));
 
 		function makeLeaderboard(data) {
-			console.log(data);
+		
 			data = JSON.parse(data);
-			console.log(data);
+		
 			var html = "";
 			var score = "";
 			var rank = "";

@@ -4,7 +4,7 @@ if (window.location.href.indexOf("/testing")) {
 	testing = true;
 }
 
-testing = false;
+testing = true;
 var spinner_shown = false;
 var ldmc = document.createElement("canvas");
 var playh = document.getElementById("playh");
@@ -23,7 +23,7 @@ var profile_btn;
 var global_btn;
 var vfr;
 var snake = null;
-
+var wumsts;
 
 const GameScene = Object.freeze({
 	MAIN_MENU: Symbol('MAIN_MENU'),
@@ -573,6 +573,38 @@ function GameClient() {
 		ready_to_play = 1;
 	}
 
+
+	function drawSpinner(lsfr, avfr, connecting, ready_to_play, ss_a, ss_sh) {
+		lsfr += avfr;
+		var f = ldmc.getContext("2d");
+		f.clearRect(0, 0, 512, 128);
+
+		for (var c, h, u = 1; 2 >= u; u++) {
+			var xx, yy;
+			f.beginPath();
+			if (1 == u) {
+				(f.fillStyle = "#60FF70", h = 0)
+			} else {
+				(f.fillStyle = "#9850FF", h = Math.PI)
+			}
+
+			for (var q = 0; 256 >= q; q++) c = 32 + 5 * Math.cos(h + lsfr / 6 + 8 * q / 256) + 8 * q / 256, 256 == q && (c += 10), xx = 64 + Math.cos(h + lsfr / 44 + .8 * Math.PI * q / 256) * c * 1.25, yy = 64 + Math.sin(h + lsfr / 44 + .8 * Math.PI * q / 256) * c, 0 == q ? f.moveTo(xx, yy) : f.lineTo(xx, yy);
+			c = 32;
+			xx = 64 + Math.cos(h + lsfr / 44 + .8 * Math.PI * (q + 47) / 256) * c * 1.25;
+			yy = 64 + Math.sin(h + lsfr / 44 + .8 * Math.PI * (q + 47) / 256) * c;
+			f.lineTo(xx, yy);
+			for (q = 256; 0 <= q; q--) c = 32 + 5 * Math.cos(h + lsfr / 6 + 8 * q / 256) - 8 * q / 256, 256 == q && (c -= 10), xx = 64 + Math.cos(h + lsfr / 44 + .8 * Math.PI * q / 256) * c * 1.25, yy = 64 + Math.sin(h + lsfr / 44 + .8 * Math.PI * q / 256) * c, f.lineTo(xx, yy);
+			f.fill();
+		}
+		connecting || ready_to_play ? (ss_a += avfr / 86, 1 <= ss_a && (ss_a = 1), ss_sh += avfr / 93, 1 <= ss_sh && (ss_sh = 1)) : (ss_a -= avfr / 86, 0 >= ss_a && (ss_sh = ss_a = 0, ldmc.style.display = "none", transform(ldmc, "")));
+		ldmc.style.opacity = ss_a;
+		q = Math.round(.1 + .9 * ss_sh *
+				(1 + 2 * Math.pow(1 - ss_a, 2)) * 1E5) / 1E5;
+
+		transform(ldmc, "scale(" + q + "," + q + ")")
+		return {f, h, u, q};
+	}
+
 	//snake skin canvases
 	var sest = document.createElement("canvas");
 	var playbulb = document.createElement("canvas");
@@ -776,7 +808,6 @@ function GameClient() {
 			mww2 = mww / 2,
 			mhh2 = mhh / 2;
 
-	var wumsts;
 
 	var tips = document.getElementById("tips");
 	var tipss = ["Eat to grow longer!", "Don't run into other players!", "When longer, hold the mouse for a speed boost!"];
@@ -1405,8 +1436,8 @@ function GameClient() {
 		var f = b.tl;
 		b.tl = b.sct + b.fam;
 		for (var f = b.tl - f, c = b.flpos, h = 0; h < lfc; h++) b.fls[c] -= f * lfas[h], c++, c >= lfc && (c = 0);
-		b.fl = b.fls[b.flpos];
-		b.fltg = lfc;
+		b.fl = b.fls[b.flpos] * b.sp / 5.79;
+		b.fltg = lfc * b.sp / 5.79;
 		if (b == snake) {
 			wumsts = true;
 		}
@@ -1765,8 +1796,7 @@ function GameClient() {
 						e = !1;
 						for (var t = c.pts.length - 1; 0 <= t; t--) {
 							A = c.pts[t];
-							lpx =
-									px;
+							lpx = px;
 							lpy = py;
 							px = A.xx;
 							py = A.yy;
@@ -1808,8 +1838,7 @@ function GameClient() {
 						n = .25 - n;
 						G += 1 - .25 * Math.ceil((c.chl + c.fchl) / .25);
 
-						//Fixme snake length
-
+						//Positions of pts updated here?
 						ax = px;
 						ay = py;
 						c.sep != c.wsep && (c.sep < c.wsep ? (c.sep += .01, c.sep >= c.wsep && (c.sep = c.wsep)) :
@@ -1868,7 +1897,23 @@ function GameClient() {
 										b.drawImage(w, -e, -e, 2 * e, 2 * e)) : b.drawImage(w, -y, -y, 2 * y, 2 * y), b.restore());
 							}
 							else {
-								for (t = B - 1; 0 <= t; t--) 1 == pbu[t] && (px = pbx[t], py = pby[t], b.save(), b.globalAlpha = G * L * .38 * (.6 + .4 * Math.cos(t / 4 - 1.15 * c.sfr)), b.translate((px - view_xx) * gsc, (py - view_yy) * gsc), 4 > t ? (e = y * (1 + (4 - t) * c.swell), b.drawImage(w, -e, -e, 2 * e, 2 * e)) : b.drawImage(w, -y, -y, 2 * y, 2 * y), b.restore());
+								//Glow
+								for (t = B - 1; 0 <= t; t--) {
+									if (1 == pbu[t]) {
+										px = pbx[t];
+										py = pby[t];
+										b.save();
+										b.globalAlpha = G * L * .38 * (.6 + .4 * Math.cos(t / 4 - 1.15 * c.sfr));
+										b.translate((px - view_xx) * gsc, (py - view_yy) * gsc);
+										if (4 > t) {
+											e = y * (1 + (4 - t) * c.swell);
+											b.drawImage(w, -e, -e, 2 * e, 2 * e)
+										} else {
+											b.drawImage(w, -y, -y, 2 * y, 2 * y)
+										}
+										b.restore();
+									}
+								}
 							}
 							b.restore();
 							A = 1 - A
@@ -2280,7 +2325,7 @@ function GameClient() {
 											: "3" == command && (M = b[c] / 18));
 
 						if (f = os["s" + t]) {
-							if (snake == f) console.log(M);
+				
 							-1 != u && (f.dir = u);
 							anguc++;
 							if (-1 != z) {
@@ -2318,10 +2363,13 @@ function GameClient() {
 							snl(f)
 						}
 					} else if ("g" == command || "n" == command || "G" == command || "N" == command) {
+				
+						
 						if (playing) {
 							var y = "n" == command || "N" == command,
 									t = b[c] << 8 | b[c + 1],
 									current_byte = c + 2;
+
 							if (f = os["s" + t]) {
 								if (y) f.sct++;
 								else
@@ -2330,27 +2378,51 @@ function GameClient() {
 											f.pts[q].dying = true;
 											break
 										}
-								var E = f.pts[f.pts.length - 1],
-										q = E;
-								3 <= protocol_version ? "g" == command || "n" == command ? (e = b[current_byte] << 8 | b[current_byte + 1], current_byte += 2, F = b[current_byte] << 8 | b[current_byte + 1], current_byte += 2) : (e = q.xx + b[current_byte] - 128, current_byte++, F = q.yy + b[current_byte] - 128, current_byte++) : (e = (b[current_byte] << 16 | b[current_byte + 1] << 8 | b[current_byte + 2]) / 5, current_byte += 3, F = (b[current_byte] << 16 | b[current_byte + 1] << 8 | b[current_byte + 2]) / 5, current_byte += 3);
+								var head = f.pts[f.pts.length - 1];
+								q = head;
+
+								if ("g" == command || "n" == command) {
+									e = b[current_byte] << 8 | b[current_byte + 1];
+									current_byte += 2;
+									F = b[current_byte] << 8 | b[current_byte + 1];
+									current_byte += 2
+								} else {
+									e = q.xx + b[current_byte] - 128;
+									current_byte++;
+									F = q.yy + b[current_byte] - 128;
+									current_byte++
+								}
+
+
 								y && (f.fam = (b[current_byte] << 16 | b[current_byte + 1] << 8 | b[current_byte + 2]) / 16777215);
-								(E = points_dp.get()) || (E = {
+								(head = points_dp.get()) || (head = {
 									exs: [],
 									eys: [],
 									efs: [],
 									ems: []
 								});
-								E.eiu = 0;
-								E.xx = e;
-								E.yy = F;
-								E.fx = 0;
-								E.fy = 0;
-								E.da = 0;
-								E.ebx = E.xx - q.xx;
-								E.eby = E.yy - q.yy;
-								f.pts.push(E);
-								f.iiv && (b = f.xx +
-										f.fx - E.xx, c = f.yy + f.fy - E.yy, E.fx += b, E.fy += c, E.exs[E.eiu] = b, E.eys[E.eiu] = c, E.efs[E.eiu] = 0, E.ems[E.eiu] = 1, E.eiu++);
+								head.eiu = 0;
+								console.log(e);
+								head.xx = e;
+								head.yy = F;
+								head.fx = 0;
+								head.fy = 0;
+								head.da = 0;
+								head.ebx = head.xx - q.xx;
+								head.eby = head.yy - q.yy;
+								f.pts.push(head);
+								//iiv = is in view
+								if (f.iiv) {
+									b = f.xx + f.fx - head.xx;
+									c = f.yy + f.fy - head.yy;
+									head.fx += b;
+									head.fy += c;
+									head.exs[head.eiu] = b;
+									head.eys[head.eiu] = c;
+									head.efs[head.eiu] = 0;
+									head.ems[head.eiu] = 1;
+									head.eiu++;
+								}
 								t = f.pts.length - 3;
 								if (1 <= t)
 									for (u = f.pts[t], command = n = 0, q = t - 1; 0 <= q; q--) t = f.pts[q], n++, b = t.xx, c = t.yy, 4 >= n && (command = cst * n / 4), t.xx += (u.xx - t.xx) * command, t.yy += (u.yy - t.yy) * command, f.iiv && (b -= t.xx, c -= t.yy, t.fx += b, t.fy += c, t.exs[t.eiu] = b, t.eys[t.eiu] = c, t.efs[t.eiu] = 0, t.ems[t.eiu] = 2, t.eiu++), u = t;
@@ -2363,7 +2435,7 @@ function GameClient() {
 										gsc;
 								f.wsep < b && (f.wsep = b);
 								y && snl(f);
-								f.lnp = E;
+								f.lnp = head;
 								f == snake && (ovxx = snake.xx + snake.fx, ovyy = snake.yy + snake.fy);
 								t = etm / 8 * f.sp / 4;
 								t *= lag_mult;
@@ -2404,6 +2476,7 @@ function GameClient() {
 									fvtg = vfc
 								}
 							}
+
 						}
 					} else if ("l" == command) {
 						if (playing) {
@@ -2755,33 +2828,7 @@ function GameClient() {
 		}
 
 		if (spinner_shown) {
-			lsfr += avfr;
-			var f = ldmc.getContext("2d");
-			f.clearRect(0, 0, 512, 128);
-
-			for (var c, h, u = 1; 2 >= u; u++) {
-				var xx, yy;
-				f.beginPath();
-				if (1 == u) {
-					(f.fillStyle = "#60FF70", h = 0)
-				} else {
-					(f.fillStyle = "#9850FF", h = Math.PI)
-				}
-
-				for (var q = 0; 256 >= q; q++) c = 32 + 5 * Math.cos(h + lsfr / 6 + 8 * q / 256) + 8 * q / 256, 256 == q && (c += 10), xx = 64 + Math.cos(h + lsfr / 44 + .8 * Math.PI * q / 256) * c * 1.25, yy = 64 + Math.sin(h + lsfr / 44 + .8 * Math.PI * q / 256) * c, 0 == q ? f.moveTo(xx, yy) : f.lineTo(xx, yy);
-				c = 32;
-				xx = 64 + Math.cos(h + lsfr / 44 + .8 * Math.PI * (q + 47) / 256) * c * 1.25;
-				yy = 64 + Math.sin(h + lsfr / 44 + .8 * Math.PI * (q + 47) / 256) * c;
-				f.lineTo(xx, yy);
-				for (q = 256; 0 <= q; q--) c = 32 + 5 * Math.cos(h + lsfr / 6 + 8 * q / 256) - 8 * q / 256, 256 == q && (c -= 10), xx = 64 + Math.cos(h + lsfr / 44 + .8 * Math.PI * q / 256) * c * 1.25, yy = 64 + Math.sin(h + lsfr / 44 + .8 * Math.PI * q / 256) * c, f.lineTo(xx, yy);
-				f.fill();
-			}
-			connecting || ready_to_play ? (ss_a += avfr / 86, 1 <= ss_a && (ss_a = 1), ss_sh += avfr / 93, 1 <= ss_sh && (ss_sh = 1)) : (ss_a -= avfr / 86, 0 >= ss_a && (ss_sh = ss_a = 0, ldmc.style.display = "none", transform(ldmc, "")));
-			ldmc.style.opacity = ss_a;
-			q = Math.round(.1 + .9 * ss_sh *
-					(1 + 2 * Math.pow(1 - ss_a, 2)) * 1E5) / 1E5;
-
-			transform(ldmc, "scale(" + q + "," + q + ")")
+			var {f, h, u, q} = drawSpinner(lsfr, avfr, connecting, ready_to_play, ss_a, ss_sh);
 
 		}
 
@@ -2798,6 +2845,7 @@ function GameClient() {
 				}
 			view_xx -= vfr
 		}
+
 		playing && (high_quality ? (1 > gla && (gla += .0075 * vfr, 1 < gla && (gla = 1)), 1 < qsm && (qsm -= 4E-5 * vfr, 1 > qsm && (qsm = 1))) : (0 < gla && (gla -= .0075 * vfr, 0 > gla && (gla = 0)), qsm < mqsm && (qsm += 4E-5 * vfr, qsm > mqsm && (qsm = mqsm))));
 		0 != want_hide_victory && (1 == want_hide_victory ? (hvfr += .02 * vfr, 1 <= hvfr ? (hvfr = 0, want_hide_victory =
 				2, victory_holder.style.opacity = 1, saveh.style.opacity = 1, victory_holder.style.display = "none", saveh.style.display = "none", nick_holder.style.opacity = 0, playh.style.opacity = 0, smh.style.opacity = 0, nick_holder.style.display = "inline-block", playh.style.display = "block", smh.style.display = "block") : (victory_holder.style.opacity = 1 - hvfr, saveh.style.opacity = 1 - hvfr)) : 2 == want_hide_victory && (hvfr += .02 * vfr, 1 <= hvfr && (hvfr = 1, want_hide_victory = 0), nick_holder.style.opacity = hvfr, playh.style.opacity = hvfr, smh.style.opacity = hvfr));
@@ -2962,6 +3010,7 @@ function GameClient() {
 				} else e.ang = e.wang;
 				1 != e.ehl && (e.ehl += .03 * vfr, 1 <= e.ehl && (e.ehl = 1));
 				f = e.pts[e.pts.length - 1];
+				//Face direction
 				e.wehang = Math.atan2(e.yy + e.fy - f.yy - f.fy + f.eby * (1 - e.ehl), e.xx + e.fx - f.xx - f.fx + f.ebx * (1 - e.ehl));
 				e.dead || e.ehang == e.wehang || (h = (e.wehang - e.ehang) % pi2, 0 > h && (h += pi2), h > Math.PI && (h -= pi2), 0 > h ? e.edir = 1 : 0 < h && (e.edir = 2));
 				if (1 == e.edir) {

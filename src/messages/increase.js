@@ -8,6 +8,6 @@ exports.build = function (snake) {
 	  message.writeInt16(3, arr, snake.id);
     message.writeInt16(5, arr, snake.body.x);
     message.writeInt16(7, arr, snake.body.y);
-	  message.writeInt24(9, arr, snake.fam);
+	  message.writeInt24(9, arr, snake.fam * 16777215);
     return arr;
 };

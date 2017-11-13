@@ -90,6 +90,7 @@ class NetworkSystem {
 		snake.on('increase', this._snakeIncrease.bind(this));
 		snake.on('decrease', this._snakeDecrease.bind(this));
 		snake.on('fam', this._snakeFam.bind(this));
+		snake.on('updateSmall', this._snakeUpdateSmall.bind(this));
 
 		this._send(client.id, messages.initial);
 		this._send(client.id, messages.food.build(foods));
@@ -113,7 +114,13 @@ class NetworkSystem {
 	}
 
 	_snakeUpdate(snake) {
-		this._broadcast(messages.position.build(snake))
+		this._broadcast(messages.position.build(snake));
+		this._broadcast(messages.direction.build(snake));
+
+	}
+
+	_snakeUpdateSmall(snake) {
+		this._broadcast(messages.movement.build(snake));
 		this._broadcast(messages.direction.build(snake));
 
 	}

@@ -26,6 +26,7 @@ class Game extends EventEmitter {
 
 	startGame() {
 		setInterval(this._update.bind(this), config["gameUpdateRate"]);
+		setInterval(this._updateBoost.bind(this), config["snakeUpdateRate"]);
 		setInterval(this._updateLeaderboard.bind(this), config["leaderboardUpdateRate"]);
 	}
 
@@ -47,6 +48,12 @@ class Game extends EventEmitter {
 
 	}
 
+	_updateBoost() {
+		this._snakes.forEach(snake => {
+			snake.updateBoost();
+		});
+	}
+
 	_update() {
 		let now = Date.now();
 		let deltaTime = now - this._lastUpdate;
@@ -65,11 +72,14 @@ class Game extends EventEmitter {
 	}
 
 	_updateLeaderboard() {
-		this._snakes.filter(function(e){
+		this._snakes.filter(function (e) {
 			return e;
 		});
 		if (Object.keys(this._snakes).length <= 0) {
-			this._leaderboard.setLeaderboard(JSON.stringify([{name:"No one is playing",score:0},{name:"test",score:5}]));
+			this._leaderboard.setLeaderboard(JSON.stringify([{name: "No one is playing", score: 0}, {
+				name: "test",
+				score: 5
+			}]));
 			return;
 		}
 
@@ -78,13 +88,13 @@ class Game extends EventEmitter {
 		topSnakes.sort(function (a, b) {
 			return b.length - a.length;
 		});
-		
+
 		topSnakes = topSnakes.filter(function (e) {
 			return e
 		});
-		
+
 		this.emit("leaderboard", topSnakes);
-		
+
 		topSnakes.slice(0, 10);
 
 		var cleanSnakes = [];
@@ -94,7 +104,7 @@ class Game extends EventEmitter {
 
 		console.log("snakes count " + Object.keys(this._snakes).length);
 		this._leaderboard.setLeaderboard(JSON.stringify(cleanSnakes));
-		
+
 	}
 
 
@@ -119,7 +129,10 @@ class Game extends EventEmitter {
 			else if (firstByte === 224) {
 				this._newLeaderboardObserver(client, data);
 
-			} else {
+			} else if (firstByte === 252) {
+				this._snakeMovementMessage(client, data);
+			}
+			else {
 				console.log("length:" + data.length);
 				console.log('[ERROR] Unhandled message ' + firstByte);
 				console.log(message.readInt8(0, data));
@@ -157,35 +170,29 @@ class Game extends EventEmitter {
 		let radians, speed, value, x, y;
 		value = message.readInt8(0, data);
 		let snake = this._snakes[client.id];
+		if (snake === undefined) return;
 
 		if (value === 251) {
 			this.emit("clientPing", client.id);
-		}
-		if (snake === undefined) return;
-		if (value <= 250) {
+		} else if (value <= 250) {
 			// console.log('Snake going to', value);
 			if (snake === undefined) return;
 
-			if (value === snake.direction.angle) {
-				console.log('[DEBUG] Angle is equal to last');
-				return;
-			}
 			//256 or 251
-			radians = value * 2 * Math.PI / 256;
-			let degree = value * 360 / 250;
+			radians = value * 2 * Math.PI / 251;
+			snake.setExpectedAngle(radians);
 
-			speed = snake.speed;
-			x = Math.cos(radians) + 1;
-			y = Math.sin(radians) + 1;
-			snake.direction.x = x * 127 * speed;
-			snake.direction.y = y * 127 * speed;
-			snake.direction.angle = radians;
+		} else if (value === 252) {
+			var value2 = message.readInt8(1, data);
+			value2 = value2 - 127;
+			radians = value2 * 2 * Math.PI / 256;
+			snake.turn(radians);
 		} else if (value === 253) {
 			//console.log('Snake in speed mode');
 			snake.setBoost(true);
 			//snake.speed *= 3;
 		} else if (value === 254) {
-		//	console.log('Snake in normal mode');
+			//	console.log('Snake in normal mode');
 			//snake.speed = 1.79;
 			snake.setBoost(false);
 			// killPlayer(conn.id, 1);
@@ -241,7 +248,7 @@ class Game extends EventEmitter {
 
 		let skin = message.readInt8(2, data);
 		let name = message.readString(3, data, data.byteLength);
-	console.log(skin);
+		console.log(skin);
 		//TODO random position in world
 		//id cooke name color position
 		let snake = new Snake(client.id, 'asdf', name, skin, new Position(
