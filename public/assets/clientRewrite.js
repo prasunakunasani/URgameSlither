@@ -4,7 +4,7 @@ if (window.location.href.indexOf("/testing")) {
 	testing = true;
 }
 
-testing = true;
+testing = false;
 var spinner_shown = false;
 var ldmc = document.createElement("canvas");
 var playh = document.getElementById("playh");
