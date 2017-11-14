@@ -20,11 +20,12 @@ b += message.writeInt16(b, arr, config['sectorSize']);
 
 b += message.writeInt16(b, arr, 144);
 
-b += message.writeInt8(b, arr, 4.8 * 10);
+//Spangdv is 4.8
+b += message.writeInt8(b, arr, config["spangdv"] * 10);
 
-b += message.writeInt16(b, arr, 5.39 * 100);
+b += message.writeInt16(b, arr, config['nsp1'] * 100);
 
-b += message.writeInt16(b, arr, 0.4 * 100);
+b += message.writeInt16(b, arr, config['nsp2'] * 100);
 
 b += message.writeInt16(b, arr, 14 * 100);
 

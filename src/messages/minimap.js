@@ -4,7 +4,7 @@ var config = require('../../config/config');
 
 var type = 'u'.charCodeAt(0);
 
-exports.build = function (foods) {
+exports.build = function (snakes) {
  
 
 	var radius =  config["gameRadius"];
@@ -18,28 +18,46 @@ exports.build = function (foods) {
       }
   }
 	
-  for(var f in foods){
-	    var food = foods[f];
-	    var i = Math.floor(food.position.x * 79 / (2*radius));
-	    if(i > 80) i = 80;
-	    var j = Math.floor(food.position.y * 79 / (2*radius)) ;
-	    if(j > 80) j = 80;
-	    b[i][j] = 1;
-  }
+  snakes.forEach(snake=>{
+  	snake.parts.forEach(part=>{
+  		"use strict";
+			var i = Math.floor(part.y* 79 / (2*radius));
+			if(i > 80) i = 80;
+			var j = Math.floor(part.x * 79 / (2*radius)) ;
+			if(j > 80) j = 80;
+			b[i][j] = 1;
+		})
+	
+  });
 
   var num = 0;
   var count = 0;
   var m = [];
+  var skip = 0;
 	for(var i = 0; i < 80; i++){
 		for (var j = 0; j < 80; j++) {
-		    count++;
-		    if(b[i][j])
+			count++;
+		    if(b[i][j]){
+					if(skip > 7)
+					{
+						m.push(skip + 128);
+						skip = 0;
+					}
 					num = (num << 1) + 1;
-				
-		    if(count >= 7){
+				}else{
+		    	skip ++;
+					num = (num << 1);
+				}
+					
+				if(skip == 127) {
+					m.push(skip + 128);
+					skip = 0;
+				}				
+		    if(count >= 7 && count > skip){
 		        m.push(num);
 		        count = 0;
 		        num = 0;
+						skip = 0;
         }
 		}
   }

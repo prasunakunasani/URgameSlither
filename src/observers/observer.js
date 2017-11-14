@@ -1,17 +1,13 @@
 
-
-var ws = require('ws');
-
-
 class Observer
 {
 	
-	constructor(conn,id){
+	constructor(client,id){
 		if (new.target === Observer) {
 			throw new TypeError("Cannot construct Abstract instances directly");
 		}
 		this._id = id;
-		this._conn = conn;
+		this._client = client;
 	}
 	
 	get id(){
@@ -19,7 +15,7 @@ class Observer
 	}
 	
 	get conn(){
-		return this._conn;
+		return this._client;
 	}
 	
 	update(){};

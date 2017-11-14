@@ -1,11 +1,11 @@
 var testing;
 localStorage.edttsg = "1"
-testing = true;
 if (window.location.href.indexOf("/testing")) {
 	testing = true;
 }
 
 
+testing = false;
 var spinner_shown = false;
 var ldmc = document.createElement("canvas");
 var playh = document.getElementById("playh");
@@ -22,7 +22,9 @@ var ui_holder_opacity = 0;
 var play_btn;
 var profile_btn;
 var global_btn;
-
+var vfr;
+var snake = null;
+var wumsts;
 
 const GameScene = Object.freeze({
 	MAIN_MENU: Symbol('MAIN_MENU'),
@@ -40,8 +42,8 @@ const Fade = Object.freeze({
 class SceneBuilder {
 
 	buildMainMenuScene() {
-		let scene = new Scene();
-		let login = document.getElementById("login");
+		var scene = new Scene();
+		var login = document.getElementById("login");
 		login.resize = function () {
 			var w = Window.width;
 			var h = Window.height;
@@ -149,12 +151,12 @@ function UI() {
 		"use strict";
 		(doTitleFade.title_fade_ratio) || (doTitleFade.title_fade_ratio = 0);
 		doTitleFade.title_fade_ratio += title_fade_rate * frame;
-		var fr = update.title_fade_ratio;
+		var fr = doTitleFade.title_fade_ratio;
 		//login_fade_rate += .05 * f;
 		//choosing_skin && (login_fade_rate += .06 * f);
 		if (1 <= fr) {
 			save_skin.style.opacity = 1;
-			update.title_fade_ratio = 0;
+			doTitleFade.title_fade_ratio = 0;
 			title_fadout = false;
 		}
 		save_skin.style.opacity = fr;
@@ -282,7 +284,7 @@ function UI() {
 		globaldiv.style.display = "inline-block";
 		globaldiv.style.marginTop = "20px";
 		globaldiv.style.marginBottom = "50px";
-		
+
 		playh.lastElementChild.appendChild(globaldiv);
 
 		global_btn.elem.onclick = function () {
@@ -309,7 +311,7 @@ function UI() {
 		playh.appendChild(pbdiv);
 		var div = document.createElement("div");
 		playh.appendChild(div);
-		
+
 		play_btn.elem.onclick = function () {
 			if (!play_btn.disabled) {
 				GameClient.setReadyToPlay();
@@ -557,9 +559,9 @@ function UI() {
 
 function GameClient() {
 
-	let MainMenuScene = new Scene();
-	let SkinMenuScene = new Scene();
-	let GameScene = new Scene();
+	var MainMenuScene = new Scene();
+	var SkinMenuScene = new Scene();
+	var GameScene = new Scene();
 
 
 	var ready_to_play = false;
@@ -571,6 +573,7 @@ function GameClient() {
 		"use strict";
 		ready_to_play = 1;
 	}
+
 
 	//snake skin canvases
 	var sest = document.createElement("canvas");
@@ -705,7 +708,7 @@ function GameClient() {
 			lsym = 0,
 			my_nick = "",
 			gw2k16 = !1;
-	var snake = null;
+	//var snake = null;
 
 	var mscps = 0,
 			fmlts = [],
@@ -775,7 +778,6 @@ function GameClient() {
 			mww2 = mww / 2,
 			mhh2 = mhh / 2;
 
-	var wumsts;
 
 	var tips = document.getElementById("tips");
 	var tipss = ["Eat to grow longer!", "Don't run into other players!", "When longer, hold the mouse for a speed boost!"];
@@ -1400,6 +1402,7 @@ function GameClient() {
 		return os["s" + e.id] = e
 	}
 
+	//This makes the snake look long
 	function snl(b) {
 		var f = b.tl;
 		b.tl = b.sct + b.fam;
@@ -1736,6 +1739,8 @@ function GameClient() {
 			b.strokeStyle = "#90C098";
 			for (var e, w, C, f = snakes.length - 1; 0 <= f; f--) c = snakes[f], e = c.xx + c.fx, w = c.yy + c.fy + 40, 0 < c.na && e >= bpx1 - 100 && w >= bpy1 && e <= bpx2 + 100 && w <= bpy2 && (c == snake && (c.fnfr++, 200 < c.fnfr && (c.na -= .004, 0 > c.na && (c.na = 0))), b.save(), b.globalAlpha = .5 * c.na * c.alive_amt * (1 - c.dead_amt), b.font = "12px Arial, Helvetica Neue, Helvetica, sans-serif", b.fillStyle = c.csw, b.textBaseline = "middle", b.textAlign = "center", h = c.xx + c.fx, u = c.yy + c.fy, h = mww2 + (h - view_xx) * gsc, u = mhh2 + (u - view_yy) * gsc, b.fillText(c.nk, h, u + 32 +
 					11 * c.sc * gsc), b.restore());
+
+			//Checks if a snake should be drawn
 			for (f = snakes.length - 1; 0 <= f; f--)
 				for (c = snakes[f], c.iiv = !1, t = c.pts.length - 1; 0 <= t; t--)
 					if (A = c.pts[t], px = A.xx + A.fx, py = A.yy + A.fy, px >= bpx1 && py >= bpy1 && px <= bpx2 && py <= bpy2) {
@@ -1754,6 +1759,7 @@ function GameClient() {
 							G = c.cfl,
 							A = c.pts[c.pts.length - 1];
 
+					//Mobile renderer
 					if (1 == render_mode) {
 						b.save();
 						b.beginPath();
@@ -1761,8 +1767,7 @@ function GameClient() {
 						e = !1;
 						for (var t = c.pts.length - 1; 0 <= t; t--) {
 							A = c.pts[t];
-							lpx =
-									px;
+							lpx = px;
 							lpy = py;
 							px = A.xx;
 							py = A.yy;
@@ -1789,6 +1794,7 @@ function GameClient() {
 								"round", b.globalCompositeOperation = "lighter", b.lineWidth = (D - 3) * gsc, b.globalAlpha = z, b.strokeStyle = "#FFCC99", b.stroke(), b.restore());
 						b.restore()
 					}
+					//Pc renderer
 					if (2 == render_mode) {
 						var D = .5 * D,
 								I, M, y, E, H, K, N, F;
@@ -1802,6 +1808,8 @@ function GameClient() {
 						0 > n && (n += .25);
 						n = .25 - n;
 						G += 1 - .25 * Math.ceil((c.chl + c.fchl) / .25);
+
+						//Positions of pts updated here?
 						ax = px;
 						ay = py;
 						c.sep != c.wsep && (c.sep < c.wsep ? (c.sep += .01, c.sep >= c.wsep && (c.sep = c.wsep)) :
@@ -1851,14 +1859,33 @@ function GameClient() {
 							J = .37 * A;
 							L = Math.pow(A, .5);
 							y = gsc * D * (1 + .9375 * L);
+
 							w = per_color_imgs[c.cv].kfmc;
 							b.save();
 							b.globalCompositeOperation = "lighter";
-							if (c.rbcs)
+							if (c.rbcs) {
 								for (K = c.rbcs, O = K.length, t = B - 1; 0 <= t; t--) 1 == pbu[t] && (px = pbx[t], py = pby[t], w = per_color_imgs[K[t % O]], w = w.kfmc, b.save(), b.globalAlpha = G * L * .38 * (.6 + .4 * Math.cos(t / 4 - 1.15 * c.sfr)), b.translate((px - view_xx) * gsc, (py - view_yy) * gsc), 4 > t ? (e = y * (1 + (4 - t) * c.swell),
 										b.drawImage(w, -e, -e, 2 * e, 2 * e)) : b.drawImage(w, -y, -y, 2 * y, 2 * y), b.restore());
-							else
-								for (t = B - 1; 0 <= t; t--) 1 == pbu[t] && (px = pbx[t], py = pby[t], b.save(), b.globalAlpha = G * L * .38 * (.6 + .4 * Math.cos(t / 4 - 1.15 * c.sfr)), b.translate((px - view_xx) * gsc, (py - view_yy) * gsc), 4 > t ? (e = y * (1 + (4 - t) * c.swell), b.drawImage(w, -e, -e, 2 * e, 2 * e)) : b.drawImage(w, -y, -y, 2 * y, 2 * y), b.restore());
+							}
+							else {
+								//Glow
+								for (t = B - 1; 0 <= t; t--) {
+									if (1 == pbu[t]) {
+										px = pbx[t];
+										py = pby[t];
+										b.save();
+										b.globalAlpha = G * L * .38 * (.6 + .4 * Math.cos(t / 4 - 1.15 * c.sfr));
+										b.translate((px - view_xx) * gsc, (py - view_yy) * gsc);
+										if (4 > t) {
+											e = y * (1 + (4 - t) * c.swell);
+											b.drawImage(w, -e, -e, 2 * e, 2 * e)
+										} else {
+											b.drawImage(w, -y, -y, 2 * y, 2 * y)
+										}
+										b.restore();
+									}
+								}
+							}
 							b.restore();
 							A = 1 - A
 						}
@@ -2026,6 +2053,7 @@ function GameClient() {
 
 				var s = "" + '<span style="font-size: 14px;"><span style="opacity: .4;">' + c + ': </span><span style="opacity: .8; font-weight: bold;">';
 				s += Math.floor(15 * (fpsls[snake.sct] + snake.fam / fmlts[snake.sct] - 1) - 5) / 1 + "</span></span>";
+				//console.log(snake.sct + snake.fam);
 				s += '<BR><span style="opacity: .3;">' + J + ': </span><span style="opacity: .35;">' + rank + '</span><span style="opacity: .3;"> ';
 				s += f + ' </span><span style="opacity: .35;">' + snake_count + "</span>";
 				lbf.innerHTML = s;
@@ -2127,7 +2155,7 @@ function GameClient() {
 		var server = window.location.hostname;
 		var port = 8080;
 		var cstring = "ws://" + server + ":" + port + "/game/socket";
-		if(server = "urgame.me")
+		if (server === "urgame.me")
 			cstring = "wss://" + server + "/game/socket";
 
 		resetGame();
@@ -2145,12 +2173,13 @@ function GameClient() {
 				this.counter = 0;
 			}
 			this.counter++;
-			console.log(this.counter);
+			//console.log(this.counter);
+
 
 			if (ws == this) {
 				b = new Uint8Array(b.data);
 				var packet = b;
-				console.log(b[0]);
+				//console.log("b[0] is " + b[0]);
 				rdps += packet.length;
 
 				if (testing) {
@@ -2267,6 +2296,7 @@ function GameClient() {
 											: "3" == command && (M = b[c] / 18));
 
 						if (f = os["s" + t]) {
+
 							-1 != u && (f.dir = u);
 							anguc++;
 							if (-1 != z) {
@@ -2290,7 +2320,7 @@ function GameClient() {
 							4 <= q && (f.fam = (b[c] << 16 | b[c + 1] << 8 | b[c + 2]) / 16777215);
 							for (q = 0; q < f.pts.length; q++)
 								if (!f.pts[q].dying) {
-									f.pts[q].dying = !0;
+									f.pts[q].dying = true;
 									f.sct--;
 									f.sc = Math.min(6, 1 + (f.sct - 2) / 106);
 									f.scang = .13 + .87 * Math.pow((7 - f.sc) / 6, 2);
@@ -2304,40 +2334,66 @@ function GameClient() {
 							snl(f)
 						}
 					} else if ("g" == command || "n" == command || "G" == command || "N" == command) {
+
+
 						if (playing) {
 							var y = "n" == command || "N" == command,
 									t = b[c] << 8 | b[c + 1],
 									current_byte = c + 2;
+
 							if (f = os["s" + t]) {
+					
 								if (y) f.sct++;
 								else
-									for (q =
-													 0; q < f.pts.length; q++)
+									for (q = 0; q < f.pts.length; q++)
 										if (!f.pts[q].dying) {
-											f.pts[q].dying = !0;
+											f.pts[q].dying = true;
 											break
 										}
-								var E = f.pts[f.pts.length - 1],
-										q = E;
-								3 <= protocol_version ? "g" == command || "n" == command ? (e = b[current_byte] << 8 | b[current_byte + 1], current_byte += 2, F = b[current_byte] << 8 | b[current_byte + 1], current_byte += 2) : (e = q.xx + b[current_byte] - 128, current_byte++, F = q.yy + b[current_byte] - 128, current_byte++) : (e = (b[current_byte] << 16 | b[current_byte + 1] << 8 | b[current_byte + 2]) / 5, current_byte += 3, F = (b[current_byte] << 16 | b[current_byte + 1] << 8 | b[current_byte + 2]) / 5, current_byte += 3);
+								var head = f.pts[f.pts.length - 1];
+								q = head;
+
+								if ("g" == command || "n" == command) {
+									e = b[current_byte] << 8 | b[current_byte + 1];
+									current_byte += 2;
+									F = b[current_byte] << 8 | b[current_byte + 1];
+									current_byte += 2
+								} else {
+									e = q.xx + b[current_byte] - 128;
+									current_byte++;
+									F = q.yy + b[current_byte] - 128;
+									current_byte++
+								}
+
+
 								y && (f.fam = (b[current_byte] << 16 | b[current_byte + 1] << 8 | b[current_byte + 2]) / 16777215);
-								(E = points_dp.get()) || (E = {
+								(head = points_dp.get()) || (head = {
 									exs: [],
 									eys: [],
 									efs: [],
 									ems: []
 								});
-								E.eiu = 0;
-								E.xx = e;
-								E.yy = F;
-								E.fx = 0;
-								E.fy = 0;
-								E.da = 0;
-								E.ebx = E.xx - q.xx;
-								E.eby = E.yy - q.yy;
-								f.pts.push(E);
-								f.iiv && (b = f.xx +
-										f.fx - E.xx, c = f.yy + f.fy - E.yy, E.fx += b, E.fy += c, E.exs[E.eiu] = b, E.eys[E.eiu] = c, E.efs[E.eiu] = 0, E.ems[E.eiu] = 1, E.eiu++);
+								head.eiu = 0;
+								head.xx = e;
+								head.yy = F;
+								head.fx = 0;
+								head.fy = 0;
+								head.da = 0;
+								head.ebx = head.xx - q.xx;
+								head.eby = head.yy - q.yy;
+								f.pts.push(head);
+								//iiv = is in view
+								if (f.iiv) {
+									b = f.xx + f.fx - head.xx;
+									c = f.yy + f.fy - head.yy;
+									head.fx += b;
+									head.fy += c;
+									head.exs[head.eiu] = b;
+									head.eys[head.eiu] = c;
+									head.efs[head.eiu] = 0;
+									head.ems[head.eiu] = 1;
+									head.eiu++;
+								}
 								t = f.pts.length - 3;
 								if (1 <= t)
 									for (u = f.pts[t], command = n = 0, q = t - 1; 0 <= q; q--) t = f.pts[q], n++, b = t.xx, c = t.yy, 4 >= n && (command = cst * n / 4), t.xx += (u.xx - t.xx) * command, t.yy += (u.yy - t.yy) * command, f.iiv && (b -= t.xx, c -= t.yy, t.fx += b, t.fy += c, t.exs[t.eiu] = b, t.eys[t.eiu] = c, t.efs[t.eiu] = 0, t.ems[t.eiu] = 2, t.eiu++), u = t;
@@ -2350,7 +2406,7 @@ function GameClient() {
 										gsc;
 								f.wsep < b && (f.wsep = b);
 								y && snl(f);
-								f.lnp = E;
+								f.lnp = head;
 								f == snake && (ovxx = snake.xx + snake.fx, ovyy = snake.yy + snake.fy);
 								t = etm / 8 * f.sp / 4;
 								t *= lag_mult;
@@ -2391,6 +2447,7 @@ function GameClient() {
 									fvtg = vfc
 								}
 							}
+
 						}
 					} else if ("l" == command) {
 						if (playing) {
@@ -2461,7 +2518,13 @@ function GameClient() {
 						e = e.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
 						0 < F && (b = "", 0 < e.length && (b += "<span style='font-size:17px;'><b><i><span style='opacity: .5;'>&quot;</span>" + e + "<span style='opacity: .5;'>&quot;</span></i></b></span><BR><div style='height: 5px;'></div>"), 0 < q.length ? (b = 0 < e.length ? b + ("<i><span style='opacity: .5;'>- </span><span style='opacity: .75;'><b>" + q + "</b></span><span style='opacity: .5;'>, today's longest</span></i>") : "<i><span style='opacity: .5;'>Today's longest was </span><span style='opacity: .75;'><b>" + q + "</b></span></i>", b += "<br><i><span style='opacity: .5;'>with a length of </span><span style='opacity: .65;'><b>" +
 								F + "</b></span></i>") : b = 0 < e.length ? b + "<i><span style='opacity: .5;'>- </span><span style='opacity: .5;'>today's longest</span></i>" + ("<br><i><span style='opacity: .5;'>with a length of </span><span style='opacity: .65;'><b>" + F + "</b></span></i>") : b + ("<i><span style='opacity: .5;'>Today's longest: </span><span style='opacity: .75;'><b>" + F + "</b></span></i>"), vcm.innerHTML = b)
-					} else if ("p" == command) wfpr = !1, lagging && (etm *= lag_mult, lagging = !1);
+					} else if ("p" == command) {
+						wfpr = false;
+						if (lagging) {
+							etm *= lag_mult;
+							lagging = false;
+						}
+					}
 					else if ("u" == command) {
 						q = asmc.getContext("2d");
 						q.clearRect(0, 0, 80, 80);
@@ -2489,19 +2552,41 @@ function GameClient() {
 								H = [];
 								K = (b[c] << 16 | b[c + 1] << 8 | b[c + 2]) / 5;
 								c += 3;
-								N = (b[c] <<
-										16 | b[c + 1] << 8 | b[c + 2]) / 5;
+								N = (b[c] << 16 | b[c + 1] << 8 | b[c + 2]) / 5;
 								c += 3;
 								e = b[c];
 								c++;
 								command = "";
 								for (q = 0; q < e; q++) command += String.fromCharCode(b[c]), c++;
-								for (var F = e = 0, O, L = !1; c < f;) q = e, O = F, L ? (e += (b[c] - 127) / 2, c++, F += (b[c] - 127) / 2, c++) : (e = (b[c] << 16 | b[c + 1] << 8 | b[c + 2]) / 5, c += 3, F = (b[c] << 16 | b[c + 1] << 8 | b[c + 2]) / 5, c += 3, q = e, O = F, L = !0), (E = points_dp.get()) || (E = {
-									exs: [],
-									eys: [],
-									efs: [],
-									ems: []
-								}), E.eiu = 0, E.xx = e, E.yy = F, E.fx = 0, E.fy = 0, E.da = 0, E.ebx = e - q, E.eby = F - O, H.push(E);
+								for (var F = e = 0, O, L = false; c < f;) {
+									q = e;
+									O = F;
+									if (L) {
+										e += (b[c] - 127) / 2;
+										c++;
+										F += (b[c] - 127) / 2;
+										c++
+									} else {
+										e = (b[c] << 16 | b[c + 1] << 8 | b[c + 2]) / 5;
+										c += 3;
+										F = (b[c] << 16 | b[c + 1] << 8 | b[c + 2]) / 5;
+										c += 3;
+										q = e;
+										O = F;
+										L = true;
+									}
+									(E = points_dp.get()) || (E = {
+										exs: [],
+										eys: [],
+										efs: [],
+										ems: []
+									});
+									E.eiu = 0, E.xx = e, E.yy = F, E.fx = 0, E.fy = 0, E.da = 0, E.ebx = e - q, E.eby = F - O;
+									H.push(E);
+								}
+								//t = id
+								//K = tailx
+								//N = taily
 								f = newSnake(t, K, N, y, z, H);
 								null == snake ? (view_xx = e, view_yy = F, snake = f, snake.md = !1, snake.wmd = !1, f.nk = my_nick) : (f.nk = command, gdnm(command) ||
 								(f.nk = ""));
@@ -2533,8 +2618,23 @@ function GameClient() {
 									b[c], c++, e = b[c] << 8 | b[c + 1], c += 2, F = b[c] << 8 | b[c + 1], c += 2, q = b[c] / 5, c++, t = F * game_radius * 3 + e, q = newFood(t, e, F, q, !0, y), command || (command = !0, u = Math.floor(e / sector_size), E = Math.floor(F / sector_size)), q.sx = u, q.sy = E;
 						else
 							for (u = b[c] << 8 | b[c + 1], c += 2, E = b[c] << 8 | b[c + 1], c += 2; c < f;) t = b[c] << 16 | b[c + 1] << 8 | b[c + 2], c += 3, y = b[c], c++, e = sector_size * (u + b[c] / 255), c++, F = sector_size * (E + b[c] / 255), c++, q = b[c] / 5, c++, q = newFood(t, e, F, q, !0, y), q.sx = u, q.sy = E;
-					else if ("b" == command || "f" == command) 4 <= protocol_version ? (y = b[c], c++, 4 < q && (e = b[c] << 8 | b[c + 1], c += 2, F = b[c] << 8 | b[c + 1], t = F *
-							game_radius * 3 + e, q = b[c + 2] / 5, q = newFood(t, e, F, q, "b" == command, y), q.sx = Math.floor(e / sector_size), q.sy = Math.floor(F / sector_size))) : (t = b[c] << 16 | b[c + 1] << 8 | b[c + 2], c += 3, 4 < q && (y = b[c], c++, u = b[c] << 8 | b[c + 1], c += 2, E = b[c] << 8 | b[c + 1], c += 2, e = sector_size * (u + b[c] / 255), c++, F = sector_size * (E + b[c] / 255), c++, q = b[c] / 5, q = newFood(t, e, F, q, "b" == command, y), q.sx = u, q.sy = E));
+					else if ("b" == command || "f" == command) {
+						y = b[c];
+						c++;
+						if (4 < q) {
+							e = b[c] << 8 | b[c + 1];
+							c += 2;
+							F = b[c] << 8 | b[c + 1];
+							t = F *
+									game_radius * 3 + e;
+							q = b[c + 2] / 5;
+							q = newFood(t, e, F, q, "b" == command, y);
+							q.sx = Math.floor(e / sector_size);
+							q.sy = Math.floor(F / sector_size);
+						}
+
+					}
+
 					else if ("c" == command) {
 						if (4 <= protocol_version) {
 							//Food_x
@@ -2650,12 +2750,28 @@ function GameClient() {
 					f == "" + Number(f) && (e = Number(f))
 				} catch (c) {
 				}
-				f = new Uint8Array(3 + b.length);
-				f[0] = 115;
-				f[1] = 7;
-				f[2] = e;
-				for (e = 0; e < b.length; e++) f[e + 3] = b.charCodeAt(e);
-				ws.send(f);
+				if(cookie_id){
+					f = new Uint8Array(3 + b.length + cookie_id.length);
+					f[0] = 116;
+					//skin
+					f[1] = e;
+					f[2] = cookie_id.length;
+					for (e = 0; e < cookie_id.length; e++)
+						f[e + 3] = cookie_id.charCodeAt(e);
+					for (e = 0; e < b.length; e++)
+						f[e + 3 + cookie_id.length] = b.charCodeAt(e);
+					ws.send(f);
+				}else{
+					f = new Uint8Array(3 + b.length);
+					f[0] = 115;
+					f[1] = 7;
+					//skin
+					f[2] = e;
+					for (e = 0; e < b.length; e++)
+						f[e + 3] = b.charCodeAt(e);
+					ws.send(f);
+				}
+				
 				high_quality = !0;
 				gla = 1;
 				wdfg = 0;
@@ -2677,13 +2793,30 @@ function GameClient() {
 	oef = function () {
 		UI.update();
 
+
 		var b = Date.now();
 		vfr = (b - ltm) / 8;
 		5 < vfr && (vfr = 5);
 		1.56 > vfr && (vfr = 1.56);
 		avfr = vfr;
 		ltm = b;
-		choosing_skin || (lagging || wfpr && 420 < b - last_ping_mtm && (ready_to_play || (lagging = !0)), lagging ? (lag_mult *= .85, .01 > lag_mult && (lag_mult = .01)) : 1 > lag_mult && (lag_mult += .05, 1 <= lag_mult && (lag_mult = 1)));
+		if (!choosing_skin) {
+			if (!lagging) {
+				if (wfpr && 420 < b - last_ping_mtm) {
+					if (!ready_to_play) lagging = true;
+				}
+			}
+			if (lagging) {
+				lag_mult *= .85;
+				if (.01 > lag_mult) lag_mult = .01;
+			} else {
+				if (1 > lag_mult) {
+					lag_mult += .05;
+					if (1 <= lag_mult) lag_mult = 1;
+				}
+			}
+		}
+
 		120 < vfr && (vfr = 120);
 		vfr *= lag_mult;
 		etm *= lag_mult;
@@ -2740,9 +2873,12 @@ function GameClient() {
 		//Snake wiggle for choosing skin snake
 		if (choosing_skin) {
 			for (q = snakes.length - 1; 0 <= q; q--)
-				for (e = snakes[q], u = e.pts.length - 1; 0 <= u; u--) e.pts[u].yy = game_radius / 2 + 15 * Math.cos(u / 4 + fr / 19) * (1 - u / e.pts.length);
+				for (e = snakes[q], u = e.pts.length - 1; 0 <= u; u--) {
+					e.pts[u].yy = game_radius / 2 + 15 * Math.cos(u / 4 + fr / 19) * (1 - u / e.pts.length);
+				}
 			view_xx -= vfr
 		}
+
 		playing && (high_quality ? (1 > gla && (gla += .0075 * vfr, 1 < gla && (gla = 1)), 1 < qsm && (qsm -= 4E-5 * vfr, 1 > qsm && (qsm = 1))) : (0 < gla && (gla -= .0075 * vfr, 0 > gla && (gla = 0)), qsm < mqsm && (qsm += 4E-5 * vfr, qsm > mqsm && (qsm = mqsm))));
 		0 != want_hide_victory && (1 == want_hide_victory ? (hvfr += .02 * vfr, 1 <= hvfr ? (hvfr = 0, want_hide_victory =
 				2, victory_holder.style.opacity = 1, saveh.style.opacity = 1, victory_holder.style.display = "none", saveh.style.display = "none", nick_holder.style.opacity = 0, playh.style.opacity = 0, smh.style.opacity = 0, nick_holder.style.display = "inline-block", playh.style.display = "block", smh.style.display = "block") : (victory_holder.style.opacity = 1 - hvfr, saveh.style.opacity = 1 - hvfr)) : 2 == want_hide_victory && (hvfr += .02 * vfr, 1 <= hvfr && (hvfr = 1, want_hide_victory = 0), nick_holder.style.opacity = hvfr, playh.style.opacity = hvfr, smh.style.opacity = hvfr));
@@ -2761,9 +2897,9 @@ function GameClient() {
 			}
 			//Fade out of change skin screen
 			if (-2 == login_iv) {
-				login_fade_rate -= .004 * vfr;
+				login_fade_rate -= .4 * vfr;
 				if (choosing_skin)
-					login_fade_rate -= .007 * vfr;
+					login_fade_rate -= .7 * vfr;
 
 				lb_fr = login_fade_rate;
 				//If Negative login_fade_rate
@@ -2868,15 +3004,26 @@ function GameClient() {
 				f = mamu * vfr * e.scang * e.spang;
 				b = e.sp * vfr / 4;
 				b > e.msl && (b = e.msl);
+
+				//Dont know what this does
 				if (!e.dead) {
 					e.tsp != e.sp && (e.tsp < e.sp ? (e.tsp += .3 * vfr, e.tsp > e.sp && (e.tsp = e.sp)) : (e.tsp -= .3 * vfr, e.tsp < e.sp && (e.tsp = e.sp)));
 					e.tsp > e.fsp && (e.sfr += (e.tsp - e.fsp) * vfr * .021);
-					if (0 < e.fltg)
-						for (h = vfrb, h > e.fltg && (h = e.fltg), e.fltg -= h, qq = 0; qq < h; qq++) e.fl = e.fls[e.flpos],
-								e.fls[e.flpos] = 0, e.flpos++, e.flpos >= lfc && (e.flpos = 0);
-					else 0 == e.fltg && (e.fltg = -1, e.fl = 0);
+					//If longer than last time
+					if (0 < e.fltg) {
+						for (h = vfrb, h > e.fltg && (h = e.fltg), e.fltg -= h, qq = 0; qq < h; qq++) {
+							e.fl = e.fls[e.flpos];
+							e.fls[e.flpos] = 0;
+							e.flpos++;
+							e.flpos >= lfc && (e.flpos = 0);
+						}
+					} else {
+						0 == e.fltg && (e.fltg = -1, e.fl = 0);
+					}
 					e.cfl = e.tl + e.fl
+
 				}
+
 				if (1 == e.dir) {
 					e.ang -= f;
 					if (0 > e.ang || e.ang >= pi2) e.ang %= pi2;
@@ -2895,8 +3042,8 @@ function GameClient() {
 					0 > h && (e.ang = e.wang, e.dir = 0)
 				} else e.ang = e.wang;
 				1 != e.ehl && (e.ehl += .03 * vfr, 1 <= e.ehl && (e.ehl = 1));
-				f = e.pts[e.pts.length -
-				1];
+				f = e.pts[e.pts.length - 1];
+				//Face direction
 				e.wehang = Math.atan2(e.yy + e.fy - f.yy - f.fy + f.eby * (1 - e.ehl), e.xx + e.fx - f.xx - f.fx + f.ebx * (1 - e.ehl));
 				e.dead || e.ehang == e.wehang || (h = (e.wehang - e.ehang) % pi2, 0 > h && (h += pi2), h > Math.PI && (h -= pi2), 0 > h ? e.edir = 1 : 0 < h && (e.edir = 2));
 				if (1 == e.edir) {
@@ -2918,6 +3065,8 @@ function GameClient() {
 					0 > h && (e.ehang = e.wehang, e.edir = 0)
 				}
 				e.dead || (e.xx += Math.cos(e.ang) * b, e.yy += Math.sin(e.ang) * b, e.chl += b / e.msl);
+
+				//TODO This does the smoothing
 				if (0 < vfrb) {
 					for (u = e.pts.length - 1; 0 <= u; u--) f = e.pts[u], f.dying && (f.da += .0015 * vfrb, 1 < f.da && (e.pts.splice(u, 1), f.dying = !1, points_dp.add(f)));
 					for (u = e.pts.length - 1; 0 <= u; u--)
@@ -2929,6 +3078,7 @@ function GameClient() {
 							f.fy = fy
 						}
 				}
+
 				b = Math.cos(e.eang) * e.pma;
 				h = Math.sin(e.eang) * e.pma;
 				e.rex < b && (e.rex += vfr / 6, e.rex >= b && (e.rex = b));
@@ -3708,7 +3858,7 @@ function GameClient() {
 
 			o.cs = "#" + rs + gs + bs;
 			var sz = 62;
-
+			kfmc = document.createElement("canvas");
 			kfmc.width = kfmc.height = sz;
 			context = kfmc.getContext("2d");
 			map = context.getImageData(0, 0, sz, sz);

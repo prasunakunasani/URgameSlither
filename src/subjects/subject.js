@@ -1,24 +1,29 @@
-
-
 class Subject{
 	
 	constructor(){
 		if (new.target === Subject) {
 			throw new TypeError("Cannot construct Abstract instances directly");
 		}
-		this.observers = [];
+		this._observers = [];
 	}
 	
-	register(observer){
-		this.observers[observer.id] = observer;
+	attach(observer){
+		this._observers.push(observer);
+		this.notifyObservers();
 	}
 	
-	unregister(observer){
-		delete this.observers[observer.id];
+	detach(observer){
+		this._observers.forEach((o,i) =>{
+			if(o === observer){
+				this._observers.splice(i,1);
+				return true;
+			}
+		});
+		return false;
 	}
 	
 	notifyObservers(){
-		this.observers.forEach(observer =>{
+		this._observers.forEach(observer =>{
 			observer.update(this);
 		})
 	}
