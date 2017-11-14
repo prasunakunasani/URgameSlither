@@ -14,7 +14,6 @@ class NetworkSystem {
 		game.on('collision', this._snakeCollision.bind(this));
 		game.on('newClientSnake', this._newClientSnake.bind(this));
 		game.on('snakeDied', this._snakeDied.bind(this));
-		game.on('snakeRemoved', this._snakeRemoved.bind(this));
 		game.on('clientPing', this._clientPing.bind(this));
 		game.on('foodEaten', this._foodEaten.bind(this));
 		game.on('leaderboard', this._leaderboard.bind(this));
@@ -71,10 +70,6 @@ class NetworkSystem {
 		this._send(id, messages.pong);
 	}
 
-	_snakeRemoved(id) {
-		this._send(id, messages.end.build(2));
-		this.removeClient(id);
-	}
 
 	_snakeDied(snake, count) {
 		this._sendRequest(snake,count);

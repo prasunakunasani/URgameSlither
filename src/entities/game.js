@@ -39,7 +39,7 @@ class Game extends EventEmitter {
 		let snake = this._snakes[id];
 		if (snake !== undefined) {
 			console.log(id + " removed snake");
-			this._removeSnake(id);
+			this._killSnake(id);
 
 		}
 
@@ -161,13 +161,6 @@ class Game extends EventEmitter {
 	}
 
 	///PRIVATE METHODS
-	_removeSnake(id) {
-		this.emit("snakeRemoved", this._snakes[id]);
-
-		delete this._snakes[id];
-
-	}
-
 	_killSnake(id) {
 		//Let the snake save data 1 last time
 		this._snakes[id].finalRecord();
