@@ -90,7 +90,7 @@ class StatsController {
                 UsersSnakes.find(function (err, usersSnakes) {
                     if (err) { return next(err); }
                     UsersStats.findOne({'cookie_id': cookie_id}, function (err, usersStats) {
-                        if (err) { return next(err); }
+                        if (err) { return next(err); } //todo -  check here that the stats are from today. Else, blank and create a new record.
                         DailyStats.findOne({'createdOn': {$lt: new Date().toISOString()} }, function (err, dailyStats) {
                             if (err) { return next(err); }
                             CalculatedStats.find(function (err, calculatedStats) {
