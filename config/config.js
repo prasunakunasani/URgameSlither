@@ -10,16 +10,20 @@ var c = {
 	minFoodSize: 40,
 	maxFoodSize: 100,
 	foodPerSpawn: 1000, // Not Implemented
-	gameRadius: 2000,//21600,
+	gameRadius: 1800,//21600,
 	sectorSize: 300,
 	gameUpdateRate: 40,
 	snakeUpdateRate: 15,
 	leaderboardUpdateRate: 4000,
+	dataUpdateRate: 1000,
 	nsp1: 5.39,
 	nsp2: 0.4,
 	maxSpeed: 14,
 	snakeStartSize: 20,
-	spangdv: 4.8
+	spangdv: 4.8,
+	
+	//5 seconds
+	intervalRate: 5000
 };
 
 

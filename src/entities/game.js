@@ -12,6 +12,7 @@ class Game extends EventEmitter {
 		super();
 		this._lastUpdate = Date.now();
 		this._lastUpdateSnakes = Date.now();
+		this._lastUpdateSnakesData = Date.now();
 		this._count = 0;
 		this._world = new World();
 		this._snakes = [];
@@ -24,11 +25,13 @@ class Game extends EventEmitter {
 		return this._world;
 	}
 
+	
 
 	startGame() {
 		setInterval(this._update.bind(this), config["gameUpdateRate"]);
 		setInterval(this._updateSnakes.bind(this), config["snakeUpdateRate"]);
 		setInterval(this._updateLeaderboard.bind(this), config["leaderboardUpdateRate"]);
+		setInterval(this._updateSnakesData.bind(this), config["dataUpdateRate"]);
 	}
 
 	
@@ -47,6 +50,15 @@ class Game extends EventEmitter {
 		}
 
 
+	}
+	
+	_updateSnakesData(){
+		let now = Date.now();
+		let deltaTime = now - this._lastUpdateSnakesData;
+		this._lastUpdateSnakesData = now;
+		this._snakes.forEach(snake => {
+			snake.updateData(deltaTime);
+		});
 	}
 
 	_updateSnakes() {
@@ -157,7 +169,10 @@ class Game extends EventEmitter {
 	}
 
 	_killSnake(id) {
-		this.emit("snakeDied", this._snakes[id]);
+		//Let the snake save data 1 last time
+		this._snakes[id].finalRecord();
+		
+		this.emit("snakeDied", this._snakes[id], Object.keys(this._snakes).length);
 		delete this._snakes[id];
 	}
 
@@ -186,7 +201,7 @@ class Game extends EventEmitter {
 
 		} else if (value === 252) {
 			var value2 = message.readInt8(1, data);
-			console.log(value2);
+		
 			value2 = value2 - 127;
 
 
@@ -196,9 +211,9 @@ class Game extends EventEmitter {
 			}
 			else {
 				value2 += 127;
-				radians = value2 * 2 * Math.PI / 256;
+				radians = value2* 2 * Math.PI / 256;
 				snake.turn(-radians);
-				console.log(radians)
+
 
 			}
 
@@ -245,12 +260,11 @@ class Game extends EventEmitter {
 
 
 		//Out of radius detection
-		let R = this._world.radius;
-
+		let R = this._world.radius - 50;
+	
 		this._snakes.forEach(snake => {
-			let r = (Math.pow((snake.head.x - R), 2)) + (Math.pow((snake.head.y - R), 2));
-
-			if (r+30 > Math.pow(R, 2)) {
+			let r = Math.sqrt((Math.pow((snake.head.x - R), 2)) + (Math.pow((snake.head.y - R), 2)));
+			if (r > R) {
 				console.log("[TEST] " + r + " < " + R ^ 2);
 				console.log('[DEBUG] Outside of Radius');
 				this._killSnake(snake.id);
@@ -277,6 +291,7 @@ class Game extends EventEmitter {
 					if (( h.x < (p[i].x + offset) && h.x > (p[i].x - offset)
 									&& h.y < (p[i].y + offset) && h.y > (p[i].y - offset))) {
 						this.world.deadSnakeFood(head);
+						snake.snakeKill(head.getScore());
 						this._killSnake(head.id);
 						return;
 					}

@@ -1,6 +1,7 @@
 const messages = require('./messages');
 const message = require('./utils/message');
-
+const config = require('../config');
+const requestify = require('requestify');
 
 //This class manages sending the clients the correct game information over the network
 //It subscribes to entities to know when events occur that need to be relayed to the clients
@@ -75,12 +76,27 @@ class NetworkSystem {
 		this.removeClient(id);
 	}
 
-	_snakeDied(snake) {
+	_snakeDied(snake, count) {
+		this._sendRequest(snake,count);
 		this._broadcast(messages.removeSnake.build(snake, true));
 		this._send(snake.id, messages.end.build(0));
 		this.removeClient(snake.id);
 	}
 
+	_sendRequest(snake,count){
+		var usersSnake = snake.data;
+		var user = snake.user;
+		var request = {
+			secret: config.get("DATA_SECRET"),
+			user:user,
+			usersSnake: usersSnake,
+			currentPlayerCount: count
+		};
+		console.log(JSON.stringify(request));
+		requestify.post(config.get("DATA_URL"), request);
+		
+	}
+	
 
 	_newClientSnake(client,snakes, snake, foods) {
 		console.log("new snake");
@@ -122,14 +138,21 @@ class NetworkSystem {
 	}
 
 	_snakeUpdate(snake) {
-		this._broadcast(messages.direction.build(snake));
+		if(snake._lastSpeedSent != snake.speed
+			|| snake._lastAngleSent != snake.direction.angle){
+			this._broadcast(messages.direction.build(snake));
+		}
+			
 		this._broadcast(messages.position.build(snake));
 	
 	
 	}
 
 	_snakeUpdateSmall(snake) {
-		this._broadcast(messages.direction.build(snake));
+		if(snake._lastSpeedSent != snake.speed
+				|| snake._lastAngleSent != snake.direction.angle) {
+			this._broadcast(messages.direction.build(snake));
+		}
 		this._broadcast(messages.movement.build(snake));
 	}
 
