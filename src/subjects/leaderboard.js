@@ -1,31 +1,33 @@
+const Subject = require("./subject");
 
-const Subject = require('./subject');
+class Leaderboard extends Subject {
 
-class Leaderboard extends Subject{
-        
 	constructor() {
 		super();
-		this.leaders = [];
+		this._leaderboard = "";
 	}
-	register(observer){
-		super.register(observer);
+
+	attach(observer) {
+		super.attach(observer);
 		console.log("registered to leaderboard");
 	}
-	
-	unregisterById(id){
-		if(this.observers[id] !== 'undefined'){
+
+	detach(observer) {
+		console.log("trying to detach from leaderboard");
+		let success = super.detach(observer);
+		if (success)
 			console.log("unregistered from leaderboard");
-			delete this.observers[id];
-		}
 	}
-	
-	setLeaderboard(leaders){
-		this.leaders = leaders;
+
+	getLeaderboard() {
+		return this._leaderboard;
+	}
+
+	setLeaderboard(leaderboard) {
+		this._leaderboard = leaderboard;
 		this.notifyObservers();
 	}
-	
+
 }
-
-
 
 module.exports = Leaderboard;

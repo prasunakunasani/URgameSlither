@@ -11,31 +11,34 @@ exports.build = function (snake) {
     b += message.writeInt8(b, arr, 0);
     b += message.writeInt8(b, arr, type);
     b += message.writeInt16(b, arr, snake.id);
-    b += message.writeInt24(b, arr, snake.D);
+    //Was D
+    //b += message.writeInt24(b, arr, snake.D);
+     b += message.writeInt24(b, arr, (snake.direction.angle / snake.direction.expectedAngle) * 16777215);
     b += message.writeInt8(b, arr, 0);
-    b += message.writeInt24(b, arr, snake.X);
+    //Was X
+    //	b += message.writeInt24(b, arr, (snake.X) );
+     b += message.writeInt24(b, arr, (snake.direction.angle / snake.direction.expectedAngle) * 16777215);
     b += message.writeInt16(b, arr, snake.speed * 1E3);
     b += message.writeInt24(b, arr, 0);
     b += message.writeInt8(b, arr, snake.skin);
-    b += message.writeInt24(b, arr, snake.body.x * 5);
-    b += message.writeInt24(b, arr, snake.body.y * 5);
-    b += message.writeInt8(b, arr, nameLength);
-    b += message.writeString(b, arr, snake.name);
     b += message.writeInt24(b, arr, snake.head.x * 5);
     b += message.writeInt24(b, arr, snake.head.y * 5);
+    b += message.writeInt8(b, arr, nameLength);
+    b += message.writeString(b, arr, snake.name);
+    b += message.writeInt24(b, arr, snake.body.x * 5);
+    b += message.writeInt24(b, arr, snake.body.y * 5);
     
-    prevX = snake.head.x;
-    prevY = snake.head.y;
-
-    var i = 0;
-    while (i < snake.parts.length) {
+    prevX = snake.body.x;
+    prevY = snake.body.y;
+ 
+    for  ( var i = 0; i < part ; i++) {
         thisX = snake.parts[i].x;
         thisY = snake.parts[i].y;
         b += message.writeInt8(b, arr, (thisX-prevX)*2 + 127);
         b += message.writeInt8(b, arr, (thisY-prevY)*2 + 127);
         prevX = thisX;
         prevY = thisY;
-        i++;
+
     }
     return arr;
 };

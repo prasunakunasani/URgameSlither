@@ -5,12 +5,16 @@ exports.randomInt = function (min, max) {
 };
 
 exports.randomSpawnPoint = function () {
+	var angle =  Math.random() * 2 * Math.PI;
+	var radius_sq = 0.7* Math.random() * config['gameRadius'] * config['gameRadius'];
     return {
-        x: exports.randomInt(5000 * 5, config['gameRadius'] * 5),
-        y: exports.randomInt(5000 * 5, config['gameRadius'] * 5)
+        x: Math.sqrt(radius_sq) * Math.cos(angle)+  config['gameRadius'],
+        y: Math.sqrt(radius_sq) * Math.sin(angle)+ config['gameRadius'] 
     };
+    
+    
 };
-
+ 
 exports.chunk = function (arr, chunkSize) {
     var R, i;
     R = [];
