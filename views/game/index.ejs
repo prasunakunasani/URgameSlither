@@ -90,6 +90,11 @@
   </style>
 </head>
 <body style="background: #161c22;">
+
+<script>
+	var cookie_id = '<%= cookie_id %>';
+</script>
+
 <div id="title_background" style="position: fixed; left: 0px; top: 0px; width: 721px; height: 959px;">
 </div>
 <div id="login"
@@ -97,10 +102,10 @@
   <div id="google-login">
 
       <% if (!profile) { %>
-    <a class="loginBtn loginBtn--google" href="/auth/login">Sign in with Google</a>
+    <a class="loginBtn loginBtn--google" href="/auth/login">Sign in with Google | <%= cookie_id  %></a>
       <% }else{ %>
     <span></span>
-    <a class="loginBtn loginBtn--google" href="/auth/logout">Logout | <%= profile.displayName %></a>
+    <a class="loginBtn loginBtn--google" href="/auth/logout">Logout | <%= profile.displayName %> | <%= cookie_id  %> </a>
       <% } %>
   </div>
 

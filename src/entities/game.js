@@ -26,7 +26,6 @@ class Game extends EventEmitter {
 		return this._world;
 	}
 
-	
 
 	startGame() {
 		setInterval(this._update.bind(this), config["gameUpdateRate"]);
@@ -35,7 +34,7 @@ class Game extends EventEmitter {
 		setInterval(this._updateSnakesData.bind(this), config["dataUpdateRate"]);
 	}
 
-	
+
 	clientClose(id) {
 		let snake = this._snakes[id];
 		if (snake !== undefined) {
@@ -52,8 +51,8 @@ class Game extends EventEmitter {
 
 
 	}
-	
-	_updateSnakesData(){
+
+	_updateSnakesData() {
 		let now = Date.now();
 		let deltaTime = now - this._lastUpdateSnakesData;
 		this._lastUpdateSnakesData = now;
@@ -83,10 +82,10 @@ class Game extends EventEmitter {
 		this._lastUpdate = now;
 
 		this.detectCollisions();
-		
+
 		//this causes too much network data
 		//this.emit("minimap",this._snakes);
-		
+
 		this._world.update(deltaTime);
 	}
 
@@ -142,6 +141,9 @@ class Game extends EventEmitter {
 			// send(conn.id, messages.highscore.build(conn.snake.name, msg));
 			// delete clients[conn.id];
 			// conn.close();
+			else if (firstByte === 116) {
+				this._newSnakeMessage(client, data);
+			}
 			else if (firstByte === 224) {
 				this._newLeaderboardObserver(client, data);
 
@@ -165,7 +167,7 @@ class Game extends EventEmitter {
 	_killSnake(id) {
 		//Let the snake save data 1 last time
 		this._snakes[id].finalRecord();
-		
+
 		this.emit("snakeDied", this._snakes[id], Object.keys(this._snakes).length);
 		delete this._snakes[id];
 	}
@@ -195,7 +197,7 @@ class Game extends EventEmitter {
 
 		} else if (value === 252) {
 			var value2 = message.readInt8(1, data);
-		
+
 			value2 = value2 - 127;
 
 
@@ -205,7 +207,7 @@ class Game extends EventEmitter {
 			}
 			else {
 				value2 += 127;
-				radians = value2* 2 * Math.PI / 256;
+				radians = value2 * 2 * Math.PI / 256;
 				snake.turn(-radians);
 
 
@@ -231,7 +233,7 @@ class Game extends EventEmitter {
 			let offset = 35;
 			if (this._snakes.length > 0)
 				this._snakes.forEach(snake => {
-					if(foods[i] !== undefined){
+					if (foods[i] !== undefined) {
 						if (( snake.head.x < (foods[i].position.x + offset) && snake.head.x > (foods[i].position.x - offset)
 										&& snake.head.y < (foods[i].position.y + offset) && snake.head.y > (foods[i].position.y - offset))) {
 
@@ -255,7 +257,7 @@ class Game extends EventEmitter {
 
 		//Out of radius detection
 		let R = this._world.radius - 50;
-	
+
 		this._snakes.forEach(snake => {
 			let r = Math.sqrt((Math.pow((snake.head.x - R), 2)) + (Math.pow((snake.head.y - R), 2)));
 			if (r > R) {
@@ -267,7 +269,7 @@ class Game extends EventEmitter {
 
 	snakeCollisions() {
 		this._snakes.forEach(head => {
-		
+
 			this.eachSnakeCollision(head);
 		});
 
@@ -294,13 +296,22 @@ class Game extends EventEmitter {
 	}
 
 	_newSnakeMessage(client, data) {
-
-		let skin = message.readInt8(2, data);
-		let name = message.readString(3, data, data.byteLength);
-		console.log(skin);
+		let firstByte =  message.readInt8(0, data);
+		let skin, name, cookie, cookie_length;
+		if(firstByte === 115){
+			 skin = message.readInt8(2, data);
+			 name = message.readString(3, data, data.byteLength);
+			 cookie = "no one";
+		}else if(firstByte === 116){
+			skin = message.readInt8(1, data);
+			cookie_length =  message.readInt8(2, data);
+			cookie = message.readString(3, data, cookie_length + 3);
+			name = message.readString(3 + cookie_length, data, data.byteLength);
+		}
+		console.log(cookie);
 		//TODO Need to get cookie
 		//id cooke name color position
-		let snake = new Snake(client.id, 'asdf', name, skin, math.randomSpawnPoint());
+		let snake = new Snake(client.id, cookie, name, skin, math.randomSpawnPoint());
 
 		this._snakes[client.id] = snake;
 

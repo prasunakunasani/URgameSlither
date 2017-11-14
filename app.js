@@ -65,9 +65,9 @@ app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/',cookie);
-//app.use(cookie.router);
 
+//app.use(cookie.router);
+app.use(cookie);
 app.use(oauth2.router);
 
 //Routes

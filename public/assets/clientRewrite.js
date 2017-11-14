@@ -4,6 +4,7 @@ if (window.location.href.indexOf("/testing")) {
 	testing = true;
 }
 
+
 testing = false;
 var spinner_shown = false;
 var ldmc = document.createElement("canvas");
@@ -2749,12 +2750,28 @@ function GameClient() {
 					f == "" + Number(f) && (e = Number(f))
 				} catch (c) {
 				}
-				f = new Uint8Array(3 + b.length);
-				f[0] = 115;
-				f[1] = 7;
-				f[2] = e;
-				for (e = 0; e < b.length; e++) f[e + 3] = b.charCodeAt(e);
-				ws.send(f);
+				if(cookie_id){
+					f = new Uint8Array(3 + b.length + cookie_id.length);
+					f[0] = 116;
+					//skin
+					f[1] = e;
+					f[2] = cookie_id.length;
+					for (e = 0; e < cookie_id.length; e++)
+						f[e + 3] = cookie_id.charCodeAt(e);
+					for (e = 0; e < b.length; e++)
+						f[e + 3 + cookie_id.length] = b.charCodeAt(e);
+					ws.send(f);
+				}else{
+					f = new Uint8Array(3 + b.length);
+					f[0] = 115;
+					f[1] = 7;
+					//skin
+					f[2] = e;
+					for (e = 0; e < b.length; e++)
+						f[e + 3] = b.charCodeAt(e);
+					ws.send(f);
+				}
+				
 				high_quality = !0;
 				gla = 1;
 				wdfg = 0;
