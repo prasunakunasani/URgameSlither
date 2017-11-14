@@ -58,22 +58,11 @@ class Game extends EventEmitter {
 
 		this._count += 1;
 		this._count %= 12;
-		
-		if(this._count % 5 == 0)
-		{
-			this._snakes.forEach(snake => {
-				snake.update(deltaTime, this._count);
-			});
-		}else if (this._count % 12 == 0 ){
-			this._snakes.forEach(snake => {
-				snake.update(deltaTime, this._count);
-			});
-		}
-		if(this._count % 4 == 0){
-			this._snakes.forEach(snake => {
-				snake.updateDirection(deltaTime);
-			});
-		}
+
+
+		this._snakes.forEach(snake => {
+			snake.update(deltaTime, this._count);
+		});
 		
 	}
 
@@ -203,9 +192,22 @@ class Game extends EventEmitter {
 
 		} else if (value === 252) {
 			var value2 = message.readInt8(1, data);
+			console.log(value2);
 			value2 = value2 - 127;
-			radians = value2 * 2 * Math.PI / 256;
-			snake.turn(radians);
+		
+			
+			if(value2 > 0){
+				radians = value2 * 2 * Math.PI / 256;
+				snake.turn(radians);
+			}
+			else{
+				value2 += 127;
+				radians = value2 * 2 * Math.PI / 256;
+				snake.turn(-radians);
+				console.log(radians)
+				
+			}
+				
 		} else if (value === 253) {
 			//console.log('Snake in speed mode');
 			snake.setBoost(true);

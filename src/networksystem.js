@@ -123,6 +123,8 @@ class NetworkSystem {
 	_snakeUpdate(snake) {
 		this._broadcast(messages.direction.build(snake));
 		this._broadcast(messages.position.build(snake));
+	
+	
 	}
 
 	_snakeUpdateSmall(snake) {

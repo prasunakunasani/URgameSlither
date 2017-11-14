@@ -16,7 +16,7 @@ class Snake extends EventEmitter {
 
 	init() {
 		this._count = 0;
-		this._speed = 1.79;
+		this._speed = 5.79;
 		this._actualSpeed = 5.79;
 		this._body = this._head; // This is why the snake dies when it reach's half way
 
@@ -29,8 +29,6 @@ class Snake extends EventEmitter {
 		//Fullness amount of last part of snake
 		//Fam is a float between 0 and 1, multiplied by to make it a 24 bit number to send to client
 		this._fam = 0; //* 16777215
-		this._xOff = 0;
-		this._yOff = 0;
 
 		//Starting snake sections is 2
 		//Number of parts
@@ -60,26 +58,26 @@ class Snake extends EventEmitter {
 
 	}
 
-	updateDirection(deltaTime){
-		this._updateDirection(deltaTime);
+	updateDirection(deltaTime) {
+
 	}
 
 	//FIXME MOOVE THE SNAKE PARTS
 	update(deltaTime, count) {
-	
+
 		this._update(deltaTime, count);
-		
-		
+
+
 	}
 
 	_updatePosition(deltaTime) {
 		var sc = Math.min(6, 1 + (this._sct - 2) / 106);
 		var baseSpeed = config["nsp1"] + config["nsp2"];
-		var scale = 1;//baseSpeed / (config["nsp1"] + config["nsp2"] * sc + 0.1);
-	
+		var scale = 1;// baseSpeed / (config["nsp1"] + config["nsp2"] * sc + 0.1);
+
 		if (this._boost && this._length > 2) {
 			this._speed += 1.45;
-		
+
 			if (this._speed > config["maxSpeed"]) this._speed = config["maxSpeed"];
 		} else {
 			this._speed -= 1.95;
@@ -91,47 +89,52 @@ class Snake extends EventEmitter {
 			this.increaseSize(sizeChange * 4);
 
 		let distance = scale * deltaTime / 8 * this._speed / 4;
-		this._direction.x = Math.cos(this._direction.angle) * distance;
-		this._direction.y = Math.sin(this._direction.angle) * distance;
+
+		this._direction.x = parseInt(Math.cos(this._direction.angle) * distance);
+		this._direction.y = parseInt(Math.sin(this._direction.angle) * distance);
 		this._head.x += this._direction.x;
 		this._head.y += this._direction.y;
-
+		
 		this._updateParts();
-		this.emit('update', this);
+		if (Math.abs(this._direction.x) < 120 && Math.abs(this._direction.y) < 120) {
+
+			this.emit("updateSmall", this);
+		} else{
+		
+			this.emit('update', this);
+			
+		}
+			
 	}
-	
-	_updateParts(){
-		this._parts.forEach(p=>{
+
+	_updateParts() {
+		this._parts.forEach(p => {
 			p.x = this._head.x;
 			p.y = this._head.y;
 		})
 	}
-	
-	
-	_update(deltaTime, count) {
-		if (this._boost && this._length > 2) {
-			if(count % 5 == 0){
-				console.log(this._count);
-				this._updatePosition(deltaTime*5);
-			}
-			
-		} else {
-			if(this.isTurning()){
-				if(count % 5 == 0){
-					this._updatePosition(deltaTime*5);
-				}
-				if (count % 12 == 0)
-					this._updatePosition(deltaTime*5);
-			}else{
-				if (count % 12 == 0)
-					this._updatePosition(deltaTime*2.4*5);
-			}
-			
-		}
-	}
 
-	isTurning(){
-		return this._direction.angle != this._direction.expectedAngle
+
+	_update(deltaTime, count) {
+		var baseSpeed = config["nsp1"] + config["nsp2"];
+		if (this._boost && this._length > 2 || this._speed > 8) {
+			if (parseInt(count) % 4 == 0) {
+				this._updateDirection(deltaTime * 4);
+				this._updatePosition(deltaTime * 4);
+			}
+			// if (parseInt(count) % 8 == 0) {
+			// 	console.log(count);
+			// 	this._updatePosition(deltaTime * 2);
+			// }
+		} else {
+
+			if (parseInt(count) % 12 == 0) {
+				this._updateDirection(deltaTime * 12);
+				this._updatePosition(deltaTime * 12);
+			}
+
+
+		}
 	}
 
 	_updateDirection(deltaTime) {
@@ -140,8 +143,9 @@ class Snake extends EventEmitter {
 		}
 		var rads = this._direction.expectedAngle;
 		var radsOld = this._direction.angle;
-		var maxRads = Math.PI / 6 * deltaTime/config["snakeUpdateRate"] ;
-		
+
+		var maxRads =  Math.PI  * deltaTime/800;
+		console.log(maxRads);
 		var diff = radsOld - rads;
 
 		if (Math.abs(diff) < maxRads || Math.abs(diff) > Math.PI * 2 - maxRads) {
@@ -168,10 +172,11 @@ class Snake extends EventEmitter {
 		var rad = radsOld;
 		this._direction.angle = rad;
 
+		//unused
 		this.emit("direction", this);
 
-		this.scang = 0.13 + 0.87 * Math.pow((7 - this._sc) / 6, 2);
-		this._spang = Math.max(this._speed / this._spangdv, 1);
+		// this.scang = 0.13 + 0.87 * Math.pow((7 - this._sc) / 6, 2);
+		// this._spang = Math.max(this._speed / this._spangdv, 1);
 		//this._direction.angle = ((0.033 * 1e3) * rad * this.scang * this.spang)
 
 	}
@@ -229,12 +234,13 @@ class Snake extends EventEmitter {
 
 
 	turn(radians) {
-		var old = this._direction.expectedAngle;
+		var old = this._direction.angle;
 		old += radians;
-
+	//	console.log(radians);
 		if (old > Math.PI * 2) old -= Math.PI * 2;
 		if (old < 0) old += Math.PI * 2;
-		this._direction.expectedAngle = this._direction.angle + radians;
+		
+		this._direction.expectedAngle =old;
 
 	}
 
