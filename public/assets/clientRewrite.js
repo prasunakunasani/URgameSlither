@@ -1405,8 +1405,8 @@ function GameClient() {
 		var f = b.tl;
 		b.tl = b.sct + b.fam;
 		for (var f = b.tl - f, c = b.flpos, h = 0; h < lfc; h++) b.fls[c] -= f * lfas[h], c++, c >= lfc && (c = 0);
-		b.fl = b.fls[b.flpos] * b.sp / 5.79;
-		b.fltg = lfc * b.sp / 5.79;
+		b.fl = b.fls[b.flpos];
+		b.fltg = lfc;
 		if (b == snake) {
 			wumsts = true;
 		}
@@ -2340,7 +2340,7 @@ function GameClient() {
 									current_byte = c + 2;
 
 							if (f = os["s" + t]) {
-								console.log(f.pts);
+					
 								if (y) f.sct++;
 								else
 									for (q = 0; q < f.pts.length; q++)
@@ -2372,7 +2372,6 @@ function GameClient() {
 									ems: []
 								});
 								head.eiu = 0;
-								console.log(e);
 								head.xx = e;
 								head.yy = F;
 								head.fx = 0;
