@@ -3,7 +3,6 @@ const Leaderboard = require("../subjects/leaderboard");
 const Snake = require("./snake");
 const LeaderboardObserver = require("../observers/leaderboardObserver");
 const Position = require("./position");
-
 const EventEmitter = require('events');
 const config = require('../../config/config');
 const message = require('../utils/message');
@@ -31,7 +30,6 @@ class Game extends EventEmitter {
 		setInterval(this._updateSnakes.bind(this), config["snakeUpdateRate"]);
 		setInterval(this._updateLeaderboard.bind(this), config["leaderboardUpdateRate"]);
 	}
-
 
 	
 	clientClose(id) {

@@ -47,22 +47,18 @@ class Snake extends EventEmitter {
 			angle: ((0.033 * 1e3) * 0 * this.scang * this.spang)
 		};
 		this._parts = [];
-		var i = 0;
-		while (i < ((this._sct - 1) * 2)) {
+		for (var i = this._sct - 1; i >= 0 ; i--) {
 			this._parts.push({
-				x: this._head.x + 5 * i,
-				y: this._head.y + 5 * i
+				x: this._head.x ,
+				y: this._head.y + 25*i
 			});
-			i += 2;
+			
 		}
 
 	}
 
-	updateDirection(deltaTime) {
+	
 
-	}
-
-	//FIXME MOOVE THE SNAKE PARTS
 	update(deltaTime, count) {
 
 		this._update(deltaTime, count);
@@ -84,9 +80,6 @@ class Snake extends EventEmitter {
 			if (this._speed < baseSpeed) this._speed = baseSpeed;
 		}
 
-		var sizeChange = baseSpeed - this._speed;
-		if (sizeChange !== 0)
-			this.increaseSize(sizeChange * 4);
 
 		let distance = scale * deltaTime / 8 * this._speed / 4;
 
@@ -94,24 +87,36 @@ class Snake extends EventEmitter {
 		this._direction.y = parseInt(Math.sin(this._direction.angle) * distance);
 		this._head.x += this._direction.x;
 		this._head.y += this._direction.y;
-		
+
+		var sizeChange = baseSpeed - this._speed;
+		if (sizeChange !== 0)
+			this.increaseSize(sizeChange * 4);
+
 		this._updateParts();
 		if (Math.abs(this._direction.x) < 120 && Math.abs(this._direction.y) < 120) {
 
-			this.emit("updateSmall", this);
-		} else{
-		
+			this.emit("update", this);
+		} else {
+
 			this.emit('update', this);
-			
+
 		}
-			
+
 	}
 
 	_updateParts() {
-		this._parts.forEach(p => {
-			p.x = this._head.x;
-			p.y = this._head.y;
-		})
+		var p = this._parts;
+		var lastx = this._head.x;
+		var lasty = this._head.y;
+		for (var i = this._parts.length - 1; i >= 0; i--) {
+			var tempx = p[i].x;
+			var tempy = p[i].y;
+			p[i].x = lastx;
+			p[i].y = lasty;
+			lastx = tempx;
+			lasty = tempy;
+		}
+
 	}
 
 
@@ -144,8 +149,8 @@ class Snake extends EventEmitter {
 		var rads = this._direction.expectedAngle;
 		var radsOld = this._direction.angle;
 
-		var maxRads =  Math.PI  * deltaTime/800;
-		console.log(maxRads);
+		var maxRads = Math.PI * deltaTime / 800;
+	
 		var diff = radsOld - rads;
 
 		if (Math.abs(diff) < maxRads || Math.abs(diff) > Math.PI * 2 - maxRads) {
@@ -196,19 +201,18 @@ class Snake extends EventEmitter {
 			this._sct += 1;
 			this.emit("increase", this);
 			//TODO ADD PARTS 
-			// if (client.snake.fam / 16777215 >= 1) {
-			// 	client.snake.fam = 16777215;
-			// 	var newparts = client.snake.parts[client.snake.parts.length - 1];
-			// 	client.snake.parts.push(newparts);
-			// 	client.snake.sct++;
-			// 	broadcast(messages.increase.build(client.snake));
-			// 	client.snake.fam = 0;
-			// }
+			this._parts.push({
+				x: this._head.x,
+				y: this._head.y
+			});
+
 		} else if (this._fam < 0) {
 			if (this._sct > 2) {
 				this._sct -= 1;
 				this._fam += 1;
 				this.emit("decrease", this);
+				if (this._parts.length > 2)
+					this._parts.splice(0, 1);
 			} else {
 				this._fam = 0;
 				this.emit("fam", this);
@@ -236,11 +240,11 @@ class Snake extends EventEmitter {
 	turn(radians) {
 		var old = this._direction.angle;
 		old += radians;
-	//	console.log(radians);
+		//	console.log(radians);
 		if (old > Math.PI * 2) old -= Math.PI * 2;
 		if (old < 0) old += Math.PI * 2;
-		
-		this._direction.expectedAngle =old;
+
+		this._direction.expectedAngle = old;
 
 	}
 
@@ -318,7 +322,7 @@ class Snake extends EventEmitter {
 	}
 
 	get body() {
-		return this._head;
+		return this._parts[0];
 		//return this._parts[this._parts.length-1];
 	}
 
