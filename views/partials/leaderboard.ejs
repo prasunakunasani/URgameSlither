@@ -36,10 +36,13 @@
 <script>
 	(function () {
 		var host = window.document.location.host.replace(/:.*/, '');
-		if (host !== "urgame.me")
-			host += ":8080"
-		var ws = new WebSocket('ws://' + host + '/game/socket');
-
+		var ws;
+		if (host !== "urgame.me"){
+          ws = new WebSocket('ws://' + host + '/game/socket')
+        }else{
+          ws = new WebSocket('wss://' + host + '/game/socket')
+        }
+	
 		ws.onmessage = function (event) {
 
 	
