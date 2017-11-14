@@ -6,6 +6,7 @@ const Position = require("./position");
 const EventEmitter = require('events');
 const config = require('../../config/config');
 const message = require('../utils/message');
+const math = require('../utils/math');
 
 class Game extends EventEmitter {
 	constructor() {
@@ -258,7 +259,6 @@ class Game extends EventEmitter {
 		this._snakes.forEach(snake => {
 			let r = Math.sqrt((Math.pow((snake.head.x - R), 2)) + (Math.pow((snake.head.y - R), 2)));
 			if (r > R) {
-				console.log("[TEST] " + r + " < " + R ^ 2);
 				console.log('[DEBUG] Outside of Radius');
 				this._killSnake(snake.id);
 			}
@@ -298,12 +298,9 @@ class Game extends EventEmitter {
 		let skin = message.readInt8(2, data);
 		let name = message.readString(3, data, data.byteLength);
 		console.log(skin);
-		//TODO random position in world
+		//TODO Need to get cookie
 		//id cooke name color position
-		let snake = new Snake(client.id, 'asdf', name, skin, new Position(
-				config['gameRadius'],
-				config['gameRadius']
-		));
+		let snake = new Snake(client.id, 'asdf', name, skin, math.randomSpawnPoint());
 
 		this._snakes[client.id] = snake;
 

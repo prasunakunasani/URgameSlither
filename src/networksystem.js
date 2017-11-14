@@ -94,7 +94,6 @@ class NetworkSystem {
 	
 
 	_newClientSnake(client,snakes, snake, foods) {
-		console.log("new snake");
 		this.addClient(client.id, client);
 
 		snake.on('update', this._snakeUpdate.bind(this));
@@ -128,7 +127,6 @@ class NetworkSystem {
 	}
 
 	_newFood(foods) {
-		console.log("broadcasting new food");
 		this._broadcast(messages.food.build(foods))
 	}
 

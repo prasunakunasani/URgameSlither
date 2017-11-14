@@ -30,7 +30,6 @@ exports.build = function (snake) {
     
     prevX = snake.body.x;
     prevY = snake.body.y;
-    console.log(snake.parts);
  
     for  ( var i = 0; i < part ; i++) {
         thisX = snake.parts[i].x;

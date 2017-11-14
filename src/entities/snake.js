@@ -72,7 +72,7 @@ class Snake extends EventEmitter {
 			angle: ((0.033 * 1e3) * 0 * this.scang * this.spang)
 		};
 		this._parts = [];
-		for (var i = this._sct - 1; i >= 0; i--) {
+		for (var i = this._sct - 2; i >= 0; i--) {
 			this._parts.push({
 				x: this._head.x,
 				y: this._head.y + 25 * i

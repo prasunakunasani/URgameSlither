@@ -19,7 +19,7 @@ var c = {
 	nsp1: 5.39,
 	nsp2: 0.4,
 	maxSpeed: 14,
-	snakeStartSize: 20,
+	snakeStartSize: 2,
 	spangdv: 4.8,
 	
 	//5 seconds
