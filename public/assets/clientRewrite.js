@@ -2325,7 +2325,7 @@ function GameClient() {
 											: "3" == command && (M = b[c] / 18));
 
 						if (f = os["s" + t]) {
-				
+
 							-1 != u && (f.dir = u);
 							anguc++;
 							if (-1 != z) {
@@ -2363,14 +2363,15 @@ function GameClient() {
 							snl(f)
 						}
 					} else if ("g" == command || "n" == command || "G" == command || "N" == command) {
-				
-						
+
+
 						if (playing) {
 							var y = "n" == command || "N" == command,
 									t = b[c] << 8 | b[c + 1],
 									current_byte = c + 2;
 
 							if (f = os["s" + t]) {
+								console.log(f.pts);
 								if (y) f.sct++;
 								else
 									for (q = 0; q < f.pts.length; q++)
@@ -2587,12 +2588,32 @@ function GameClient() {
 								c++;
 								command = "";
 								for (q = 0; q < e; q++) command += String.fromCharCode(b[c]), c++;
-								for (var F = e = 0, O, L = !1; c < f;) q = e, O = F, L ? (e += (b[c] - 127) / 2, c++, F += (b[c] - 127) / 2, c++) : (e = (b[c] << 16 | b[c + 1] << 8 | b[c + 2]) / 5, c += 3, F = (b[c] << 16 | b[c + 1] << 8 | b[c + 2]) / 5, c += 3, q = e, O = F, L = !0), (E = points_dp.get()) || (E = {
-									exs: [],
-									eys: [],
-									efs: [],
-									ems: []
-								}), E.eiu = 0, E.xx = e, E.yy = F, E.fx = 0, E.fy = 0, E.da = 0, E.ebx = e - q, E.eby = F - O, H.push(E);
+								for (var F = e = 0, O, L = false; c < f;) {
+									q = e;
+									O = F;
+									if (L) {
+										e += (b[c] - 127) / 2;
+										c++;
+										F += (b[c] - 127) / 2;
+										c++
+									} else {
+										e = (b[c] << 16 | b[c + 1] << 8 | b[c + 2]) / 5;
+										c += 3;
+										F = (b[c] << 16 | b[c + 1] << 8 | b[c + 2]) / 5;
+										c += 3;
+										q = e;
+										O = F;
+										L = true;
+									}
+									(E = points_dp.get()) || (E = {
+										exs: [],
+										eys: [],
+										efs: [],
+										ems: []
+									});
+									E.eiu = 0, E.xx = e, E.yy = F, E.fx = 0, E.fy = 0, E.da = 0, E.ebx = e - q, E.eby = F - O;
+									H.push(E);
+								}
 								//t = id
 								//K = tailx
 								//N = taily

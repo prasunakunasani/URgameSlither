@@ -33,6 +33,7 @@ class Game extends EventEmitter {
 	}
 
 
+	
 	clientClose(id) {
 		let snake = this._snakes[id];
 		if (snake !== undefined) {
@@ -54,16 +55,15 @@ class Game extends EventEmitter {
 		let now = Date.now();
 		let deltaTime = now - this._lastUpdateSnakes;
 		this._lastUpdateSnakes = now;
-		
+
 
 		this._count += 1;
 		this._count %= 12;
 
-
 		this._snakes.forEach(snake => {
 			snake.update(deltaTime, this._count);
 		});
-		
+
 	}
 
 	_update() {
@@ -71,11 +71,11 @@ class Game extends EventEmitter {
 		let deltaTime = now - this._lastUpdate;
 		this._lastUpdate = now;
 
-		// for(let snake of this._snakes.values()){
-		// 	snake.update(deltaTime);
-		// }
 		this.detectCollisions();
-
+		
+		//this causes too much network data
+		//this.emit("minimap",this._snakes);
+		
 		this._world.update(deltaTime);
 	}
 
@@ -84,10 +84,7 @@ class Game extends EventEmitter {
 			return e;
 		});
 		if (Object.keys(this._snakes).length <= 0) {
-			this._leaderboard.setLeaderboard(JSON.stringify([{name: "No one is playing", score: 0}, {
-				name: "test",
-				score: 5
-			}]));
+			this._leaderboard.setLeaderboard(JSON.stringify([{name: "No one is playing", score: 0}]));
 			return;
 		}
 
@@ -163,7 +160,6 @@ class Game extends EventEmitter {
 
 	_killSnake(id) {
 		this.emit("snakeDied", this._snakes[id]);
-
 		delete this._snakes[id];
 	}
 
@@ -194,20 +190,20 @@ class Game extends EventEmitter {
 			var value2 = message.readInt8(1, data);
 			console.log(value2);
 			value2 = value2 - 127;
-		
-			
-			if(value2 > 0){
+
+
+			if (value2 > 0) {
 				radians = value2 * 2 * Math.PI / 256;
 				snake.turn(radians);
 			}
-			else{
+			else {
 				value2 += 127;
 				radians = value2 * 2 * Math.PI / 256;
 				snake.turn(-radians);
 				console.log(radians)
-				
+
 			}
-				
+
 		} else if (value === 253) {
 			//console.log('Snake in speed mode');
 			snake.setBoost(true);
@@ -228,23 +224,24 @@ class Game extends EventEmitter {
 			let offset = 35;
 			if (this._snakes.length > 0)
 				this._snakes.forEach(snake => {
+					if(foods[i] !== undefined){
+						if (( snake.head.x < (foods[i].position.x + offset) && snake.head.x > (foods[i].position.x - offset)
+										&& snake.head.y < (foods[i].position.y + offset) && snake.head.y > (foods[i].position.y - offset))) {
 
-					if (( snake.head.x < (foods[i].position.x + offset) && snake.head.x > (foods[i].position.x - offset)
-									&& snake.head.y < (foods[i].position.y + offset) && snake.head.y > (foods[i].position.y - offset))) {
+							this.emit("foodEaten", snake, foods[i]);
+							snake.increaseSize(foods[i].size);
 
-						this.emit("foodEaten", snake, foods[i]);
-						snake.increaseSize(foods[i].size);
-
-						//This food is gone remove it
-						this._world.foods.splice(i, 1);
+							//This food is gone remove it
+							this._world.foods.splice(i, 1);
+						}
 					}
-
 				});
 		}
 	}
 
 	detectCollisions() {
 		//TODO Snake Collisions 
+		this.snakeCollisions();
 
 		this.foodCollisions();
 
@@ -255,12 +252,37 @@ class Game extends EventEmitter {
 		this._snakes.forEach(snake => {
 			let r = (Math.pow((snake.head.x - R), 2)) + (Math.pow((snake.head.y - R), 2));
 
-			if (r > Math.pow(R, 2)) {
+			if (r+30 > Math.pow(R, 2)) {
 				console.log("[TEST] " + r + " < " + R ^ 2);
 				console.log('[DEBUG] Outside of Radius');
-
-				this.emit("snakeDied", snake);
 				this._killSnake(snake.id);
+			}
+		});
+	}
+
+	snakeCollisions() {
+		this._snakes.forEach(head => {
+		
+			this.eachSnakeCollision(head);
+		});
+
+	}
+
+	eachSnakeCollision(head) {
+		var h = head.head;
+		this._snakes.forEach(snake => {
+			//TODO this offset should be larger for bigger snakes
+			let offset = 30;
+			if (head !== snake) {
+				var p = snake.parts;
+				for (var i = 0; i < p.length; i++) {
+					if (( h.x < (p[i].x + offset) && h.x > (p[i].x - offset)
+									&& h.y < (p[i].y + offset) && h.y > (p[i].y - offset))) {
+						this.world.deadSnakeFood(head);
+						this._killSnake(head.id);
+						return;
+					}
+				}
 			}
 		});
 	}
@@ -278,7 +300,7 @@ class Game extends EventEmitter {
 		));
 
 		this._snakes[client.id] = snake;
-	
+
 		this.emit('newClientSnake', client, this._snakes, snake, this._world.foods);
 		console.log(client.id + " new snake");
 		//console.log((snake.name === '' ? '[DEBUG] An unnamed snake' : '[DEBUG] A new snake called ' + snake.name) + ' has connected!');
@@ -286,9 +308,7 @@ class Game extends EventEmitter {
 }
 
 
-function
-
-setMscps(mscps) {
+function setMscps(mscps) {
 	fmlts = [mscps + 1 + 2048];
 	fpsls = [mscps + 1 + 2048];
 

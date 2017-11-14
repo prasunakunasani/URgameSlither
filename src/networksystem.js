@@ -10,7 +10,7 @@ class NetworkSystem {
 		this._clients = new Map();
 
 		world.on('newFoods', this._newFood.bind(this));
-		//game.on('snakeCollision', this._snakeCollision(snake));
+		game.on('collision', this._snakeCollision.bind(this));
 		game.on('newClientSnake', this._newClientSnake.bind(this));
 		game.on('snakeDied', this._snakeDied.bind(this));
 		game.on('snakeRemoved', this._snakeRemoved.bind(this));
@@ -47,8 +47,8 @@ class NetworkSystem {
 		});
 	}
 
-	_minimap() {
-		this._broadcast(messages.minimap.build(foods));
+	_minimap(snakes) {
+		this._broadcast(messages.minimap.build(snakes));
 	}
 
 	_highscore(name, message) {
@@ -112,11 +112,12 @@ class NetworkSystem {
 		this._broadcast(messages.fullness.build(snake));
 	}
 
-	_snakeCollision(snake) {
-		//this._broadcast(messages.end.build(0));
+	_snakeCollision(head, snake) {
+		this._snakeDecrease(head);
 	}
 
 	_newFood(foods) {
+		console.log("broadcasting new food");
 		this._broadcast(messages.food.build(foods))
 	}
 
