@@ -16,7 +16,7 @@
     "events": "^1.1.1",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
-    "mongoose": "^4.13.0",
+    "mongoose": "^4.13.2",
     "morgan": "~1.9.0",
     "nconf": "^0.9.1",
     "passport": "^0.4.0",
@@ -25,7 +25,7 @@
     "serve-favicon": "~2.4.5",
     "shortid": "^2.2.8",
     "sloc": "^0.2.0",
-    "ws": "^3.3.0"
+    "ws": "^3.3.1"
   },
   "devDependencies": {
     "concurrently": "^3.5.0"

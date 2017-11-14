@@ -574,37 +574,6 @@ function GameClient() {
 	}
 
 
-	function drawSpinner(lsfr, avfr, connecting, ready_to_play, ss_a, ss_sh) {
-		lsfr += avfr;
-		var f = ldmc.getContext("2d");
-		f.clearRect(0, 0, 512, 128);
-
-		for (var c, h, u = 1; 2 >= u; u++) {
-			var xx, yy;
-			f.beginPath();
-			if (1 == u) {
-				(f.fillStyle = "#60FF70", h = 0)
-			} else {
-				(f.fillStyle = "#9850FF", h = Math.PI)
-			}
-
-			for (var q = 0; 256 >= q; q++) c = 32 + 5 * Math.cos(h + lsfr / 6 + 8 * q / 256) + 8 * q / 256, 256 == q && (c += 10), xx = 64 + Math.cos(h + lsfr / 44 + .8 * Math.PI * q / 256) * c * 1.25, yy = 64 + Math.sin(h + lsfr / 44 + .8 * Math.PI * q / 256) * c, 0 == q ? f.moveTo(xx, yy) : f.lineTo(xx, yy);
-			c = 32;
-			xx = 64 + Math.cos(h + lsfr / 44 + .8 * Math.PI * (q + 47) / 256) * c * 1.25;
-			yy = 64 + Math.sin(h + lsfr / 44 + .8 * Math.PI * (q + 47) / 256) * c;
-			f.lineTo(xx, yy);
-			for (q = 256; 0 <= q; q--) c = 32 + 5 * Math.cos(h + lsfr / 6 + 8 * q / 256) - 8 * q / 256, 256 == q && (c -= 10), xx = 64 + Math.cos(h + lsfr / 44 + .8 * Math.PI * q / 256) * c * 1.25, yy = 64 + Math.sin(h + lsfr / 44 + .8 * Math.PI * q / 256) * c, f.lineTo(xx, yy);
-			f.fill();
-		}
-		connecting || ready_to_play ? (ss_a += avfr / 86, 1 <= ss_a && (ss_a = 1), ss_sh += avfr / 93, 1 <= ss_sh && (ss_sh = 1)) : (ss_a -= avfr / 86, 0 >= ss_a && (ss_sh = ss_a = 0, ldmc.style.display = "none", transform(ldmc, "")));
-		ldmc.style.opacity = ss_a;
-		q = Math.round(.1 + .9 * ss_sh *
-				(1 + 2 * Math.pow(1 - ss_a, 2)) * 1E5) / 1E5;
-
-		transform(ldmc, "scale(" + q + "," + q + ")")
-		return {f, h, u, q};
-	}
-
 	//snake skin canvases
 	var sest = document.createElement("canvas");
 	var playbulb = document.createElement("canvas");
@@ -2849,7 +2818,33 @@ function GameClient() {
 		}
 
 		if (spinner_shown) {
-			var {f, h, u, q} = drawSpinner(lsfr, avfr, connecting, ready_to_play, ss_a, ss_sh);
+			lsfr += avfr;
+			var f = ldmc.getContext("2d");
+			f.clearRect(0, 0, 512, 128);
+
+			for (var c, h, u = 1; 2 >= u; u++) {
+				var xx, yy;
+				f.beginPath();
+				if (1 == u) {
+					(f.fillStyle = "#60FF70", h = 0)
+				} else {
+					(f.fillStyle = "#9850FF", h = Math.PI)
+				}
+
+				for (var q = 0; 256 >= q; q++) c = 32 + 5 * Math.cos(h + lsfr / 6 + 8 * q / 256) + 8 * q / 256, 256 == q && (c += 10), xx = 64 + Math.cos(h + lsfr / 44 + .8 * Math.PI * q / 256) * c * 1.25, yy = 64 + Math.sin(h + lsfr / 44 + .8 * Math.PI * q / 256) * c, 0 == q ? f.moveTo(xx, yy) : f.lineTo(xx, yy);
+				c = 32;
+				xx = 64 + Math.cos(h + lsfr / 44 + .8 * Math.PI * (q + 47) / 256) * c * 1.25;
+				yy = 64 + Math.sin(h + lsfr / 44 + .8 * Math.PI * (q + 47) / 256) * c;
+				f.lineTo(xx, yy);
+				for (q = 256; 0 <= q; q--) c = 32 + 5 * Math.cos(h + lsfr / 6 + 8 * q / 256) - 8 * q / 256, 256 == q && (c -= 10), xx = 64 + Math.cos(h + lsfr / 44 + .8 * Math.PI * q / 256) * c * 1.25, yy = 64 + Math.sin(h + lsfr / 44 + .8 * Math.PI * q / 256) * c, f.lineTo(xx, yy);
+				f.fill();
+			}
+			connecting || ready_to_play ? (ss_a += avfr / 86, 1 <= ss_a && (ss_a = 1), ss_sh += avfr / 93, 1 <= ss_sh && (ss_sh = 1)) : (ss_a -= avfr / 86, 0 >= ss_a && (ss_sh = ss_a = 0, ldmc.style.display = "none", transform(ldmc, "")));
+			ldmc.style.opacity = ss_a;
+			q = Math.round(.1 + .9 * ss_sh *
+					(1 + 2 * Math.pow(1 - ss_a, 2)) * 1E5) / 1E5;
+
+			transform(ldmc, "scale(" + q + "," + q + ")")
 
 		}
 
