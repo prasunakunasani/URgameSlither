@@ -22,7 +22,7 @@ class GameController {
 
     saveUserAndSnake(req, res, next) {
         if(req.body.secret !== config.get("DATA_SECRET"))
-        
+
         console.log(JSON.stringify(req.body));
         userSnakeFunctions.InsertUsersSnakeData(req.body.usersSnake, next);
         userFunctions.InsertUserDetails(req.body.user, next);

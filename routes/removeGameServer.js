@@ -6,7 +6,7 @@ var requestify = require('requestify');
 //todo - 2) Assume this is sending a dead snake's details to the Game controller. Implement that eg.
 //For this to work, go to http://localhost:3000/sendFakeDeadSnake and just close the page. Cause' you're not sending anything
 
-var newUser = {
+var user = {
 
     cookie_id: 'horse',
     google:
@@ -21,7 +21,7 @@ var newUser = {
         }
 };
 
-var deadSnake = {
+var usersSnake = {
 
     cookie_id: 'deadSnake',
     boosts: 20,
@@ -36,10 +36,10 @@ var deadSnake = {
     length: 30
 };
 
-var currentPlayerCount = 2;
+var count = 2;
 
 router.get('/', function (req, res, next) {
-        requestify.post('http://localhost:3000/game/saveUserAndSnake', {newUser: newUser, deadSnake: deadSnake, currentPlayerCount: currentPlayerCount});
+        requestify.post('http://localhost:3000/game/saveUserAndSnake', {user: user, usersSnake: usersSnake, currentPlayerCount: count});
         res.send("Post request sent");
 });
 

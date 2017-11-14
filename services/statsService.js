@@ -24,6 +24,21 @@ class StatsService {
         }.bind(this));
 
         CalculatedStats.findOne({}, function (err, result) {
+
+            if (!result) {
+                result = new CalculatedStats();
+                result.totals.all_time.boosts = 0;
+                result.totals.all_time.deaths = 0;
+                result.totals.all_time.duration = 0;
+                result.totals.all_time.kills = 0;
+                result.totals.all_time.length =0;
+                result.totals.all_time.uniques = 0;
+            }
+
+            result.save(function(err){
+                if(err) console.error(err);
+            })
+
             this.cachedCalculatedStats = result;
         }.bind(this));
 
@@ -109,30 +124,27 @@ class StatsService {
 	}
 
 	UpdateCalculatedStats(snakeDetails, next) {
-		CalculatedStats.findOne({}, function (err, calcstats) {
 
-			//calculate totals:
-			if (!calcstats) {
-				calcstats = new CalculatedStats();
-				calcstats.totals.all_time.boosts = 0;
-				calcstats.totals.all_time.deaths = 0;
-				calcstats.totals.all_time.duration = 0;
-				calcstats.totals.all_time.kills = 0;
-				calcstats.totals.all_time.length =0;
-				calcstats.totals.all_time.uniques = 0;
-			}
+        var tempRecord = {
+            totals:
+                {
+                    all_time:
+                        {
+                            boosts: 0,
+                            deaths: 0,
+                            duration: 0,
+                            kills: 0,
+                            length: 0,
+                            unique_users: 0
+                        }
+                }
+        };
 
-			calcstats.totals.all_time.boosts += snakeDetails.boosts;
-			calcstats.totals.all_time.deaths += 1;
-			calcstats.totals.all_time.duration += snakeDetails.duration;
-			calcstats.totals.all_time.kills += snakeDetails.kills;
-			calcstats.totals.all_time.length += snakeDetails.length;
-			//tempRecord.totals.unique_users = calcstats.totals.unique_users + uniqueUsers;
-
-			calcstats.save(function(err){
-				if(err) console.error(err);
-			})
-		});
+        tempRecord.totals.all_time.boosts = this.cachedCalculatedStats.totals.all_time.boosts + snakeDetails.boosts;
+        tempRecord.totals.all_time.deaths = this.cachedCalculatedStats.totals.all_time.deaths + 1;
+        tempRecord.totals.all_time.duration = this.cachedCalculatedStats.totals.all_time.duration + snakeDetails.duration;
+        tempRecord.totals.all_time.kills = this.cachedCalculatedStats.totals.all_time.kills + snakeDetails.kills;
+        tempRecord.totals.all_time.length = this.cachedCalculatedStats.totals.all_time.length + snakeDetails.length
 
 	}
 
