@@ -3,6 +3,7 @@ let router = express.Router();
 let UserService = require('../services/userService');
 let UserSnakeService = require('../services/usersSnakesService');
 let StatsService = require('../services/statsService');
+let config = require('../config');
 
 var userFunctions = new UserService(express);
 var userSnakeFunctions = new UserSnakeService(express);
@@ -20,12 +21,14 @@ class GameController {
     }
 
     saveUserAndSnake(req, res, next) {
-
-        userSnakeFunctions.InsertUsersSnakeData(req.body.deadSnake, next);
-        userFunctions.InsertUserDetails(req.body.newUser, next);
-        userFunctions.UpdateUsersStats(req.body.deadSnake,next);
-        globalFunctions.UpdateDailyStats(req.body.deadSnake, req.body.currentPlayerCount,next);
-        globalFunctions.UpdateCalculatedStats(req.body.deadSnake,next);
+        if(req.body.secret !== config.get("DATA_SECRET"))
+        
+        console.log(JSON.stringify(req.body));
+        userSnakeFunctions.InsertUsersSnakeData(req.body.usersSnake, next);
+        userFunctions.InsertUserDetails(req.body.user, next);
+        userFunctions.UpdateUsersStats(req.body.usersSnake,next);
+        globalFunctions.UpdateDailyStats(req.body.usersSnake, req.body.currentPlayerCount,next);
+        globalFunctions.UpdateCalculatedStats(req.body.usersSnake,next);
 
         //create a record for dailyStats if doesn't exist, else update - //fixme - wouldn't this be too much checking? Is that okay?
         //use player count coming in form Game Server

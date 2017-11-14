@@ -20,7 +20,7 @@ class Snake extends EventEmitter {
 			duration: 0,
 			kills: 0,
 			boosts: 0,
-			intervalData: {
+			interval_data: {
 				length: [],
 				kills: []
 			},
@@ -85,8 +85,8 @@ class Snake extends EventEmitter {
 	finalRecord() {
 		this._data.length = this.getScore();
 		this._data.duration = (Date.now() - this._initTime) / 1000;
-		this._data.intervalData.length.push(this.getScore());
-		this._data.intervalData.kills.push(this._killCounter);
+		this._data.interval_data.length.push(this.getScore());
+		this._data.interval_data.kills.push(this._killCounter);
 	}
 
 	snakeKill(length) {
@@ -100,8 +100,8 @@ class Snake extends EventEmitter {
 		//Record data now
 		if (this._time - this._lastIntervalTime > config["intervalRate"]) {
 			this._lastIntervalTime = this._lastIntervalTime + config["intervalRate"];
-			this._data.intervalData.length.push(this.getScore());
-			this._data.intervalData.kills.push(this._killCounter);
+			this._data.interval_data.length.push(this.getScore());
+			this._data.interval_data.kills.push(this._killCounter);
 			this._killCounter = 0;
 		}
 	}
