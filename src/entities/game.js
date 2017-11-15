@@ -15,6 +15,7 @@ class Game extends EventEmitter {
 		this._lastUpdateSnakes = Date.now();
 		this._lastUpdateSnakesData = Date.now();
 		this._count = 0;
+		this._fast_count = 0;
 		this._world = new World();
 		this._snakes = [];
 		this._leaderboard = new Leaderboard();
@@ -68,12 +69,16 @@ class Game extends EventEmitter {
 
 
 		this._count += 1;
+		this._fast_count += 1;
 		this._count %= 12;
-
-		this._snakes.forEach(snake => {
-			snake.update(deltaTime, this._count);
-		});
-
+		this._fast_count %= 10;
+		
+		if (parseInt(this._fast_count) % 5 == 0 
+				||	parseInt(this._count) % 12 == 0) {
+			this._snakes.forEach(snake => {
+				snake.update(deltaTime, this._count, this._fast_count);
+			});
+		}
 	}
 
 	_update() {
@@ -296,15 +301,15 @@ class Game extends EventEmitter {
 	}
 
 	_newSnakeMessage(client, data) {
-		let firstByte =  message.readInt8(0, data);
+		let firstByte = message.readInt8(0, data);
 		let skin, name, cookie, cookie_length;
-		if(firstByte === 115){
-			 skin = message.readInt8(2, data);
-			 name = message.readString(3, data, data.byteLength);
-			 cookie = "no one";
-		}else if(firstByte === 116){
+		if (firstByte === 115) {
+			skin = message.readInt8(2, data);
+			name = message.readString(3, data, data.byteLength);
+			cookie = "no one";
+		} else if (firstByte === 116) {
 			skin = message.readInt8(1, data);
-			cookie_length =  message.readInt8(2, data);
+			cookie_length = message.readInt8(2, data);
 			cookie = message.readString(3, data, cookie_length + 3);
 			name = message.readString(3 + cookie_length, data, data.byteLength);
 		}

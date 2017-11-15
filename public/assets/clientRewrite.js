@@ -1,11 +1,10 @@
-var testing;
+var testing = false;
 localStorage.edttsg = "1"
-if (window.location.href.indexOf("/testing")) {
+if (window.location.href.indexOf("/testing") > 0) {
 	testing = true;
 }
 
 
-testing = false;
 var spinner_shown = false;
 var ldmc = document.createElement("canvas");
 var playh = document.getElementById("playh");
@@ -3553,7 +3552,7 @@ function GameClient() {
 			} catch (f) {
 			}
 		};
-		ii.src = "assets/bg45.jpg";
+		ii.src = "/assets/bg45.jpg";
 
 		function rdgbg() {
 			if (ggbg) {
@@ -3573,7 +3572,7 @@ function GameClient() {
 			ggbg = !0;
 			rdgbg()
 		};
-		gbgi.src = "assets/gbg.jpg";
+		gbgi.src = "/assets/gbg.jpg";
 
 
 		is_mobile && (render_mode = 1);
@@ -3780,7 +3779,7 @@ function GameClient() {
 			f.shadowBlur = 20;
 			f.drawImage(b, 0, 0)
 		};
-		kwki.src = "assets/kwk6.png";
+		kwki.src = "/assets/kwk6.png";
 		jmou = document.createElement("canvas");
 		jmou.width = 79;
 		jmou.height = 130;
@@ -3788,7 +3787,7 @@ function GameClient() {
 		jmoi.onload = function () {
 			jmou.getContext("2d").drawImage(jmoi, 0, 0)
 		};
-		jmoi.src = "assets/jmou3.png";
+		jmoi.src = "/assets/jmou3.png";
 		pwdbulb = document.createElement("canvas");
 		pwdbulb.width = 190;
 		pwdbulb.height = 188;
@@ -3804,7 +3803,7 @@ function GameClient() {
 			f.shadowBlur = 20;
 			f.drawImage(b, 0, 0)
 		};
-		pwdi.src = "assets/pewd.png";
+		pwdi.src = "/assets/pewd.png";
 		sest = document.createElement("canvas");
 		sest.width = 105;
 		sest.height = 88;
@@ -3813,7 +3812,7 @@ function GameClient() {
 		sesti.onload = function () {
 			sest.getContext("2d").drawImage(sesti, 0, 0)
 		};
-		sesti.src = "assets/sest5.png";
+		sesti.src = "/assets/sest5.png";
 		playbulb = document.createElement("canvas");
 		playbulb.width = 142;
 		playbulb.height = 149;
@@ -4245,7 +4244,7 @@ function GameClient() {
 
 
 		try {
-			"0" == localStorage.qual ? (grqi.src = "./assets/lowquality.png", want_quality = 0) : (phqi.src = "./assets/lowquality.png", want_quality = 1)
+			"0" == localStorage.qual ? (grqi.src = "/assets/lowquality.png", want_quality = 0) : (phqi.src = "/assets/lowquality.png", want_quality = 1)
 		} catch (b) {
 		}
 		grq.onclick = function () {
@@ -4253,11 +4252,11 @@ function GameClient() {
 
 				if ("0" == localStorage.qual) {
 					localStorage.qual = "1";
-					grqi.src = "./assets/highquality.png";
+					grqi.src = "/assets/highquality.png";
 					want_quality = 1
 				} else {
 					localStorage.qual = "0";
-					grqi.src = "./assets/lowquality.png";
+					grqi.src = "/assets/lowquality.png";
 					want_quality = 0
 				}
 			} catch (b) {

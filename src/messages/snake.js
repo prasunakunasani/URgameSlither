@@ -11,13 +11,9 @@ exports.build = function (snake) {
     b += message.writeInt8(b, arr, 0);
     b += message.writeInt8(b, arr, type);
     b += message.writeInt16(b, arr, snake.id);
-    //Was D
-    //b += message.writeInt24(b, arr, snake.D);
-     b += message.writeInt24(b, arr, (snake.direction.angle / snake.direction.expectedAngle) * 16777215);
+    b += message.writeInt24(b, arr, (snake.direction.angle /(Math.PI*2)) * 16777215);
     b += message.writeInt8(b, arr, 0);
-    //Was X
-    //	b += message.writeInt24(b, arr, (snake.X) );
-     b += message.writeInt24(b, arr, (snake.direction.angle / snake.direction.expectedAngle) * 16777215);
+    b += message.writeInt24(b, arr, (snake.direction.expectedAngle/(Math.PI*2)) * 16777215);
     b += message.writeInt16(b, arr, snake.speed * 1E3);
     b += message.writeInt24(b, arr, 0);
     b += message.writeInt8(b, arr, snake.skin);

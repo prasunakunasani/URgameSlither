@@ -7,8 +7,8 @@ var c = {
 	highscoreMsg: "Set this message in the config",
 	food: 1000,
 	maxFoodColors: 8,
-	minFoodSize: 40,
-	maxFoodSize: 100,
+	minFoodSize: 25,
+	maxFoodSize: 75,
 	foodPerSpawn: 1000, // Not Implemented
 	gameRadius: 2000,//21600,
 	sectorSize: 300,
@@ -18,10 +18,12 @@ var c = {
 	dataUpdateRate: 1000,
 	nsp1: 5.39,
 	nsp2: 0.4,
-	maxSpeed: 14,
+	maxSpeed: 12,
 	snakeStartSize: 2,
 	spangdv: 4.8,
-	
+	foodToGrow: 200,
+	speedMult: 1,
+	speedBonus: 0,
 	//5 seconds
 	intervalRate: 5000
 };
