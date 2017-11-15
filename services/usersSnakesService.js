@@ -10,21 +10,7 @@ class UsersSnakesService {
 
     InsertUsersSnakeData(snakeDetails, next) {
 
-        //fixme - see if this can be done shorter using mongoose Insert instead.
-
-        var saveSnakeDetails = new UsersSnakes({
-
-            cookie_id: snakeDetails.cookie_id,
-            boost_count: snakeDetails.boost_count,
-            duration: snakeDetails.duration,
-            interval_data:
-                {
-                    length: snakeDetails.interval_data.length,
-                    kills: snakeDetails.interval_data.kills
-                },
-            kill_count: snakeDetails.kill_count,
-            length: snakeDetails.length
-        });
+         var saveSnakeDetails = new UsersSnakes(snakeDetails);
 
         saveSnakeDetails.save(function (err) {
             if (err) return next(err);

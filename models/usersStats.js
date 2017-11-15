@@ -7,23 +7,24 @@ var usersStatsSchema = new mongoose.Schema({
     cookie_id:
         {
             type: String,
-            required: [true, 'No cookie ID']
+            default: ""
         },
     cumulative_moving_average_snake_length:
         {
-            type: [Number]
+            type: [Number],
+            default: []
         },
     interval_data:
         {
             averages:
                 {
                     type: [Number],
-                    default: [0]
+                    default: []
                 },
             sums:
                 {
                     type: [Number],
-                    default: [0]
+                    default: []
                 }
 
         },
