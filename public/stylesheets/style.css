@@ -108,16 +108,13 @@ body {
     border: none;
 }
 
-.well#one {
-    background-color: #2E3740;
+.card {
+    background-color: #242F39;
 }
 
-.well#two {
-    background-color: salmon;
-}
+.well
+{ background-color: #242F39;
 
-.well#three {
-    background-color: mediumblue;
 }
 
 #avgSnakeLengthchartdiv, #highestSnakeLengthchartdiv, #timeOfKillschartdiv, #avgSnakeLengthAllchartdiv, #highestSnakeLengthAllchartdiv {
@@ -139,7 +136,7 @@ body {
 /*Logo*/
 svg {
     display: block;
-    font: 10.5em 'Montserrat';
+    font: 300px 'Montserrat';
     margin: 0 auto;
 }
 
@@ -179,55 +176,15 @@ svg {
 
 /*End of Logo*/
 
-.rad-info-box {
-    margin-bottom: 16px;
-    padding: 20px;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
-    background: grey !important;
-}
-
-.rad-info-box i {
-    display: block;
-    background-clip: padding-box;
-    margin-right: 15px;
-    height: 60px;
-    width: 60px;
-    border-radius: 100%;
-    line-height: 60px;
-    text-align: center;
-    font-size: 4.4em;
-    position: absolute;
-}
-
-.rad-info-box .value,
-.rad-info-box .heading {
-    display: block;
-    position: relative;
-    color: #515d6e;
-    text-align: right;
-    z-index: 10;
-}
-
-.rad-info-box .heading {
-    font-size: 1.2em;
-    font-weight: 300;
-    text-transform: uppercase;
-}
-
-.rad-info-box .value {
-    font-size: 2.1em;
-    font-weight: 600;
-    margin-top: 5px;
-}
-
-.icon {
-    color: pink;
-}
-
 /* Import fonts */
 @import url(http://fonts.googleapis.com/css?family=Ruda:400,700,900);
 
-/* LINE ICONS CONFIGURATION */
+#spacing
+{
+    margin-bottom: 15px;
+}
+
+
 
 .box1 {
     padding: 15px;

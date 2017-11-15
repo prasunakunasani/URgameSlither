@@ -64,6 +64,7 @@ function generateAllAvgChartData(dailyStats) {
 
 function generateAllHighChartData(dailyStats) {
     var highestSnakeLengthAllChartData = [];
+
     for (var x = 0; x < dailyStats.interval_data.sums.length; x++) {
         highestSnakeLengthAllChartData.push({
             second: x * 5,
@@ -73,6 +74,39 @@ function generateAllHighChartData(dailyStats) {
     return highestSnakeLengthAllChartData;
 
 };
+
+function secondsToHms(s) {
+    return (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s;
+};
+
+function getMinutesAgo(date)
+{
+
+    var seconds = Math.floor((new Date() - date) / 1000);
+
+    var interval = Math.floor(seconds / 31536000);
+
+    if (interval > 1) {
+        return interval + " years";
+    }
+    interval = Math.floor(seconds / 2592000);
+    if (interval > 1) {
+        return interval + " months";
+    }
+    interval = Math.floor(seconds / 86400);
+    if (interval > 1) {
+        return interval + " days";
+    }
+    interval = Math.floor(seconds / 3600);
+    if (interval > 1) {
+        return interval + " hours";
+    }
+    interval = Math.floor(seconds / 60);
+    if (interval > 1) {
+        return interval + " minutes";
+    }
+    return Math.floor(seconds) + " seconds";
+}
 
 
 class StatsController {
@@ -84,17 +118,29 @@ class StatsController {
     Index(req, res, next) {
 //fixme - the data for dailystats should come from today's date
         Users.count({'cookie_id': cookie_id}, function (err, count) {
-            if (err) { return next(err); }
+            if (err) {
+                return next(err);
+            }
             Users.findOne({'cookie_id': cookie_id}, function (err, users) {
-                if (err) { return next(err); }
+                if (err) {
+                    return next(err);
+                }
                 UsersSnakes.find(function (err, usersSnakes) {
-                    if (err) { return next(err); }
+                    if (err) {
+                        return next(err);
+                    }
                     UsersStats.findOne({'cookie_id': cookie_id}, function (err, usersStats) {
-                        if (err) { return next(err); } //todo -  check here that the stats are from today. Else, blank and create a new record.
-                        DailyStats.findOne({'createdOn': {$lt: new Date().toISOString()} }, function (err, dailyStats) {
-                            if (err) { return next(err); }
+                        if (err) {
+                            return next(err);
+                        } //todo -  check here that the stats are from today. Else, blank and create a new record.
+                        DailyStats.findOne({'createdOn': {$lt: new Date().toISOString()}}, function (err, dailyStats) {
+                            if (err) {
+                                return next(err);
+                            }
                             CalculatedStats.find(function (err, calculatedStats) {
-                                if (err) { return next(err); }
+                                if (err) {
+                                    return next(err);
+                                }
                                 res.render('stats',
                                     {
                                         totalgames: count,
@@ -107,7 +153,9 @@ class StatsController {
                                         highestSnakeLengths: generateHighChartData(usersStats),
                                         timeOfKills: generateKillsChartData(usersStats),
                                         avgSnakeLengthAll: generateAllAvgChartData(dailyStats),
-                                        highestSnakeLengthAll: generateAllHighChartData(dailyStats)
+                                        highestSnakeLengthAll: generateAllHighChartData(dailyStats),
+                                        secondsToHms: secondsToHms,
+                                        getMinutesAgo: getMinutesAgo
                                     });
                             });
                         });
@@ -131,17 +179,29 @@ class StatsController {
     AjaxUpdateProfileStats(req, res, next) {
         if (req.xhr) {
             Users.count({'cookie_id': cookie_id}, function (err, count) {
-                if (err) { return next(err); }
+                if (err) {
+                    return next(err);
+                }
                 Users.findOne({'cookie_id': cookie_id}, function (err, users) {
-                    if (err) { return next(err); }
+                    if (err) {
+                        return next(err);
+                    }
                     UsersSnakes.find(function (err, usersSnakes) {
-                        if (err) { return next(err); }
+                        if (err) {
+                            return next(err);
+                        }
                         UsersStats.findOne({'cookie_id': cookie_id}, function (err, usersStats) {
-                            if (err) { return next(err); }
+                            if (err) {
+                                return next(err);
+                            }
                             DailyStats.find(function (err, dailyStats) {
-                                if (err) { return next(err); }
+                                if (err) {
+                                    return next(err);
+                                }
                                 CalculatedStats.find(function (err, calculatedStats) {
-                                    if (err) { return next(err); }
+                                    if (err) {
+                                        return next(err);
+                                    }
                                     res.render('profilestats',
                                         {
                                             totalgames: count,
@@ -165,17 +225,29 @@ class StatsController {
     AjaxUpdateGlobalStats(req, res, next) {
         if (req.xhr) {
             Users.count({'cookie_id': cookie_id}, function (err, count) {
-                if (err) { return next(err); }
+                if (err) {
+                    return next(err);
+                }
                 Users.findOne({'cookie_id': cookie_id}, function (err, users) {
-                    if (err) { return next(err); }
+                    if (err) {
+                        return next(err);
+                    }
                     UsersSnakes.find(function (err, usersSnakes) {
-                        if (err) { return next(err); }
+                        if (err) {
+                            return next(err);
+                        }
                         UsersStats.findOne({'cookie_id': cookie_id}, function (err, usersStats) {
-                            if (err) { return next(err); }
+                            if (err) {
+                                return next(err);
+                            }
                             DailyStats.find(function (err, dailyStats) {
-                                if (err) { return next(err); }
+                                if (err) {
+                                    return next(err);
+                                }
                                 CalculatedStats.find(function (err, calculatedStats) {
-                                    if (err) { return next(err); }
+                                    if (err) {
+                                        return next(err);
+                                    }
                                     res.render('globalstats',
                                         {
                                             totalgames: count,

@@ -135,3 +135,5 @@ function makeChart(chartDiv, chartData, yAxisName) {
 //     // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
 //     chart.zoomToIndexes(chartData.length - 40, chartData.length - 1);
 // }
+
+
