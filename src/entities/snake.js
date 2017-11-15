@@ -46,32 +46,43 @@ class Snake extends EventEmitter {
 
 
 	init() {
-		this._speed = 5.79;
-		//Direction angle
-		this._D = 5.69941607541398 / 2 / Math.PI * 16777215;
-		this._X = this.D;
-
+		
+		//Speed is a value from 5.79 to 14
+		this._speed = config["nsp1"] + config["nsp2"];
+		
 		//Fullness amount of last part of snake
-		//Fam is a float between 0 and 1, multiplied by to make it a 24 bit number to send to client
-		this._fam = 0; //* 16777215
-
+		//Fam is a float between 0 and 1
+		this._fam = 0;
 		//Starting snake sections is 2
 		//Number of parts
 		this._sct = config["snakeStartSize"];
+		
+		//Unused, but needs to slow snake down when its turning
+		//Currently snake looks too fast when making turns
 		this._sc = Math.min(6, 1 + (this._sct - 2) / 106);
 		this.scang = 0.13 + 0.87 * Math.pow((7 - this._sc) / 6, 2);
-
 		this._spangdv = 4.8;
 		this._spang = Math.max(this._speed / this._spangdv, 1);
 
 		this._length = this._sct + this._fam;
-
+		
+		/*
+		Angle is a value from 0 to 2Pi
+		0 is facing right
+		Pi/2 is facing downwards
+		Pi is facing right
+		3Pi/2 is facing upwards
+		*/
 		this._direction = {
-			x: 1,
-			y: 1,
-			angle: ((0.033 * 1e3) * 0 * this.scang * this.spang)
+			x: 0,
+			y: 0,
+			//Start facing upwards
+			angle: ((3/4) * Math.PI*2),
+			expectedAngle: ((3/4) * Math.PI *2)
 		};
+
 		this._parts = [];
+		//Tail grows downwards
 		for (var i = this._sct - 2; i >= 0; i--) {
 			this._parts.push({
 				x: this._head.x,
@@ -107,14 +118,12 @@ class Snake extends EventEmitter {
 	}
 
 
-	update(deltaTime, count) {
-		var baseSpeed = config["nsp1"] + config["nsp2"];
-		if (this._boost && this._length > 2 || this._speed > 8) {
-			if (parseInt(count) % 4 == 0) {
-				this._updateDirection(deltaTime * 4);
-				this._updatePosition(deltaTime * 4);
+	update(deltaTime, count, fast_count) {
+		if (this._boost && this._length > 2 && this._speed > 7 || this._speed > 11) {
+			if (parseInt(fast_count) % 5 == 0) {
+				this._updateDirection(deltaTime * 5);
+				this._updatePosition(deltaTime * 5);
 			}
-
 		} else {
 			if (parseInt(count) % 12 == 0) {
 				this._updateDirection(deltaTime * 12);
@@ -126,7 +135,8 @@ class Snake extends EventEmitter {
 	_updatePosition(deltaTime) {
 		var sc = Math.min(6, 1 + (this._sct - 2) / 106);
 		var baseSpeed = config["nsp1"] + config["nsp2"];
-		var scale = 1;// baseSpeed / (config["nsp1"] + config["nsp2"] * sc + 0.1);
+		//Bigger snakes move slower
+		var scale = baseSpeed / (config["nsp1"] + (config["nsp2"] * sc) + 0.1);
 
 		if (this._boost && this._length > 2) {
 			this._speed += 1.45;
@@ -136,8 +146,13 @@ class Snake extends EventEmitter {
 			this._speed -= 1.95;
 			if (this._speed < baseSpeed) this._speed = baseSpeed;
 		}
-
-		let distance = scale * deltaTime / 8 * this._speed / 4;
+	
+		//This is speed formula used in client
+		let formula = deltaTime / 8 * this._speed / 4;
+		
+		//Multiply by scale to slow down larger snakes
+		let distance = scale * formula;
+		distance = distance * config["speedMult"] + config["speedBonus"];
 		this._direction.x = parseInt(Math.cos(this._direction.angle) * distance);
 		this._direction.y = parseInt(Math.sin(this._direction.angle) * distance);
 		this._head.x += this._direction.x;
@@ -237,7 +252,7 @@ class Snake extends EventEmitter {
 		var fmlts = config["fmlts"];
 		amount = fmlts[this._sct] * amount;
 
-		this._fam += amount / 200;
+		this._fam += amount / config["foodToGrow"];
 		if (this._fam > 2) this._fam = 1.95;
 
 		if (this._fam > 1) {
@@ -310,15 +325,7 @@ class Snake extends EventEmitter {
 
 
 	}
-
-	get xOff() {
-		return this._xOff;
-	}
-
-	get yOff() {
-		return this._yOff;
-	}
-
+	
 	get speed() {
 		return this._speed;
 	}
@@ -345,14 +352,6 @@ class Snake extends EventEmitter {
 
 	get skin() {
 		return this._color;
-	}
-
-	get D() {
-		return this._D;
-	}
-
-	get X() {
-		return this._X;
 	}
 
 	get cookie_id() {

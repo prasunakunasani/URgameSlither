@@ -67,6 +67,8 @@ app.use(passport.session());
 //app.use(cookie.router);
 app.use(cookie);
 app.use(oauth2.router);
+app.use(oauth2.template);
+
 
 //Routes
 app.use('/', index);
@@ -75,21 +77,21 @@ app.use('/game',gameController);
 
 
 
-// catch 404 and forward to error handler2
+// redirect all other urls to homepage
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+  res.redirect("/");
 });
 
 // error handler
-app.use(function(err, req, res) {
+app.use(function(err, req, res, next) {
   // set locals, only providing error in development
+	
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
   res.status(err.status || 500);
+  
   res.render('error');
 });
 

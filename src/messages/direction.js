@@ -35,6 +35,7 @@ exports.build = function (snake) {
 		message.writeInt8(7, arr, snake.speed * 18);
 	}
 
+		
 	return arr;
 
 };

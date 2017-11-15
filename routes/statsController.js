@@ -7,11 +7,18 @@ let UsersStats = require('../models/usersStats');
 let UsersSnakes = require('../models/userssnakes');
 let DailyStats = require('../models/dailyStats');
 let CalculatedStats = require('../models/calculatedstats');
-var cookie_id = "rkrDhmZA-";
 
 function generateAvgChartData(usersStats) {
 
     var avgSnakeLengthChartData = [];
+
+    if (!usersStats)
+    {
+        return [{
+            second: 0,
+            length: 0
+        }];
+    }
 
     for (var x = 0; x < usersStats.interval_data.averages.length; x++) {
         avgSnakeLengthChartData.push({
@@ -27,6 +34,14 @@ function generateHighChartData(usersStats) {
 
     var highestSnakeLengthChartData = [];
 
+    if (!usersStats)
+    {
+        return [{
+            second: 0,
+            length: 0
+        }];
+    }
+
     for (var x = 0; x < usersStats.interval_data.sums.length; x++) {
         highestSnakeLengthChartData.push({
             second: x * 5,
@@ -39,6 +54,15 @@ function generateHighChartData(usersStats) {
 
 function generateKillsChartData(usersStats) {
     var timeOfKillsChartData = [];
+
+    if (!usersStats)
+    {
+        return [{
+            second: 0,
+            kills: 0
+        }];
+    }
+
     for (var x = 0; x < usersStats.best_snake.interval_data.kills.length; x++) {
         timeOfKillsChartData.push({
             second: x * 5,
@@ -52,6 +76,14 @@ function generateKillsChartData(usersStats) {
 function generateAllAvgChartData(dailyStats) {
     var avgSnakeLengthAllChartData = [];
 
+    if (!dailyStats)
+    {
+        return [{
+            second: 0,
+            length: 0
+        }];
+    }
+
     for (var x = 0; x < dailyStats.interval_data.averages.length; x++) {
         avgSnakeLengthAllChartData.push({
             second: x * 5,
@@ -64,6 +96,14 @@ function generateAllAvgChartData(dailyStats) {
 
 function generateAllHighChartData(dailyStats) {
     var highestSnakeLengthAllChartData = [];
+
+    if (!dailyStats)
+    {
+        return [{
+            second: 0,
+            length: 0
+        }];
+    }
 
     for (var x = 0; x < dailyStats.interval_data.sums.length; x++) {
         highestSnakeLengthAllChartData.push({
@@ -116,6 +156,8 @@ class StatsController {
     }
 
     Index(req, res, next) {
+        
+        var cookie_id= req.cookies.cookie_id;
 //fixme - the data for dailystats should come from today's date
         Users.count({'cookie_id': cookie_id}, function (err, count) {
             if (err) {
@@ -141,14 +183,15 @@ class StatsController {
                                 if (err) {
                                     return next(err);
                                 }
+
                                 res.render('stats',
                                     {
                                         totalgames: count,
-                                        usersList: users,
-                                        usersSnakesList: usersSnakes,
-                                        usersStatsList: usersStats,
-                                        dailyStatsList: dailyStats,
-                                        calculatedStatsList: calculatedStats,
+                                        usersList: users?users:new Users(),
+                                        usersSnakesList: usersSnakes?usersSnakes:new UsersSnakes(),
+                                        usersStatsList: usersStats?usersStats:new UsersStats({best_snake:new UsersSnakes()}),
+                                        dailyStatsList: dailyStats?dailyStats:new DailyStats,
+                                        calculatedStatsList: calculatedStats?calculatedStats:new CalculatedStats(),
                                         avgSnakeLengths: generateAvgChartData(usersStats),
                                         highestSnakeLengths: generateHighChartData(usersStats),
                                         timeOfKills: generateKillsChartData(usersStats),
@@ -178,6 +221,7 @@ class StatsController {
 //fixme -  This is probably not the data that needs to be loaded for AJAX calls. Look at Index function.
     AjaxUpdateProfileStats(req, res, next) {
         if (req.xhr) {
+            var cookie_id= req.cookies.cookie_id;
             Users.count({'cookie_id': cookie_id}, function (err, count) {
                 if (err) {
                     return next(err);
@@ -222,8 +266,9 @@ class StatsController {
         }
     }
 
-    AjaxUpdateGlobalStats(req, res, next) {
+    AjaxUpdateGlobalStats(req, res, next) { 
         if (req.xhr) {
+            var cookie_id= req.cookies.cookie_id;
             Users.count({'cookie_id': cookie_id}, function (err, count) {
                 if (err) {
                     return next(err);
@@ -248,6 +293,9 @@ class StatsController {
                                     if (err) {
                                         return next(err);
                                     }
+
+
+
                                     res.render('globalstats',
                                         {
                                             totalgames: count,

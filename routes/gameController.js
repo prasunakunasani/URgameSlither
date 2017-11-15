@@ -16,7 +16,6 @@ class GameController {
     }
 
     Index(req, res, next) {
-
         res.render('game/index');
     }
 
@@ -39,6 +38,7 @@ class GameController {
 var gameController = new GameController(express);
 
 router.get('/', gameController.Index.bind(gameController));
+router.get('/testing', gameController.Index.bind(gameController));
 router.post('/saveUserAndSnake', gameController.saveUserAndSnake.bind(gameController));
 
 module.exports = router;
