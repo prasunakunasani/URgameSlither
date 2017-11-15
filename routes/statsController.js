@@ -7,7 +7,6 @@ let UsersStats = require('../models/usersStats');
 let UsersSnakes = require('../models/userssnakes');
 let DailyStats = require('../models/dailyStats');
 let CalculatedStats = require('../models/calculatedstats');
-var cookie_id = "rkrDhmZA-";
 
 function generateAvgChartData(usersStats) {
 
@@ -116,6 +115,8 @@ class StatsController {
     }
 
     Index(req, res, next) {
+        
+        var cookie_id: req.cookies.cookie_id; 
 //fixme - the data for dailystats should come from today's date
         Users.count({'cookie_id': cookie_id}, function (err, count) {
             if (err) {
@@ -178,6 +179,7 @@ class StatsController {
 //fixme -  This is probably not the data that needs to be loaded for AJAX calls. Look at Index function.
     AjaxUpdateProfileStats(req, res, next) {
         if (req.xhr) {
+            var cookie_id: req.cookies.cookie_id; 
             Users.count({'cookie_id': cookie_id}, function (err, count) {
                 if (err) {
                     return next(err);
@@ -222,8 +224,9 @@ class StatsController {
         }
     }
 
-    AjaxUpdateGlobalStats(req, res, next) {
+    AjaxUpdateGlobalStats(req, res, next) { 
         if (req.xhr) {
+            var cookie_id: req.cookies.cookie_id; 
             Users.count({'cookie_id': cookie_id}, function (err, count) {
                 if (err) {
                     return next(err);
