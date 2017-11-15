@@ -294,7 +294,7 @@ class StatsService {
                 tempRecord.totals.all_time.kills = this.cachedCalculatedStats.totals.all_time.kills + snakeDetails.kills;
                 tempRecord.totals.all_time.length = this.cachedCalculatedStats.totals.all_time.length + snakeDetails.length
 
-                CalculatedStats.findOneAndUpdate({_id: '5a04b2fc05644d0ab5bb3220'}, tempRecord, function (err, result) {
+                CalculatedStats.findOneAndUpdate({}, tempRecord, function (err, result) {
                     if (err) return next(err);
                     else if (result.ok == '0') return next(JSON.stringify(result));
 
