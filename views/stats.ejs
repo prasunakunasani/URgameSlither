@@ -33,11 +33,10 @@
 
             <div class="row">
                 <div class="col-sm-2 well">
-                    Hello
-                    <% if (!profile) { %>
-                    SNAKE NAME
+                    <% if (!usersList.snake.name) { %>
+                    <div>Please play a game</div>
                     <% }else{ %>
-                    <%= profile.displayName %>
+                    <%= usersList.snake.name %>
                     <% } %>
                   <div>Last game played:</div>
                     <%=getMinutesAgo(usersStatsList.lastModifiedOn)%> ago

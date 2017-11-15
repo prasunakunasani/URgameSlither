@@ -3,7 +3,8 @@ var mongoose = require('mongoose');
 var usersSnakesSchema = new mongoose.Schema({
     cookie_id:
         {
-            type: String
+            type: String,
+            default: ""
         },
     boosts:
         {
@@ -25,12 +26,12 @@ var usersSnakesSchema = new mongoose.Schema({
             length:
                 {
                     type: [Number],
-                    default: [0]
+                    default: []
                 },
             kills:
                 {
                     type: [Number],
-                    default: [0]
+                    default: []
                 }
         },
     kills:
