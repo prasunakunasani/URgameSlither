@@ -53,9 +53,9 @@ loadGlobalCharts();
 
 function loadProfileCharts() {
 
-    var avgSnakeLengthChart = makeChart("avgSnakeLengthchartdiv", avgSnakeLengthChartData, "length");
-    var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData, "length");
-    var timeOfKillsChart = makeChart("timeOfKillschartdiv", timeOfKillsChartData, "kills");
+    var avgSnakeLengthChart = makeChart("avgSnakeLengthchartdiv", avgSnakeLengthChartData, "length","#AE3F69");
+    var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData, "length","#F4B46D");
+    var timeOfKillsChart = makeChart("timeOfKillschartdiv", timeOfKillsChartData, "kills","#60C57C");
 
 }
 
@@ -64,11 +64,11 @@ function loadGlobalCharts() {
     console.log(avgSnakeLengthAllChart);
     console.log('Printing kills here:');
     console.log(highestSnakeLengthAllChart);
-    var avgSnakeLengthAllChart = makeChart("avgSnakeLengthAllchartdiv", avgSnakeLengthAllChartData, "length");
-    var highestSnakeLengthAllChart = makeChart("highestSnakeLengthAllchartdiv", highestSnakeLengthAllChartData, "length");
+    var avgSnakeLengthAllChart = makeChart("avgSnakeLengthAllchartdiv", avgSnakeLengthAllChartData, "length","#60C57C");
+    var highestSnakeLengthAllChart = makeChart("highestSnakeLengthAllchartdiv", highestSnakeLengthAllChartData, "length","#60C57C");
 }
 
-function makeChart(chartDiv, chartData, yAxisName) {
+function makeChart(chartDiv, chartData, yAxisName,graphColor) {
 
     return AmCharts.makeChart(chartDiv, {
         "type": "serial",
@@ -89,6 +89,7 @@ function makeChart(chartDiv, chartData, yAxisName) {
         "graphs": [
             {
                 "id": "g1",
+                "fillColors": "[[graphColor]]",
                 "balloonText": "[[value]]", //what the pop up when hovered is
                 "bullet": "round", //available: none, square, triangleUp, traingleDown, bubble, custom, round
                 "bulletBorderAlpha": 1, //bulletborderopacity
@@ -135,5 +136,5 @@ function makeChart(chartDiv, chartData, yAxisName) {
 //     // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
 //     chart.zoomToIndexes(chartData.length - 40, chartData.length - 1);
 // }
-
+//
 

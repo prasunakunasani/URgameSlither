@@ -113,8 +113,27 @@ body {
 }
 
 .well
-{ background-color: #242F39;
+{
+    background-color: #242F39;
+}
 
+.well.imp
+{
+    text-align: center;
+}
+
+#ttlscore{
+    color: #AE3F69;
+}
+
+
+#ttlkills{
+   color: #F4B46D;
+}
+
+
+#ttlboosts{
+    color: #60C57C;
 }
 
 #avgSnakeLengthchartdiv, #highestSnakeLengthchartdiv, #timeOfKillschartdiv, #avgSnakeLengthAllchartdiv, #highestSnakeLengthAllchartdiv {
@@ -189,7 +208,7 @@ svg {
 .box1 {
     padding: 15px;
     text-align: center;
-    color: #989898;
+    color: #ffffff;
     border-bottom: 1px solid #989898;
 }
 
@@ -200,6 +219,20 @@ svg {
 
 .box1 h3 {
     text-align: center;
+}
+
+.box1.avg{
+    color: #F4B46D;
+}
+
+.box1.best
+{
+    color: #AE3F69;
+}
+
+.box1.kills
+{
+    color: #60C57C;
 }
 
 .box0:hover .box1 {
