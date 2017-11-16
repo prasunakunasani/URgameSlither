@@ -2,6 +2,7 @@ const EventEmitter = require('events');
 const config = require('../../config/config.js');
 
 class Snake extends EventEmitter {
+
 	constructor(id, cookie, name, color, position) {
 		super();
 
@@ -9,9 +10,25 @@ class Snake extends EventEmitter {
 		this._name = name;
 		this._color = color;
 		this._head = position;
+		//Speed is a value from 5.79 to 14
+		this._speed = config["nsp1"] + config["nsp2"];
 		this._boost = false;
-		this._lastSpeedSent = 0;
-		this._lastAngleSent = 0;
+
+		/*
+			Angle is a value from 0 to 2Pi
+			0 is facing right
+			Pi/2 is facing downwards
+			Pi is facing right
+			3Pi/2 is facing upwards
+		*/
+		this._direction = {
+			x: 0,
+			y: 0,
+			//Start facing upwards
+			angle: ((3 / 4) * Math.PI * 2),
+			expectedAngle: ((3 / 4) * Math.PI * 2)
+		};
+		
 
 		//Variables to record data
 		this._data = {
@@ -26,7 +43,6 @@ class Snake extends EventEmitter {
 			},
 			largestSnake: 0
 		};
-
 		this._user = {
 			cookie_id: cookie,
 			snake: {
@@ -34,52 +50,28 @@ class Snake extends EventEmitter {
 				color: color
 			}
 		};
-		this._cookie_id = cookie;
+		
 		this._initTime = Date.now();
 		this._time = this._initTime;
 		this._lastIntervalTime = this._initTime - config["intervalRate"];
 		this._killCounter = 0;
-
-		this.init();
-
-	}
-
-
-	init() {
-		
-		//Speed is a value from 5.79 to 14
-		this._speed = config["nsp1"] + config["nsp2"];
-		
+		this._lastSpeedSent = 0;
+		this._lastAngleSent = 0;
 		//Fullness amount of last part of snake
 		//Fam is a float between 0 and 1
 		this._fam = 0;
 		//Starting snake sections is 2
 		//Number of parts
 		this._sct = config["snakeStartSize"];
-		
+
 		//Unused, but needs to slow snake down when its turning
 		//Currently snake looks too fast when making turns
 		this._sc = Math.min(6, 1 + (this._sct - 2) / 106);
-		this.scang = 0.13 + 0.87 * Math.pow((7 - this._sc) / 6, 2);
+		this._scang = 0.13 + 0.87 * Math.pow((7 - this._sc) / 6, 2);
 		this._spangdv = 4.8;
 		this._spang = Math.max(this._speed / this._spangdv, 1);
 
 		this._length = this._sct + this._fam;
-		
-		/*
-		Angle is a value from 0 to 2Pi
-		0 is facing right
-		Pi/2 is facing downwards
-		Pi is facing right
-		3Pi/2 is facing upwards
-		*/
-		this._direction = {
-			x: 0,
-			y: 0,
-			//Start facing upwards
-			angle: ((3/4) * Math.PI*2),
-			expectedAngle: ((3/4) * Math.PI *2)
-		};
 
 		this._parts = [];
 		//Tail grows downwards
@@ -88,9 +80,23 @@ class Snake extends EventEmitter {
 				x: this._head.x,
 				y: this._head.y + 25 * i
 			});
-
 		}
-
+		this._cookie = cookie;
+	}
+	
+	//PUBLIC FUNCTIONS
+	update(deltaTime, count, fast_count) {
+		if (this._boost && this._length > 2 && this._speed > 7 || this._speed > 11) {
+			if (parseInt(fast_count) % 5 == 0) {
+				this._updateDirection(deltaTime * 5);
+				this._updatePosition(deltaTime * 5);
+			}
+		} else {
+			if (parseInt(count) % 12 == 0) {
+				this._updateDirection(deltaTime * 12);
+				this._updatePosition(deltaTime * 12);
+			}
+		}
 	}
 
 	finalRecord() {
@@ -117,21 +123,107 @@ class Snake extends EventEmitter {
 		}
 	}
 
-
-	update(deltaTime, count, fast_count) {
-		if (this._boost && this._length > 2 && this._speed > 7 || this._speed > 11) {
-			if (parseInt(fast_count) % 5 == 0) {
-				this._updateDirection(deltaTime * 5);
-				this._updatePosition(deltaTime * 5);
-			}
-		} else {
-			if (parseInt(count) % 12 == 0) {
-				this._updateDirection(deltaTime * 12);
-				this._updatePosition(deltaTime * 12);
-			}
-		}
+	getScore() {
+		var fpsls = config["fpsls"];
+		var fmlts = config["fmlts"];
+		var a = Math.floor(15 * (fpsls[this._sct] + this._fam / fmlts[this._sct] - 1) - 5) / 1;
+		return a;
 	}
 
+	get body() {
+		return this._parts[0];
+		//return this._parts[this._parts.length-1];
+	}
+	
+	setBoost(enabled) {
+		this._boost = enabled;
+	}
+
+	turn(radians) {
+		var old = this._direction.angle;
+		old += radians;
+		//	console.log(radians);
+		if (old > Math.PI * 2) old -= Math.PI * 2;
+		if (old < 0) old += Math.PI * 2;
+
+		this._direction.expectedAngle = old;
+
+	}
+
+	setExpectedAngle(radians) {
+		var degrees = radians * (180 / Math.PI);
+		//	console.log(degrees);
+		this._direction.expectedAngle = radians;
+		return;
+	}
+
+	
+	//GETTERS
+	get name() {
+		return this._name;
+	}
+
+	get color() {
+		return this._color;
+	}
+
+	get position() {
+		return this._position;
+	}
+
+	get lastSpeedSent() {
+		return this._lastSpeedSent;
+	}
+
+	get lastAngleSent() {
+		return this._lastAngleSent;
+	}
+
+	get user() {
+		return this._user;
+	}
+
+
+	get time() {
+		return this._time;
+	}
+
+	get id() {
+		return this._id;
+	}
+
+	get data() {
+		return this._data;
+	}
+
+	get parts(){
+		return this._parts;
+	}
+	
+	get direction(){
+		return this._direction;
+	}
+
+	get speed() {
+		return this._speed;
+	}
+
+	get head(){
+		return this._head;
+	}
+
+	get sct() {
+		return this._sct;
+	}
+
+	get length() {
+		return this._length;
+	}
+
+	get fam(){
+		return this._fam;
+	}
+	//PRIVATE FUNCTIONS
 	_updatePosition(deltaTime) {
 		var sc = Math.min(6, 1 + (this._sct - 2) / 106);
 		var baseSpeed = config["nsp1"] + config["nsp2"];
@@ -146,10 +238,10 @@ class Snake extends EventEmitter {
 			this._speed -= 1.95;
 			if (this._speed < baseSpeed) this._speed = baseSpeed;
 		}
-	
+
 		//This is speed formula used in client
 		let formula = deltaTime / 8 * this._speed / 4;
-		
+
 		//Multiply by scale to slow down larger snakes
 		let distance = scale * formula;
 		distance = distance * config["speedMult"] + config["speedBonus"];
@@ -160,7 +252,7 @@ class Snake extends EventEmitter {
 
 		var sizeChange = baseSpeed - this._speed;
 		if (sizeChange !== 0)
-			this.increaseSize(sizeChange * 4);
+			this._increaseSize(sizeChange * 4);
 
 		this._updateParts();
 		if (Math.abs(this._direction.x) < 120 && Math.abs(this._direction.y) < 120) {
@@ -207,11 +299,11 @@ class Snake extends EventEmitter {
 		if (radsOld > rads) {
 			if (diff - Math.PI > 0) {
 				this._direction.increasing = true;
-			//	console.log("increasing1");
+				//	console.log("increasing1");
 				radsOld += maxRads;
 			}
 			if (diff - Math.PI < 0) {
-			//	console.log("decreasing1");
+				//	console.log("decreasing1");
 				this._direction.increasing = false;
 				radsOld -= maxRads;
 			}
@@ -222,7 +314,7 @@ class Snake extends EventEmitter {
 				//console.log("increasing2");
 			}
 			if (diff + Math.PI < 0) {
-			//	console.log("decreasing2");
+				//	console.log("decreasing2");
 				radsOld -= maxRads;
 				this._direction.increasing = false;
 			}
@@ -243,11 +335,9 @@ class Snake extends EventEmitter {
 		// this.scang = 0.13 + 0.87 * Math.pow((7 - this._sc) / 6, 2);
 		// this._spang = Math.max(this._speed / this._spangdv, 1);
 		//this._direction.angle = ((0.033 * 1e3) * rad * this.scang * this.spang)
-
 	}
 
-
-	increaseSize(amount) {
+	_increaseSize(amount) {
 		var lastScore = this.getScore();
 		var fmlts = config["fmlts"];
 		amount = fmlts[this._sct] * amount;
@@ -285,103 +375,6 @@ class Snake extends EventEmitter {
 		}
 	}
 
-
-	getScore() {
-		var fpsls = config["fpsls"];
-		var fmlts = config["fmlts"];
-		var a = Math.floor(15 * (fpsls[this._sct] + this._fam / fmlts[this._sct] - 1) - 5) / 1;
-		return a;
-	}
-
-	setBoost(enabled) {
-		this._boost = enabled;
-	}
-
-	get data() {
-		return this._data;
-	}
-
-	get user() {
-		return this._user;
-	}
-
-
-	turn(radians) {
-		var old = this._direction.angle;
-		old += radians;
-		//	console.log(radians);
-		if (old > Math.PI * 2) old -= Math.PI * 2;
-		if (old < 0) old += Math.PI * 2;
-
-		this._direction.expectedAngle = old;
-
-	}
-
-	setExpectedAngle(radians) {
-		var degrees = radians * (180 / Math.PI);
-		//	console.log(degrees);
-		this._direction.expectedAngle = radians;
-		return;
-
-
-	}
-	
-	get speed() {
-		return this._speed;
-	}
-
-	get fam() {
-		return this._fam;
-	}
-
-	get sct() {
-		return this._sct;
-	}
-
-	get length() {
-		return this._length;
-	}
-
-	get direction() {
-		return this._direction;
-	}
-
-	get spang() {
-		return this._spang;
-	}
-
-	get skin() {
-		return this._color;
-	}
-
-	get cookie_id() {
-		return this._cookie_id;
-	}
-
-	get color() {
-		return this._color;
-	}
-
-	get id() {
-		return this._id;
-	}
-
-	get head() {
-		return this._head;
-	}
-
-	get name() {
-		return this._name;
-	}
-
-	get body() {
-		return this._parts[0];
-		//return this._parts[this._parts.length-1];
-	}
-
-	get parts() {
-		return this._parts;
-	}
 
 }
 

@@ -2,7 +2,6 @@ const World = require("./world");
 const Leaderboard = require("../subjects/leaderboard");
 const Snake = require("./snake");
 const LeaderboardObserver = require("../observers/leaderboardObserver");
-const Position = require("./position");
 const EventEmitter = require('events');
 const config = require('../../config/config');
 const message = require('../utils/message');
@@ -11,7 +10,6 @@ const math = require('../utils/math');
 class Game extends EventEmitter {
 	constructor() {
 		super();
-		this._lastUpdate = Date.now();
 		this._lastUpdateSnakes = Date.now();
 		this._lastUpdateSnakesData = Date.now();
 		this._count = 0;
@@ -33,6 +31,7 @@ class Game extends EventEmitter {
 		setInterval(this._updateSnakes.bind(this), config["snakeUpdateRate"]);
 		setInterval(this._updateLeaderboard.bind(this), config["leaderboardUpdateRate"]);
 		setInterval(this._updateSnakesData.bind(this), config["dataUpdateRate"]);
+		setInterval(this._updateWorld.bind(this), config["worldUpdateRate"]);
 	}
 
 
@@ -51,6 +50,10 @@ class Game extends EventEmitter {
 		}
 
 
+	}
+
+	_updateWorld() {
+		this._world.update();
 	}
 
 	_updateSnakesData() {
@@ -72,9 +75,9 @@ class Game extends EventEmitter {
 		this._fast_count += 1;
 		this._count %= 12;
 		this._fast_count %= 10;
-		
-		if (parseInt(this._fast_count) % 5 == 0 
-				||	parseInt(this._count) % 12 == 0) {
+
+		if (parseInt(this._fast_count) % 5 == 0
+				|| parseInt(this._count) % 12 == 0) {
 			this._snakes.forEach(snake => {
 				snake.update(deltaTime, this._count, this._fast_count);
 			});
@@ -82,16 +85,9 @@ class Game extends EventEmitter {
 	}
 
 	_update() {
-		let now = Date.now();
-		let deltaTime = now - this._lastUpdate;
-		this._lastUpdate = now;
-
 		this.detectCollisions();
-
 		//this causes too much network data
 		//this.emit("minimap",this._snakes);
-
-		this._world.update(deltaTime);
 	}
 
 	_updateLeaderboard() {
@@ -243,7 +239,7 @@ class Game extends EventEmitter {
 										&& snake.head.y < (foods[i].position.y + offset) && snake.head.y > (foods[i].position.y - offset))) {
 
 							this.emit("foodEaten", snake, foods[i]);
-							snake.increaseSize(foods[i].size);
+							snake._increaseSize(foods[i].size);
 
 							//This food is gone remove it
 							this._world.foods.splice(i, 1);

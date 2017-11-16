@@ -10,8 +10,8 @@ exports.build = function (snake) {
 	else
 		messageCode = 'e'.charCodeAt(0);
 
-	if (snake.direction.angle == snake._lastAngleSent) {
-		if (snake.speed == snake._lastSpeedSent) {
+	if (snake.direction.angle == snake.lastAngleSent) {
+		if (snake.speed == snake.lastSpeedSent) {
 
 			arr = new Uint8Array(6);
 			message.writeInt8(2, arr, messageCode);

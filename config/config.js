@@ -15,6 +15,7 @@ var c = {
 	gameUpdateRate: 40,
 	snakeUpdateRate: 15,
 	leaderboardUpdateRate: 4000,
+	worldUpdateRate: 5000,
 	dataUpdateRate: 1000,
 	nsp1: 5.39,
 	nsp2: 0.4,

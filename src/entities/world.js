@@ -2,7 +2,6 @@ const config = require('../../config/config.js');
 const math = require('../utils/math');
 const EventEmitter = require('events');
 const Food = require ("./food");
-const Position = require ("./position");
 
 
 class World extends EventEmitter {
@@ -15,6 +14,7 @@ class World extends EventEmitter {
 		this._minFoodSize = config['minFoodSize'];
 		this._maxFoodSize = config['maxFoodSize'];
 		this._maxFoodColors = config['maxFoodColors'];
+		this._maxFood = config['food'];
 		this._generateFood(config['food']);
 	}
 
@@ -26,11 +26,14 @@ class World extends EventEmitter {
 		return this._radius;
 	}
 
-	update(deltaTime){
+	update(){
+		var diff = this._maxFood -this._foods.length ;
 		
-		//todo add food
-		this.emit("newFood", this._foods);
-		//emit food added
+		if(diff > 0){
+			var newFoods = this._generateFood(diff);
+			this.emit("newFoods", newFoods);
+		}
+		
 	}
 
 	_newFoodAt(x,y,size,color){
@@ -52,19 +55,20 @@ class World extends EventEmitter {
 
 	//Private functions
 	_generateFood (amount) {
+		var newFoods = [];
 		for (let i = 0; i < amount; i++) {
 			let a = math.randomSpawnPoint();
-			let pos = new Position(a.x,a.y);
+			let pos = {x:a.x,y:a.y};
 			let id = (pos.y * this.radius * 3) + pos.x;
 			let color = math.randomInt(0, this._maxFoodColors);
 			let size = math.randomInt(this._minFoodSize, this._maxFoodSize);
 
 			let f = new Food(id, pos, size, color);
 			this._foods.push(f);
-			
+			 newFoods.push(f);
 
 		}
-
+		return newFoods;
 	}
 
 	generateSectors() {
