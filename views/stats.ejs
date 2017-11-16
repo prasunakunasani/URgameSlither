@@ -1,7 +1,8 @@
 <% include partials/header %>
 
 <script>
-    //used - instead of = cause' - "outputs the unescaped value into the template"
+    //All the variables declared are from the server to be used in the script.js file.
+    //used '-' instead of '=' because '-' "outputs the unescaped value into the template"
     var avgSnakeLengthChartData = <%- JSON.stringify(avgSnakeLengths) %>
     var highestSnakeLengthChartData = <%- JSON.stringify(highestSnakeLengths) %>
     var timeOfKillsChartData = <%- JSON.stringify(timeOfKills) %>
@@ -9,7 +10,7 @@
     var highestSnakeLengthAllChartData = <%- JSON.stringify(highestSnakeLengthAll) %>
     var totalGamesPlayed = <%= totalgames %>
     var avgScore = <%= (usersStatsList.totals.length / usersStatsList.totals.deaths).toFixed(0) %>
-    var avgKills = <%=(usersStatsList.totals.boosts / usersStatsList.totals.deaths).toFixed(0) %>
+    var avgKills = <%= (usersStatsList.totals.boosts / usersStatsList.totals.deaths).toFixed(0) %>
     var avgBoosts = <%= (usersStatsList.totals.kills / usersStatsList.totals.deaths).toFixed(0) %>
 </script>
 
@@ -39,7 +40,7 @@
                     <% if (totalgames <= 0) { %>
                     Please play a game
                     <% } else { %>
-                   <h5> Hello <%= usersList.snake.name %></h5>
+                    <h5> Hello <%= usersList.snake.name %></h5>
                     <div>Last game played:</div>
                     <%= getMinutesAgo(usersStatsList.lastModifiedOn) %> ago
                     <% } %>
@@ -52,7 +53,7 @@
                     <% } else { %>
                     <div><%= (usersStatsList.totals.length / usersStatsList.totals.deaths).toFixed(0) %></div>
                     <% } %>
-                    <p id="progress0" data-min="0" data-max="<%=usersStatsList.totals.length%>" data-mode="none"></p>
+                    <p id="progress0" data-min="0" data-max="<%= usersStatsList.totals.length %>" data-mode="none"></p>
                 </div>
                 <div class="col-sm-2 well imp" id="mainorange">
                     <div>Average Boosts</div>
@@ -61,7 +62,7 @@
                     <% } else { %>
                     <div><%= (usersStatsList.totals.boosts / usersStatsList.totals.deaths).toFixed(0) %></div>
                     <% } %>
-                    <p id="progress1" data-min="0" data-max="<%=usersStatsList.totals.boosts%>" data-mode="none"></p>
+                    <p id="progress1" data-min="0" data-max="<%= usersStatsList.totals.boosts %>" data-mode="none"></p>
                 </div>
                 <div class="col-sm-2 well imp" id="maingreen">
                     <div>Average Kills</div>
@@ -71,11 +72,11 @@
                     <div><%= (usersStatsList.totals.kills / usersStatsList.totals.deaths).toFixed(2) %></div>
                     <% } %>
 
-                    <p id="progress2" data-min="0" data-max="<%=usersStatsList.totals.kills%>" data-mode="none"></p>
+                    <p id="progress2" data-min="0" data-max="<%= usersStatsList.totals.kills %>" data-mode="none"></p>
                 </div>
             </div>
 
-            <div class="row" id="spacing">
+            <div class="row" id="spacingBelowBox">
 
                 <div class="col-sm box0">
                     <div class="box1 best">
@@ -166,136 +167,111 @@
 
         <div id="ajaxUpdateGlobalStats">
 
-
             <div class="row">
                 <div class="col-sm-6 well">
-                 <h5>Daily/Global Stats</h5>
+                    <h5>Daily/Global Stats</h5>
                 </div>
                 <div class="col-sm-2 well imp" id="mainred">
                     <div> Peak Time:</div>
-                    <div><%=dailyStatsList.peak.time%></div>
+
+                    <% if (!dailyStatsList.peak.time) { %>
+                    Not Available
+                    <% } else { %>
+                    <%= getMinutesAgo(dailyStatsList.peak.time) %> ago
+                    <% } %>
                 </div>
                 <div class="col-sm-2 well imp" id="mainorange">
                     <div> Concurrent Users:</div>
-                    <div><%=dailyStatsList.peak.concurrent%></div>
+                    <div><%= dailyStatsList.peak.concurrent %></div>
                 </div>
                 <div class="col-sm-2 well imp" id="maingreen">
                     <div> Unique Users Today:</div>
-                    <div><%=dailyStatsList.totals.unique_users%></div>
+                    <div><%= dailyStatsList.totals.unique_users %></div>
                 </div>
             </div>
 
-            </div>
-            <div class="row">
+            <div class="row" id="spacingBelowBox">
                 <div class="col-sm-6">
-                    Daily Stats Records
-                    Boosts:
-                    Deaths:
-                    Duration:
-                    Kills:
+                    <div class="row">
+                        <div class="col-sm box0">
+                            <div class="box1">
+                                <span class="fa fa-gamepad"></span>
+                                <h3><%= dailyStatsList.totals.boosts %></h3>
+                                <div>Total Boosts today</div>
+                            </div>
+                        </div>
+                        <div class="col-sm box0">
+                            <div class="box1">
+                                <span class="fa fa-gamepad"></span>
+                                <h3><%= dailyStatsList.totals.deaths %></h3>
+                                <div>Total Deaths today</div>
+                            </div>
+                        </div>
+                        <div class="col-sm box0">
+                            <div class="box1">
+                                <span class="fa fa-gamepad"></span>
+                                <h3><%= secondsToHms((dailyStatsList.totals.duration).toFixed(0)) %></h3>
+                                <div>Total game play time today</div>
+                            </div>
+                        </div>
+                        <div class="col-sm box0">
+                            <div class="box1 kills">
+                                <span class="fa fa-gamepad"></span>
+                                <h3><%= dailyStatsList.totals.kills %></h3>
+                                <div>Total Snake Kills today</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-sm-6">
-                    Global Stats Records
-                    Boosts:
-                    Deaths:
-                    Duration:
-                    Kills:
+                    <div class="row">
+                        <div class="col-sm box0">
+                            <div class="box1">
+                                <span class="fa fa-gamepad"></span>
+                                <h3><%= calculatedStatsList.totals.all_time.boosts %></h3>
+                                <div>Total Boosts Used Ever</div>
+                            </div>
+                        </div>
+                        <div class="col-sm box0">
+                            <div class="box1">
+                                <span class="fa fa-gamepad"></span>
+                                <h3><%= calculatedStatsList.totals.all_time.deaths %></h3>
+                                <div>Total Deaths Ever</div>
+                            </div>
+                        </div>
+                        <div class="col-sm box0">
+                            <div class="box1">
+                                <span class="fa fa-gamepad"></span>
+                                <h3><%= secondsToHms((calculatedStatsList.totals.all_time.duration).toFixed(0)) %></h3>
+                                <div>Total Game play time ever</div>
+                            </div>
+                        </div>
+                        <div class="col-sm box0">
+                            <div class="box1 kills">
+                                <span class="fa fa-gamepad"></span>
+                                <h3><%= calculatedStatsList.totals.all_time.kills %></h3>
+                                <div>Total Snake Kills ever</div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-            </div>
+            </div>  <!--for row-->
 
             <div class="row">
                 <div class="col-sm-6">
-                    Average Snake Length of all users graphed over 5 sec intervals
+                    Average Snake Score of all users graphed over 5 sec intervals
                     <div id="avgSnakeLengthAllchartdiv"></div>
                 </div>
                 <div class="col-sm-6">
-                    Highest Snake length of all users graphed over 5 second intervals
+                    Highest Snake Score of all users graphed over 5 second intervals
                     <div id="highestSnakeLengthAllchartdiv"></div>
                 </div>
             </div>
-
-            GLOBAL GAMEPLAY PERFORMANCE
-            STUFF
-
-
-            <h2>ADD THIS?: Most users from this country</h2>
-            <h2>DUPLICATE?- Total games played ever!</h2>
-            <h2>REMOVE THIS?-User country breakdown(5)</h2>
-            <h2>REMOVE THIS?-Peak Concurrent Users</h2>
-
-            <div class="row">
-
-                <div class="col-sm rad-info-box">
-                    <div class="icon">
-                        <i class="fa fa-gamepad"></i>
-                    </div>
-                    <span class="heading">Total New Users today</span>
-                    <span class="value"><span>400</span></span>
-                </div>
-
-                <div class="col-sm rad-info-box">
-                    <div class="icon">
-                        <i class="fa fa-gamepad"></i>
-                    </div>
-                    <span class="heading">Total time spent playing this game ever!</span>
-                    <span class="value"><span>400</span></span>
-                </div>
-                <div class="col-sm rad-info-box">
-                    <div class="icon">
-                        <i class="fa fa-gamepad"></i>
-                    </div>
-                    <span class="heading">Total games everyone played ever!</span>
-                    <span class="value"><span>400</span></span>
-                </div>
-            </div>  <!--row-->
-            <div class="row">
-
-                <div class="col-sm box0">
-                    <div class="box1">
-                        <span class="li_heart"></span>
-                        <h3>933</h3>
-                        <h3>Total snake length ever!</h3>
-                    </div>
-                    <p>933 People liked your page the last 24hs. Whoohoo!</p>
-                </div>
-
-                <div class="col-sm box0">
-                    <div class="box1">
-                        <span class="li_heart"></span>
-                        <h3>933</h3>
-                        <h3>Total boosts used ever!</h3>
-                    </div>
-                    <p>933 People liked your page the last 24hs. Whoohoo!</p>
-                </div>
-
-                <div class="col-sm box0">
-                    <div class="box1">
-                        <span class="li_heart"></span>
-                        <h3>933</h3>
-                        <h3>Total kills ever!</h3>
-                    </div>
-                    <p>933 People liked your page the last 24hs. Whoohoo!</p>
-                </div>
-
-                <div class="col-sm box0">
-                    <div class="box1">
-                        <span class="li_heart"></span>
-                        <h3>933</h3>
-                        <h3>Total DEATHS ever!</h3>
-                    </div>
-                    <p>933 People liked your page the last 24hs. Whoohoo!</p>
-                </div>
-
-            </div>  <!--row-->
-
-            <h1>AVERAGE SNAKE LENGTH OF ALL USERS graphed per game</h1>
-            <h1>AVERAGE SNAKE KILLS OF ALL USERS graphed per game</h1>
-            <h1>AVERAGE SNAKE BOOSTS OF ALL USERS graphed per game</h1>
-
         </div> <!--for ajax call-->
 
     </div> <!--tab-pane for global-->
-</div>
+</div><!--For Container-->
 
 
 <% include partials/footer %>

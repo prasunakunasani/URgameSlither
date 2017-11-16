@@ -172,7 +172,7 @@ class StatsController {
                             if (err) {
                                 return next(err);
                             }
-                            CalculatedStats.find(function (err, calculatedStats) {
+                            CalculatedStats.findOne(function (err, calculatedStats) {
                                 if (err) {
                                     return next(err);
                                 }
