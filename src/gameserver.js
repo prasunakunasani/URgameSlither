@@ -34,7 +34,7 @@ class GameServer {
 
 	onConnection(client) {
 		GameServer._counter = (GameServer._counter || 1);
-		if (this._clients.length >= config['max-connections']) {
+		if (this._clients.length >= config['maxConnections']) {
 			console.log('[SERVER] Too many connections. Closing newest connections!');
 			client.close();
 			return;

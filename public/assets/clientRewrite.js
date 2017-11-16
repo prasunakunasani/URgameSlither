@@ -2336,7 +2336,7 @@ function GameClient() {
 						//https://github.com/ClitherProject/Slither.io-Protocol/blob/master/Protocol.md#type_a_detail
 						connecting = false;
 						playing = connected = true;
-						spinner_shown = false;
+						server_full_notify = false;
 
 						//def = default, typ = typical
 						//Game Radius def. 16384, typ. 21600
