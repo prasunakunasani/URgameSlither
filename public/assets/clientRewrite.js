@@ -24,6 +24,17 @@ var global_btn;
 var vfr;
 var snake = null;
 var wumsts;
+var mc = document.createElement("canvas");
+var ggbg = false;
+var gbgmc = null;
+var gbgi;
+var bgi2;
+var bgp2 = null;
+var bgw2 = 599;
+var bgh2 = 519
+var ii;
+var title_background;
+
 
 const GameScene = Object.freeze({
 	MAIN_MENU: Symbol('MAIN_MENU'),
@@ -120,7 +131,7 @@ function UI() {
 	const title_fade_rate = 0.05;
 
 	var lastww, lasthh;
-	var title_background;
+
 	var title_fadout = false;
 	var time_last_update;
 
@@ -594,7 +605,7 @@ function GameClient() {
 	var lbp = document.createElement("div");
 	var lbf = document.createElement("div");
 	var vcm = document.createElement("div");
-	var mc = document.createElement("canvas");
+
 	var loch = document.createElement("div");
 	var myloc = document.createElement("img");
 	var asmc = document.createElement("canvas");
@@ -758,15 +769,15 @@ function GameClient() {
 			csc, game_radius = 16384;
 
 
-	var bgi2 = document.createElement("canvas"),
-			bgp2 = null,
-			bgw2 = 599,
-			bgh2 = 519,
-			ii = document.createElement("img");
+	bgi2 = document.createElement("canvas");
+	bgp2 = null;
+	bgw2 = 599;
+	bgh2 = 519;
+	ii = document.createElement("img");
 
-	var ggbg = !1,
-			gbgmc = null,
-			gbgi = document.createElement("img");
+	ggbg = !1;
+	gbgmc = null;
+	gbgi = document.createElement("img");
 
 	var mww = 850,
 			mhh = 700,
@@ -834,8 +845,8 @@ function GameClient() {
 	var pba = new Float32Array(32767);
 	var pbu = new Uint8Array(32767);
 
-	var max_skin_cv = 9;
-	var b_max_skin_cv = 10;
+	var max_skin_cv = 8;
+	var b_max_skin_cv = 8;
 
 	var bgx = 0, bgy = 0, bgx2 = 0, bgy2 = 0, fgfr = 0, px, py, lpx, lpy, ax, ay, lax, lay, pax, pay, fx, fy, fs,
 			dfa = [];
@@ -1156,6 +1167,7 @@ function GameClient() {
 		llgmtm = Date.now();
 		login_iv = setInterval(loginFade, 25);
 		UI.beginTitleFadeOut();
+		console.log("mc 0");
 		mc.style.opacity = 0;
 		mc.style.display = "inline";
 		lbh.style.opacity = lbs.style.opacity = lbn.style.opacity = lbp.style.opacity = lbf.style.opacity = vcm.style.opacity = 0;
@@ -1573,7 +1585,6 @@ function GameClient() {
 			pskh.style.opacity = login_fade_rate;
 			nskh.style.opacity = login_fade_rate;
 			save_skin.style.opacity = login_fade_rate;
-
 			mc.style.opacity = login_fade_rate;
 			loch.style.opacity = login_fade_rate;
 		}
@@ -2341,7 +2352,7 @@ function GameClient() {
 									current_byte = c + 2;
 
 							if (f = os["s" + t]) {
-					
+
 								if (y) f.sct++;
 								else
 									for (q = 0; q < f.pts.length; q++)
@@ -2749,7 +2760,7 @@ function GameClient() {
 					f == "" + Number(f) && (e = Number(f))
 				} catch (c) {
 				}
-				if(cookie_id){
+				if (cookie_id) {
 					f = new Uint8Array(3 + b.length + cookie_id.length);
 					f[0] = 116;
 					//skin
@@ -2760,7 +2771,7 @@ function GameClient() {
 					for (e = 0; e < b.length; e++)
 						f[e + 3 + cookie_id.length] = b.charCodeAt(e);
 					ws.send(f);
-				}else{
+				} else {
 					f = new Uint8Array(3 + b.length);
 					f[0] = 115;
 					f[1] = 7;
@@ -2770,7 +2781,7 @@ function GameClient() {
 						f[e + 3] = b.charCodeAt(e);
 					ws.send(f);
 				}
-				
+
 				high_quality = !0;
 				gla = 1;
 				wdfg = 0;
@@ -2896,9 +2907,10 @@ function GameClient() {
 			}
 			//Fade out of change skin screen
 			if (-2 == login_iv) {
-				login_fade_rate -= .4 * vfr;
+				login_fade_rate -= .004 * vfr;
+				console.log(vfr);
 				if (choosing_skin)
-					login_fade_rate -= .7 * vfr;
+					login_fade_rate -= .007 * vfr;
 
 				lb_fr = login_fade_rate;
 				//If Negative login_fade_rate
@@ -2914,10 +2926,8 @@ function GameClient() {
 						resetGame();
 						pskh.style.display = "none";
 						nskh.style.display = "none";
-
 						save_skin.style.display = "none";
 					}
-
 				}
 				pbdiv.style.opacity = 1 - .5 * Math.max(0, Math.min(1, 6 * login_fade_rate));
 				lgcsc = 1 + .1 * Math.pow(login_fade_rate, 2);
@@ -2926,21 +2936,23 @@ function GameClient() {
 					transform(login, "")
 				} else {
 					transform(login, "scale(" + q + "," + q + ")");
-					login.style.opacity = 1 - login_fade_rate;
-					cskh.style.opacity = 1 - login_fade_rate;
-					grqh.style.opacity = 1 - login_fade_rate;
-					plq.style.opacity = 1 - login_fade_rate;
-					clq.style.opacity = 1 - login_fade_rate;
-					social.style.opacity = 1 - login_fade_rate;
-					pskh.style.opacity = login_fade_rate;
-					nskh.style.opacity = login_fade_rate;
-
-					save_skin.style.opacity = login_fade_rate;
-					mc.style.opacity = login_fade_rate;
-					loch.style.opacity = login_fade_rate;
-					lbh.style.opacity = .85 * lb_fr;
-					lbs.style.opacity = lbn.style.opacity = lbp.style.opacity = lbf.style.opacity = vcm.style.opacity = lb_fr
 				}
+				
+				login.style.opacity = 1 - login_fade_rate;
+				cskh.style.opacity = 1 - login_fade_rate;
+				grqh.style.opacity = 1 - login_fade_rate;
+				plq.style.opacity = 1 - login_fade_rate;
+				clq.style.opacity = 1 - login_fade_rate;
+				social.style.opacity = 1 - login_fade_rate;
+				pskh.style.opacity = login_fade_rate;
+				nskh.style.opacity = login_fade_rate;
+
+				save_skin.style.opacity = login_fade_rate;
+				mc.style.opacity = login_fade_rate;
+				loch.style.opacity = login_fade_rate;
+				lbh.style.opacity = .85 * lb_fr;
+				lbs.style.opacity = lbn.style.opacity = lbp.style.opacity = lbf.style.opacity = vcm.style.opacity = lb_fr
+
 			}
 
 		}
@@ -3151,29 +3163,29 @@ function GameClient() {
 		wic = 0;
 
 //UNUSED?
-// 		ldi = function (b) {
-// 			wic++;
-// 			var f = {},
-// 					c = document.createElement("img");
-// 			f.ii = c;
-// 			f.sc = 1;
-// 			c.onload = function () {
-// 				for (var b = ois.length - 1; 0 <= b; b--)
-// 					if (ois[b].ii == this) {
-// 						b = ois[b];
-// 						b.ww = this.width;
-// 						b.hh = this.height;
-// 						b.loaded = !0;
-// 						if (b.onload) b.onload();
-// 						break
-// 					}
-// 				wic--;
-// 				0 == wic && startAnimation()
-// 			};
-// 			f.src = b;
-// 			ois.push(f);
-// 			return f
-// 		};
+		ldi = function (b) {
+			wic++;
+			var f = {},
+					c = document.createElement("img");
+			f.ii = c;
+			f.sc = 1;
+			c.onload = function () {
+				for (var b = ois.length - 1; 0 <= b; b--)
+					if (ois[b].ii == this) {
+						b = ois[b];
+						b.ww = this.width;
+						b.hh = this.height;
+						b.loaded = !0;
+						if (b.onload) b.onload();
+						break
+					}
+				wic--;
+				0 == wic && startAnimation()
+			};
+			f.src = b;
+			ois.push(f);
+			return f
+		};
 
 		function addCss(b) {
 			var f = document.createElement("style");
@@ -3548,7 +3560,8 @@ function GameClient() {
 			bgi2.height = bgh2;
 			var b = bgi2.getContext("2d");
 			try {
-				b.drawImage(this, 0, 0), bgp2 = b.createPattern(bgi2, "repeat")
+				b.drawImage(this, 0, 0);
+				bgp2 = b.createPattern(bgi2, "repeat");
 			} catch (f) {
 			}
 		};
@@ -4298,7 +4311,8 @@ function GameClient() {
 			if (!playing && -1 == dead_mtm) {
 				resetGame();
 				choosing_skin = !0;
-				pskh.style.opacity = 0;rr
+				pskh.style.opacity = 0;
+				rr
 				nskh.style.opacity = 0;
 				save_skin.style.opacity = 0;
 				pskh.style.display = "inline";
@@ -4361,8 +4375,7 @@ function GameClient() {
 				startShowGame();
 				lbh.style.display = "none";
 				lbs.style.display = "none";
-				lbn.style.display =
-						"none";
+				lbn.style.display = "none";
 				lbp.style.display = "none";
 				lbf.style.display = "none";
 				vcm.style.display = "none";
