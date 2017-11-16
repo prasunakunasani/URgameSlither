@@ -1,18 +1,3 @@
-<!--<div style="margin-left: auto; margin-right: auto; text-align: center; opacity: 1;">-->
-<!--<div id="lb-title" class="nsi"-->
-<!--style="opacity:0; position: relative;  text-align: center; width: 255px; height: 28px; color: rgb(255, 255, 255); font-family: Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-size: 21px; font-weight: bold; overflow: hidden; opacity: 0.85; z-index: 7; display: inline; cursor: default; transform: translateZ(0px);">-->
-<!--Leaderboard-->
-<!--</div>-->
-<!--<div id="lb-rank" class="nsi"-->
-<!--style="position: absolute; text-align: right; right: 230px; top: 32px; width: 30px; height: 800px; color: rgb(255, 255, 255); font-family: Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-size: 12px; overflow: hidden; opacity: 1; z-index: 9; display: inline; cursor: default; line-height: 150%; "></div>-->
-<!--<div id="lb-name" class="nsi"-->
-<!--style="position: relative; text-align: left; white-space: nowrap; right: 64px; top: 32px; width: 150px; height: 800px; color: rgb(255, 255, 255); font-family: Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-size: 12px; overflow: hidden; opacity: 1; z-index: 8; display: inline; cursor: default; line-height: 150%; "></div>-->
-
-<!--<div id="lb-score" class="nsi"-->
-<!--style="position: fixed; text-align: center; right: 4px; top: 32px; width: 50px; height: 800px; color: rgb(255, 255, 255); font-family: Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-size: 12px; overflow: hidden; opacity: 1; z-index: 7; display: inline; cursor: default; line-height: 150%;"></div>-->
-
-<!--</div>-->
-
 <div style="margin-left: auto; margin-right: auto; text-align: center; opacity: 1;">
     <div id="lb-title" class="nsi"
          style="opacity:0; position: relative;  text-align: center; width: 255px; height: 28px; color: rgb(255, 255, 255); font-family: Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-size: 21px; font-weight: bold; overflow: hidden; z-index: 7; display: inline; cursor: default; transform: translateZ(0px);">
@@ -49,7 +34,9 @@
 		}
 
 		ws.onclose = function () {
-			setTimeout(function(){start()},5000);
+			setTimeout(function () {
+				start()
+			}, 5000);
 		}
 
 		this.send = function (message, callback) {
