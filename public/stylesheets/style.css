@@ -3,6 +3,11 @@ body {
     color: white;
 }
 
+.hidden#grqh
+{
+    visibility:hidden;
+}
+
 .holder {
     margin-left: auto;
     margin-right: auto;
@@ -122,22 +127,22 @@ body {
     text-align: center;
 }
 
-#ttlscore{
+#mainred{
     color: #AE3F69;
 }
 
 
-#ttlkills{
-   color: #F4B46D;
-}
-
-
-#ttlboosts{
+#maingreen{
     color: #60C57C;
 }
 
+
+#mainorange{
+    color: #F4B46D;
+}
+
 #avgSnakeLengthchartdiv, #highestSnakeLengthchartdiv, #timeOfKillschartdiv, #avgSnakeLengthAllchartdiv, #highestSnakeLengthAllchartdiv {
-    width: 100%;
+    width: 110%;
     height: 500px;
 }
 
@@ -221,7 +226,7 @@ svg {
     text-align: center;
 }
 
-.box1.avg{
+.box1.boosts{
     color: #F4B46D;
 }
 
@@ -250,7 +255,7 @@ svg {
 }
 
 .box0:hover {
-    background: #ffffff;
+    background: #000000;
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2);
 }
 

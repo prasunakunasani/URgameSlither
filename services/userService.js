@@ -7,7 +7,6 @@ class UserService {
 
     constructor(express) {
         this.express = express;
-        this.foo = 10;
     }
 
     InsertUserDetails(userDetails, next) {
@@ -32,7 +31,8 @@ class UserService {
             //Now, find the created/exisiting record with this cookie_id
             UsersStats.findOne({cookie_id: snakeDetails.cookie_id}, function (err, userStatsRecord) {
 
-                // console.log(userStatsRecord);
+                if (!userStatsRecord)
+                    userStatsRecord  = new UsersStats();
 
                 var tempRecord = {
                     cumulative_moving_average_snake_length: userStatsRecord.cumulative_moving_average_snake_length,
@@ -90,7 +90,8 @@ class UserService {
                 if (snakeDetails.kills > userStatsRecord.records.highest_kills)
                     tempRecord.records.highest_kills = snakeDetails.kills;
 
-                //todo - currently unsure on how to get the largest_snake_killed_length
+                if (snakeDetails.largestSnake > userStatsRecord.records.largest_snake_killed_length )
+                    tempRecord.records.largest_snake_killed_length = snakeDetails.largestSnake;
 
                 //update last modified date
                 tempRecord.lastModifiedOn = new Date();
@@ -109,5 +110,3 @@ class UserService {
 }
 
 module.exports = UserService;
-
-//fixme - Make sure the class diagram functions match the code (capitals and stuff)

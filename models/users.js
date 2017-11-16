@@ -3,28 +3,34 @@ var mongoose = require('mongoose');
 var usersSchema = new mongoose.Schema({
     cookie_id:
         {
-            type: String
+            type: String,
+            default: ""
         },
     google:
         {
             profile_id:
                 {
-                    type: String
+                    type: String,
+                    default: ""
+
                 },
             token:
                 {
-                    type: String
+                    type: String,
+                    default: ""
                 }
         },
     snake:
         {
             name:
                 {
-                    type: String
+                    type: String,
+                    default: ""
                 },
             color:
                 {
-                    type: String
+                    type: String,
+                    default: ""
                 }
         }
 },{timestamps: true});

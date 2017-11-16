@@ -54,7 +54,7 @@ loadGlobalCharts();
 function loadProfileCharts() {
 
     var avgSnakeLengthChart = makeChart("avgSnakeLengthchartdiv", avgSnakeLengthChartData, "length","#AE3F69");
-    var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData, "length","#F4B46D");
+    var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData, "length","#ffca74");
     var timeOfKillsChart = makeChart("timeOfKillschartdiv", timeOfKillsChartData, "kills","#60C57C");
 
 }
@@ -69,6 +69,7 @@ function loadGlobalCharts() {
 }
 
 function makeChart(chartDiv, chartData, yAxisName,graphColor) {
+    console.log('Graph color is: '+graphColor);
 
     return AmCharts.makeChart(chartDiv, {
         "type": "serial",
@@ -89,11 +90,11 @@ function makeChart(chartDiv, chartData, yAxisName,graphColor) {
         "graphs": [
             {
                 "id": "g1",
-                "fillColors": "[[graphColor]]",
-                "balloonText": "[[value]]", //what the pop up when hovered is
+                "balloonText": "[[value]]", //what the pop up has when hovered is
+                "fillColors": graphColor,
                 "bullet": "round", //available: none, square, triangleUp, traingleDown, bubble, custom, round
                 "bulletBorderAlpha": 1, //bulletborderopacity
-                "bulletColor": "#FFFFFF",
+                "bulletColor": "#ffffff",
                 "hideBulletsCount": 50, //"If there are more data points than hideBulletsCount, the bullets will not be shown. 0 means the bullets will always be visible.
                 "title": "title goes here", //just a variable for the ballonText
                 "valueField": yAxisName, //the name of the field in data in Y-axis
@@ -104,6 +105,7 @@ function makeChart(chartDiv, chartData, yAxisName,graphColor) {
                         "drop": true  //if you want the balloon to be in a tear shape
                     },
                 "fillAlphas": 0.7
+
             }],
         "chartScrollbar":
             {
@@ -117,11 +119,11 @@ function makeChart(chartDiv, chartData, yAxisName,graphColor) {
             },
         "export":
             {
-                "enabled": true
+                "enabled": false
             },
         "legend":
             {
-                "enabled": true,
+                "enabled": false, //allow a legend to turn on/off the graphs.
                 "useGraphSettings": true
             }
     });
@@ -138,5 +140,39 @@ function makeChart(chartDiv, chartData, yAxisName,graphColor) {
 // }
 //
 
+if (totalGamesPlayed<=0)
+{
+    runPlayGameToast();
+}
 
+function runPlayGameToast(){
 
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-left",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "slideDown",
+        "hideMethod": "fadeOut"
+    }
+
+    toastr.error('Play a game before trying to view your profile!');
+
+}
+
+var bars = [];
+for(var n=0; n<3; n++) {
+    bars.push( new tinyProgressbar(document.getElementById("progress" + n)) );
+}
+bars[0].progress(avgScore);
+bars[1].progress(avgKills);
+bars[2].progress(avgBoosts);

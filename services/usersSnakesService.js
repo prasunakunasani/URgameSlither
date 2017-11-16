@@ -5,7 +5,6 @@ class UsersSnakesService {
 
     constructor(express) {
         this.express = express;
-        this.foo = 10;
     }
 
     InsertUsersSnakeData(snakeDetails, next) {
