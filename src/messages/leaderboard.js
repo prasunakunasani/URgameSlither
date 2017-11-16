@@ -27,7 +27,7 @@ exports.build = function (rank, players, top) {
       //Math.floor(15 * (fpsls[K] + u / fmlts[K] - 1) - 5) / 1
 			b += message.writeInt16(b, arr, snake.sct);
 			b += message.writeInt24(b, arr, snake.fam * 16777215);
-			b += message.writeInt8(b, arr, math.randomInt(0, 8));
+			b += message.writeInt8(b, arr, snake.color);
 			b += message.writeInt8(b, arr, snake.name.length);
 			b += message.writeString(b, arr, snake.name);
     });
