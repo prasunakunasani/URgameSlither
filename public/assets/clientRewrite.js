@@ -6,6 +6,8 @@ if (window.location.href.indexOf("/testing") > 0) {
 
 
 var spinner_shown = false;
+var server_full_noti_time;
+var server_full_notify;
 var ldmc = document.createElement("canvas");
 var playh = document.getElementById("playh");
 var pbdiv;
@@ -34,28 +36,125 @@ var bgw2 = 599;
 var bgh2 = 519
 var ii;
 var title_background;
-
-
+var flt_a = "ler did no;gas the;gas all;gas every;panis;panus;paynis;my ass;cut your;heil hit;flick your;fingerba;arse;naked;menstr;eat my;eat as;lick as;suck as;suck my;fuk;dong;cunn;penil;suck a;foresk;puto;puta;suck;mierd;bit.ly;ween;wein;wien;peen;turd;wank;crap;ur mom;tu madre;chinga;pu$$;phalus;phallus;verga;culo;kurwa;erect;schlong;ureth;taint;pene".split(";"),
+		flt_g = "buttlov buttf smegm therplu eatmy suckm sucka chither entmpw chlther ch1ther erioorg eri0org erio0rg eri00rg erloorg erl0org erlo0rg erl00rg erioco lithere eriodo odskinpr therbot therb0t ragapw mydik urdik heriobo mistik ki11all agarbots rcomwith brazz iomods cunt suckdik slibot iogamep siibot garb0t herioha itherhac sucksdik sukdik deltaloves suksdik hitler assmunch lickmy fuqall fukall tobils yourmom yourmother muslimsare allmuslims themuslim jewsare alljews thejews hateblack lackpeop".split(" "),
+		flt_w = ["ass", "kkk"];
 
 var boost_notif_time;
 var notify;
 
-toastr.options = {
-	"closeButton": false,
-	"debug": false,
-	"newestOnTop": false,
-	"progressBar": false,
-	"positionClass": "toast-bottom-center",
-	"preventDuplicates": true,
-	"onclick": null,
-	"showDuration": "300",
-	"hideDuration": "1000",
-	"timeOut": "2000",
-	"extendedTimeOut": "1000",
-	"showEasing": "swing",
-	"hideEasing": "linear",
-	"showMethod": "fadeIn",
-	"hideMethod": "fadeOut"
+function boostNotification() {
+	"use strict";
+	toastr.options = {
+		"closeButton": false,
+		"debug": false,
+		"newestOnTop": false,
+		"progressBar": false,
+		"positionClass": "toast-bottom-center",
+		"preventDuplicates": true,
+		"onclick": null,
+		"showDuration": "300",
+		"hideDuration": "1000",
+		"timeOut": "2000",
+		"extendedTimeOut": "1000",
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
+	}
+	toastr.info("Increase your length to boost!");
+}
+
+function serverNotification() {
+	"use strict";
+	toastr.options = {
+		"closeButton": true,
+		"debug": false,
+		"newestOnTop": false,
+		"progressBar": false,
+		"positionClass": "toast-bottom-center",
+		"preventDuplicates": true,
+		"onclick": null,
+		"showDuration": "300",
+		"hideDuration": "1000",
+		"timeOut": "0",
+		"extendedTimeOut": "0",
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
+	}
+	toastr.error("The server appears to be full. You will connect when a spot becomes available.");
+}
+
+function noNameNotification() {
+	"use strict";
+	toastr.options = {
+		"closeButton": true,
+		"debug": false,
+		"newestOnTop": false,
+		"progressBar": false,
+		"positionClass": "toast-bottom-center",
+		"onclick": null,
+		"showDuration": "300",
+		"hideDuration": "1000",
+		"timeOut": "2000",
+		"extendedTimeOut": "0",
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
+	}
+	toastr.error("Please enter a name.");
+}
+
+function badNameNotification() {
+	"use strict";
+	toastr.options = {
+		"closeButton": true,
+		"debug": false,
+		"newestOnTop": false,
+		"progressBar": false,
+		"positionClass": "toast-bottom-center",
+		"onclick": null,
+		"showDuration": "300",
+		"hideDuration": "1000",
+		"timeOut": "2000",
+		"extendedTimeOut": "0",
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
+	}
+	toastr.error("Inappropriate names are not allowed. Choose another name.");
+}
+
+function gdnm(b) {
+	var f = "",
+			c = "",
+			h = "",
+			u = 0,
+			q, e = !1,
+			w, C;
+	for (w = 0; w < b.length; w++) C = b.charCodeAt(w), 32 == C ? e || (e = !0, f += " ") : (e = !1, f += String.fromCharCode(C));
+	e = !1;
+	for (w = 0; w < b.length; w++)
+		if (C = b.charCodeAt(w), (q = 48 <= C && 57 >= C) || 65 <= C && 90 >= C || 97 <= C && 122 >= C)
+			if (c += String.fromCharCode(C), h += String.fromCharCode(C), e = !1, q) {
+				if (u++, 7 <= u) return !1
+			} else u = 0;
+		else e || (e = !0, h += " ");
+	b = f.toLowerCase();
+	for (w = flt_a.length - 1; 0 <= w; w--)
+		if (0 <= b.indexOf(flt_a[w])) return !1;
+	c = c.toLowerCase();
+	for (w = flt_g.length - 1; 0 <= w; w--)
+		if (0 <= c.indexOf(flt_g[w])) return !1;
+	h = h.toLowerCase().split(" ");
+	for (w = h.length - 1; 0 <= w; w--)
+		for (c = flt_w.length - 1; 0 <= c; c--)
+			if (h[w] == flt_w[c]) return !1;
+	return !0
 }
 
 const GameScene = Object.freeze({
@@ -346,9 +445,21 @@ function UI() {
 
 		play_btn.elem.onclick = function () {
 			if (!play_btn.disabled) {
+				if(nick.value == ""){
+					noNameNotification();
+					return;
+				}
+				if(!gdnm(nick.value)){
+					badNameNotification();
+					return;
+				}
+					
+				
 				GameClient.setReadyToPlay();
 				play_btn.setEnabled(false);
 				spinner_shown = nick.disabled = true;
+				server_full_noti_time = Date.now() + 2000;
+				server_full_notify = true;
 				ldmc.style.display = "inline";
 			}
 
@@ -824,9 +935,7 @@ function GameClient() {
 	var lsfr;
 
 
-	var flt_a = "ler did no;gas the;gas all;gas every;panis;panus;paynis;my ass;cut your;heil hit;flick your;fingerba;arse;naked;menstr;eat my;eat as;lick as;suck as;suck my;fuk;dong;cunn;penil;suck a;foresk;puto;puta;suck;mierd;bit.ly;ween;wein;wien;peen;turd;wank;crap;ur mom;tu madre;chinga;pu$$;phalus;phallus;verga;culo;kurwa;erect;schlong;ureth;taint;pene".split(";"),
-			flt_g = "buttlov buttf smegm therplu eatmy suckm sucka chither entmpw chlther ch1ther erioorg eri0org erio0rg eri00rg erloorg erl0org erlo0rg erl00rg erioco lithere eriodo odskinpr therbot therb0t ragapw mydik urdik heriobo mistik ki11all agarbots rcomwith brazz iomods cunt suckdik slibot iogamep siibot garb0t herioha itherhac sucksdik sukdik deltaloves suksdik hitler assmunch lickmy fuqall fukall tobils yourmom yourmother muslimsare allmuslims themuslim jewsare alljews thejews hateblack lackpeop".split(" "),
-			flt_w = ["ass", "kkk"];
+
 
 
 	var csk = document.getElementById("csk"),
@@ -1126,33 +1235,7 @@ function GameClient() {
 		}
 	}
 
-	function gdnm(b) {
-		var f = "",
-				c = "",
-				h = "",
-				u = 0,
-				q, e = !1,
-				w, C;
-		for (w = 0; w < b.length; w++) C = b.charCodeAt(w), 32 == C ? e || (e = !0, f += " ") : (e = !1, f += String.fromCharCode(C));
-		e = !1;
-		for (w = 0; w < b.length; w++)
-			if (C = b.charCodeAt(w), (q = 48 <= C && 57 >= C) || 65 <= C && 90 >= C || 97 <= C && 122 >= C)
-				if (c += String.fromCharCode(C), h += String.fromCharCode(C), e = !1, q) {
-					if (u++, 7 <= u) return !1
-				} else u = 0;
-			else e || (e = !0, h += " ");
-		b = f.toLowerCase();
-		for (w = flt_a.length - 1; 0 <= w; w--)
-			if (0 <= b.indexOf(flt_a[w])) return !1;
-		c = c.toLowerCase();
-		for (w = flt_g.length - 1; 0 <= w; w--)
-			if (0 <= c.indexOf(flt_g[w])) return !1;
-		h = h.toLowerCase().split(" ");
-		for (w = h.length - 1; 0 <= w; w--)
-			for (c = flt_w.length - 1; 0 <= c; c--)
-				if (h[w] == flt_w[c]) return !1;
-		return !0
-	}
+
 
 	function setMscps(_mscps) {
 		//Update mscps if not same
@@ -2253,6 +2336,7 @@ function GameClient() {
 						//https://github.com/ClitherProject/Slither.io-Protocol/blob/master/Protocol.md#type_a_detail
 						connecting = false;
 						playing = connected = true;
+						spinner_shown = false;
 
 						//def = default, typ = typical
 						//Game Radius def. 16384, typ. 21600
@@ -2775,6 +2859,8 @@ function GameClient() {
 					}
 				}
 				my_nick = b;
+				
+				
 				gdnm(b) || (b = "");
 				var e = Math.floor(9 * Math.random());
 				try {
@@ -2825,14 +2911,14 @@ function GameClient() {
 	oef = function () {
 		UI.update();
 
-		if(snake && snake.md && Date.now() > boost_notif_time && notify && playing && connected){
-			if(snake.sp < snake.fsp){
+		if (snake && snake.md && Date.now() > boost_notif_time && notify && playing && connected) {
+			if (snake.sp < snake.fsp) {
 				notify = false;
-				toastr.info("Increase your length to boost!");
+				boostNotification();
 			}
-			
+
 		}
-		
+
 
 		var b = Date.now();
 		vfr = (b - ltm) / 8;
@@ -2860,7 +2946,7 @@ function GameClient() {
 
 		120 < vfr && (vfr = 120);
 		vfr *= lag_mult;
-		
+
 		etm *= lag_mult;
 		lfr = fr;
 		fr += vfr;
@@ -2877,6 +2963,11 @@ function GameClient() {
 		}
 
 		if (spinner_shown) {
+	
+			if (Date.now() > server_full_noti_time && server_full_notify && !connected) {
+				serverNotification();
+				server_full_notify = false;
+			}
 			lsfr += avfr;
 			var f = ldmc.getContext("2d");
 			f.clearRect(0, 0, 512, 128);
@@ -2939,10 +3030,10 @@ function GameClient() {
 			}
 			//Fade out of change skin screen
 			if (-2 == login_iv) {
-					login_fade_rate -= .004 * vfr;
+				login_fade_rate -= .004 * vfr;
 				if (choosing_skin)
 					login_fade_rate -= .007 * vfr;
-	
+
 				lb_fr = login_fade_rate;
 				//If Negative login_fade_rate
 				if (0 >= login_fade_rate) {
@@ -2968,7 +3059,7 @@ function GameClient() {
 				} else {
 					transform(login, "scale(" + q + "," + q + ")");
 				}
-				
+
 				login.style.opacity = 1 - login_fade_rate;
 				cskh.style.opacity = 1 - login_fade_rate;
 				grqh.style.opacity = 1 - login_fade_rate;
@@ -4215,7 +4306,7 @@ function GameClient() {
 		}
 
 		window.oncontextmenu = function (b) {
-			if(!testing){
+			if (!testing) {
 				b.preventDefault();
 				b.stopPropagation();
 				return !1
@@ -4229,7 +4320,7 @@ function GameClient() {
 				ltchx = -1,
 				ltchy = -1,
 				ltchmtm = -1;
-		
+
 		window.ontouchstart = function (b) {
 			boost_notif_time = Date.now() + 300;
 			notify = true;
