@@ -36,6 +36,28 @@ var ii;
 var title_background;
 
 
+
+var boost_notif_time;
+var notify;
+
+toastr.options = {
+	"closeButton": false,
+	"debug": false,
+	"newestOnTop": false,
+	"progressBar": false,
+	"positionClass": "toast-bottom-center",
+	"preventDuplicates": true,
+	"onclick": null,
+	"showDuration": "300",
+	"hideDuration": "1000",
+	"timeOut": "2000",
+	"extendedTimeOut": "1000",
+	"showEasing": "swing",
+	"hideEasing": "linear",
+	"showMethod": "fadeIn",
+	"hideMethod": "fadeOut"
+}
+
 const GameScene = Object.freeze({
 	MAIN_MENU: Symbol('MAIN_MENU'),
 	CHANGE_SKIN_MENU: Symbol('CHANGE_SKIN_MENU'),
@@ -654,7 +676,7 @@ function GameClient() {
 			last_packet_time = 0,
 			lpstm = 0,
 			last_ping_mtm = 0,
-			lagging = !1,
+			lagging = false,
 			lag_mult = 1,
 			wfpr = !1,
 			high_quality = !0,
@@ -1072,7 +1094,7 @@ function GameClient() {
 		rank = 0;
 		best_rank = 999999999;
 		biggest_snake_count = snake_count = 0;
-		lagging = wfpr = playing = connected = !1;
+		lagging = wfpr = playing = connected = false;
 		for (j = vfc - 1; 0 <= j; j--) {
 			fvxs[j] = 0;
 			fvys[j] = 0;
@@ -2803,16 +2825,25 @@ function GameClient() {
 	oef = function () {
 		UI.update();
 
+		if(snake && snake.md && Date.now() > boost_notif_time && notify && playing && connected){
+			if(snake.sp < snake.fsp){
+				notify = false;
+				toastr.info("Increase your length to boost!");
+			}
+			
+		}
+		
 
 		var b = Date.now();
 		vfr = (b - ltm) / 8;
+
 		5 < vfr && (vfr = 5);
 		1.56 > vfr && (vfr = 1.56);
 		avfr = vfr;
 		ltm = b;
 		if (!choosing_skin) {
 			if (!lagging) {
-				if (wfpr && 420 < b - last_ping_mtm) {
+				if (wfpr && 420 < b - ltm) {
 					if (!ready_to_play) lagging = true;
 				}
 			}
@@ -2829,6 +2860,7 @@ function GameClient() {
 
 		120 < vfr && (vfr = 120);
 		vfr *= lag_mult;
+		
 		etm *= lag_mult;
 		lfr = fr;
 		fr += vfr;
@@ -2907,11 +2939,10 @@ function GameClient() {
 			}
 			//Fade out of change skin screen
 			if (-2 == login_iv) {
-				login_fade_rate -= .004 * vfr;
-				console.log(vfr);
+					login_fade_rate -= .004 * vfr;
 				if (choosing_skin)
 					login_fade_rate -= .007 * vfr;
-
+	
 				lb_fr = login_fade_rate;
 				//If Negative login_fade_rate
 				if (0 >= login_fade_rate) {
@@ -4184,9 +4215,11 @@ function GameClient() {
 		}
 
 		window.oncontextmenu = function (b) {
-//	b.preventDefault();
-//	b.stopPropagation();
-//	return !1
+			if(!testing){
+				b.preventDefault();
+				b.stopPropagation();
+				return !1
+			}
 		};
 		window.ontouchmove = function (b) {
 			dmutm = Date.now() + 1500;
@@ -4196,7 +4229,10 @@ function GameClient() {
 				ltchx = -1,
 				ltchy = -1,
 				ltchmtm = -1;
+		
 		window.ontouchstart = function (b) {
+			boost_notif_time = Date.now() + 300;
+			notify = true;
 			dmutm = Date.now() + 1500;
 			if (null != snake) {
 				if (b = b || window.event) {
@@ -4215,13 +4251,17 @@ function GameClient() {
 			}
 		};
 		window.onmousedown = function (b) {
+			boost_notif_time = Date.now() + 300;
+			notify = true;
 			if (0 == dmutm || Date.now() > dmutm) dmutm = 0, null != snake && (window.onmousemove(b), setAcceleration(1), b.preventDefault())
 		};
 		window.ontouchend = function () {
+
 			setAcceleration(0)
 		};
 
 		function omu(b) {
+
 			setAcceleration(0)
 		}
 
