@@ -5,7 +5,8 @@
     //used '-' instead of '=' because '-' "outputs the unescaped value into the template"
     var avgSnakeLengthChartData = <%- JSON.stringify(avgSnakeLengths) %>
     var highestSnakeLengthChartData = <%- JSON.stringify(highestSnakeLengths) %>
-    var timeOfKillsChartData = <%- JSON.stringify(timeOfKills) %>
+    var bestScoreAndKillsChartData = <%- JSON.stringify(bestScoreAndKills) %>
+    var cummulativeMovingScoreChartData = <%- JSON.stringify(cummulativeMovingScore)%>
     var avgSnakeLengthAllChartData = <%- JSON.stringify(avgSnakeLengthAll) %>
     var highestSnakeLengthAllChartData = <%- JSON.stringify(highestSnakeLengthAll) %>
     var totalGamesPlayed = <%= totalgames %>
@@ -145,22 +146,47 @@
 
             <div class="row">
                 <div class="col-sm-6 card">
-                    Average Score over 5 sec intervals
+                    <div>Average Score over 5 sec intervals</div>
                     <div id="avgSnakeLengthchartdiv"></div>
                 </div>
                 <div class="col-sm-6 card">
-                    Highest Score over 5 sec intervals.
+                    <div>Highest Score over 5 sec intervals</div>
                     <div id="highestSnakeLengthchartdiv"></div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-sm-6 well">
+                    <h5>Your Best Game: </h5>
+                </div>
+                <div class="col-sm-2 well imp" id="mainred">
+                    <div> Score:</div>
+                    <div><%= usersStatsList.best_snake.length%></div>
+                </div>
+                <div class="col-sm-2 well imp" id="mainorange">
+                    <div> Boosts:</div>
+                    <div><%= usersStatsList.best_snake.boosts%></div>
+                </div>
+                <div class="col-sm-2 well imp" id="maingreen">
+                    <div> Kills:</div>
+                    <div><%= usersStatsList.best_snake.kills%></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 card">
+                    <div>Best Score and Kills</div>
+                    <div id="bestScoreAndKillschartdiv"></div>
+                </div>
+                <div class="col-sm-6 card">
+                   <div>Cummulative score per game</div>
+                    <div id="cummulativeMovingScorechartdiv"></div>
+                </div>
+            </div>
+
         </div> <!--for ajax call-->
 
         <!--todo Make the graphs load with the ajax call as well-->
-
-
-        <h1>Graph showing TIME OF KILLS graphed over 5 sec intervals</h1>
-        <div id="timeOfKillschartdiv"></div>
-
 
     </div> <!--tab-pane for profile-->
     <div class="tab-pane fade" id="global" role="tabpanel" aria-labelledby="global-tab">
@@ -173,7 +199,6 @@
                 </div>
                 <div class="col-sm-2 well imp" id="mainred">
                     <div> Peak Time:</div>
-
                     <% if (!dailyStatsList.peak.time) { %>
                     Not Available
                     <% } else { %>
@@ -268,6 +293,9 @@
                     <div id="highestSnakeLengthAllchartdiv"></div>
                 </div>
             </div>
+
+
+
         </div> <!--for ajax call-->
 
     </div> <!--tab-pane for global-->

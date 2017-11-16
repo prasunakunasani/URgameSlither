@@ -53,22 +53,23 @@ loadGlobalCharts();
 
 function loadProfileCharts() {
 
-    var avgSnakeLengthChart = makeChart("avgSnakeLengthchartdiv", avgSnakeLengthChartData, "length","#AE3F69");
-    var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData, "length","#ffca74");
-    var timeOfKillsChart = makeChart("timeOfKillschartdiv", timeOfKillsChartData, "kills","#60C57C");
+    // console.log('Printing best here:');
+    // console.log(bestScoreAndKillsChartData);
 
+    var avgSnakeLengthChart = makeChart("avgSnakeLengthchartdiv", avgSnakeLengthChartData, "length","second","#AE3F69");
+    var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData, "length","second","#ffca74");
+    var bestScoreAndKillsChart = makeChart("bestScoreAndKillschartdiv", bestScoreAndKillsChartData, "length","second","#AE3F69");
+    var cummulativeMovingScoreChart = makeChart("cummulativeMovingScorechartdiv",cummulativeMovingScoreChartData,"score","game","#ffca74")
 }
-
 function loadGlobalCharts() {
-    console.log('Printing kills here:');
-    console.log(avgSnakeLengthAllChart);
-    console.log('Printing kills here:');
+
+
     console.log(highestSnakeLengthAllChart);
-    var avgSnakeLengthAllChart = makeChart("avgSnakeLengthAllchartdiv", avgSnakeLengthAllChartData, "length","#60C57C");
-    var highestSnakeLengthAllChart = makeChart("highestSnakeLengthAllchartdiv", highestSnakeLengthAllChartData, "length","#60C57C");
+    var avgSnakeLengthAllChart = makeChart("avgSnakeLengthAllchartdiv", avgSnakeLengthAllChartData, "length","second","#60C57C");
+    var highestSnakeLengthAllChart = makeChart("highestSnakeLengthAllchartdiv", highestSnakeLengthAllChartData, "length","second","#60C57C");
 }
 
-function makeChart(chartDiv, chartData, yAxisName,graphColor) {
+function makeChart(chartDiv, chartData, yAxisName,xAxisName,graphColor) {
     console.log('Graph color is: '+graphColor);
 
     return AmCharts.makeChart(chartDiv, {
@@ -78,7 +79,7 @@ function makeChart(chartDiv, chartData, yAxisName,graphColor) {
         "autoMarginOffset": 20,
         "marginTop": 7,
         "dataProvider": chartData,
-        "categoryField": "second", //field of x-axis
+        "categoryField": xAxisName, //field of x-axis
         "categoryAxis":
             {},
         "valueAxis": [
@@ -106,6 +107,11 @@ function makeChart(chartDiv, chartData, yAxisName,graphColor) {
                     },
                 "fillAlphas": 0.7
 
+            },
+            {
+                "id": "g2",
+                "valueField": "kills",
+                "type": "column"
             }],
         "chartScrollbar":
             {
@@ -165,7 +171,7 @@ function runPlayGameToast(){
         "hideMethod": "fadeOut"
     }
 
-    toastr.error('Play a game before trying to view your profile!');
+    toastr.info('Play a game first');
 
 }
 

@@ -19,13 +19,20 @@ class GameController {
         res.render('game/index');
     }
 
+    //todo - change the service functions to static
+    //todo - in UML , if underlined, static
+
+    //takes too long to calculate all of them.
+
     saveUserAndSnake(req, res, next) {
-        if(req.body.secret !== config.get("DATA_SECRET"))
+        if (req.body.secret !== config.get("DATA_SECRET"))
+            return next();
+
         userSnakeFunctions.InsertUsersSnakeData(req.body.usersSnake, next);
-        userFunctions.InsertUserDetails(req.body.user, next);
-        userFunctions.UpdateUsersStats(req.body.usersSnake,next);
-        globalFunctions.UpdateDailyStats(req.body.usersSnake, req.body.currentPlayerCount,next);
-        globalFunctions.UpdateCalculatedStats(req.body.usersSnake,next);
+        UserService.InsertUserDetails(req.body.user, next);
+        userFunctions.UpdateUsersStats(req.body.usersSnake, next);
+        globalFunctions.UpdateDailyStats(req.body.usersSnake, req.body.currentPlayerCount, next);
+        globalFunctions.UpdateCalculatedStats(req.body.usersSnake, next);
     }
 }
 

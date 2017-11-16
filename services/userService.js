@@ -9,7 +9,7 @@ class UserService {
         this.express = express;
     }
 
-    InsertUserDetails(userDetails, next) {
+    static InsertUserDetails(userDetails, next) {
 
         Users.update({cookie_id: userDetails.cookie_id}, userDetails, {upsert: true}, function (err, result) {
             if (err) return next(err);

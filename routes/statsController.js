@@ -49,23 +49,48 @@ function generateHighChartData(usersStats) {
     return highestSnakeLengthChartData;
 };
 
-function generateKillsChartData(usersStats) {
-    var timeOfKillsChartData = [];
+function generateCummulativeMovingScoreData(userStats) {
+    var cummulativeMovingScoreChartData = [];
+
+    if (!userStats)
+    {
+        return [{
+            game: 0,
+            score: 0
+        }];
+    }
+
+    for (var x=0; x<userStats.cumulative_moving_average_snake_length.length; x++)
+    {
+        cummulativeMovingScoreChartData.push(
+               {
+                   game: x,
+                   score: userStats.cumulative_moving_average_snake_length[x]
+               }
+           );
+    }
+    return cummulativeMovingScoreChartData;
+}
+
+function generateBestScoreAndKillsChartData(usersStats) {
+    var bestScoreAndKillsChartData = [];
 
     if (!usersStats) {
         return [{
             second: 0,
+            length: 0,
             kills: 0
         }];
     }
 
-    for (var x = 0; x < usersStats.best_snake.interval_data.kills.length; x++) {
-        timeOfKillsChartData.push({
+    for (var x = 0; x < usersStats.best_snake.interval_data.length.length; x++) {
+        bestScoreAndKillsChartData.push({
             second: x * 5,
+            length: usersStats.best_snake.interval_data.length[x],
             kills: usersStats.best_snake.interval_data.kills[x]
         });
     }
-    return timeOfKillsChartData;
+    return bestScoreAndKillsChartData;
 
 };
 
@@ -86,7 +111,6 @@ function generateAllAvgChartData(dailyStats) {
         });
     }
     return avgSnakeLengthAllChartData;
-
 };
 
 function generateAllHighChartData(dailyStats) {
@@ -187,7 +211,8 @@ class StatsController {
                                         calculatedStatsList: calculatedStats ? calculatedStats : new CalculatedStats(),
                                         avgSnakeLengths: generateAvgChartData(usersStats),
                                         highestSnakeLengths: generateHighChartData(usersStats),
-                                        timeOfKills: generateKillsChartData(usersStats),
+                                        bestScoreAndKills: generateBestScoreAndKillsChartData(usersStats),
+                                        cummulativeMovingScore: generateCummulativeMovingScoreData(usersStats),
                                         avgSnakeLengthAll: generateAllAvgChartData(dailyStats),
                                         highestSnakeLengthAll: generateAllHighChartData(dailyStats),
                                         secondsToHms: secondsToHms,

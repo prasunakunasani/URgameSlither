@@ -141,7 +141,7 @@ body {
     color: #F4B46D;
 }
 
-#avgSnakeLengthchartdiv, #highestSnakeLengthchartdiv, #timeOfKillschartdiv, #avgSnakeLengthAllchartdiv, #highestSnakeLengthAllchartdiv {
+#avgSnakeLengthchartdiv, #highestSnakeLengthchartdiv, #bestScoreAndKillschartdiv, #cummulativeMovingScorechartdiv, #avgSnakeLengthAllchartdiv, #highestSnakeLengthAllchartdiv {
     width: 110%;
     height: 500px;
 }

@@ -120,7 +120,7 @@ class StatsService {
                 //todo - double check what result is sending back..
 
                 if (err) return next(err);
-                else if (result.ok == '0') return next(JSON.stringify(result));
+                //else if (result.ok == '0') return next(JSON.stringify(result));
 
             });
 
@@ -153,7 +153,7 @@ class StatsService {
 
         CalculatedStats.findOneAndUpdate({}, tempRecord, function (err, result) {
             if (err) return next(err);
-            else if (result.ok == '0') return next(JSON.stringify(result));
+          //  else if (result.ok == '0') return next(JSON.stringify(result));
 
         });
     }
