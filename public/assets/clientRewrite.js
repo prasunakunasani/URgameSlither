@@ -25,6 +25,7 @@ var profile_btn;
 var global_btn;
 var vfr;
 var snake = null;
+
 var wumsts;
 var mc = document.createElement("canvas");
 var ggbg = false;
@@ -445,16 +446,16 @@ function UI() {
 
 		play_btn.elem.onclick = function () {
 			if (!play_btn.disabled) {
-				if(nick.value == ""){
+				if (nick.value == "") {
 					noNameNotification();
 					return;
 				}
-				if(!gdnm(nick.value)){
+				if (!gdnm(nick.value)) {
 					badNameNotification();
 					return;
 				}
-					
-				
+
+
 				GameClient.setReadyToPlay();
 				play_btn.setEnabled(false);
 				spinner_shown = nick.disabled = true;
@@ -935,9 +936,6 @@ function GameClient() {
 	var lsfr;
 
 
-
-
-
 	var csk = document.getElementById("csk"),
 			cskh = document.getElementById("cskh"),
 			want_quality = 1,
@@ -1234,7 +1232,6 @@ function GameClient() {
 			}
 		}
 	}
-
 
 
 	function setMscps(_mscps) {
@@ -2859,12 +2856,14 @@ function GameClient() {
 					}
 				}
 				my_nick = b;
-				
-				
+
+
 				gdnm(b) || (b = "");
 				var e = Math.floor(9 * Math.random());
 				try {
 					var f = localStorage.snakercv;
+					if(!f) f = db_snake_color;
+				
 					f == "" + Number(f) && (e = Number(f))
 				} catch (c) {
 				}
@@ -2963,7 +2962,7 @@ function GameClient() {
 		}
 
 		if (spinner_shown) {
-	
+
 			if (Date.now() > server_full_noti_time && server_full_notify && !connected) {
 				serverNotification();
 				server_full_notify = false;
@@ -4443,7 +4442,6 @@ function GameClient() {
 				resetGame();
 				choosing_skin = !0;
 				pskh.style.opacity = 0;
-				rr
 				nskh.style.opacity = 0;
 				save_skin.style.opacity = 0;
 				pskh.style.display = "inline";
@@ -4469,6 +4467,8 @@ function GameClient() {
 				f = 0;
 				try {
 					var c = localStorage.snakercv;
+					console.log(db_snake_color);
+					if (!c) c = db_snake_color;
 					c == "" + Number(c) &&
 					(f = Number(c))
 				} catch (h) {

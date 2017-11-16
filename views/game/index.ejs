@@ -94,6 +94,7 @@
 
 <script>
 	var cookie_id = '<%= cookie_id %>';
+	var db_snake_color = Number('<%= user.snake.color %>');
 </script>
 
 <div id="title_background" style="position: fixed; left: 0px; top: 0px; width: 721px; height: 959px;">
@@ -139,8 +140,8 @@
   <div style="margin-left: auto; margin-right: auto; text-align: center;">
     <div class="taho" id="nick_holder"
          style="width: 244px; margin-top: 34px; background: rgb(76, 68, 124); box-shadow: rgb(0, 0, 0) 0px 6px 50px; opacity: 0;">
-      <input class="sumsginp" id="nick" style="width: 220px; height: 24px;" placeholder="Nickname" maxlength="24">
-    </div>
+      <input class="sumsginp" id="nick" style="width: 220px; height: 24px;" placeholder="Nickname" maxlength="24" value="<% if (user.snake.name) { %><%=user.snake.name%> <% } %>">
+    </div>  
     <div id="victory_holder"
          style="display: none; font-family: &quot;Lucida Sans Unicode&quot;, &quot;Lucida Grande&quot;, sans-serif; font-size: 18px; color: #FFFFFF; margin-top: 22px;">
       <div style="font-size: 24px; margin-top: 12px;">
