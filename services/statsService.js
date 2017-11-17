@@ -8,12 +8,7 @@ var now = new Date();
 var startOfToday = new Date(now.getFullYear(),now.getMonth(),now.getDate());
 
 Users.count({'updatedAt': {$gt: startOfToday}}, function (err, count) {
-
-    console.log('Today is: '+startOfToday);
-
     uniqueUsers = count;
-
-    console.log('count is : '+uniqueUsers);
 });
 
 class StatsService {
