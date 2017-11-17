@@ -1,54 +1,44 @@
-<!--<div style="margin-left: auto; margin-right: auto; text-align: center; opacity: 1;">-->
-    <!--<div id="lb-title" class="nsi"-->
-         <!--style="opacity:0; position: relative;  text-align: center; width: 255px; height: 28px; color: rgb(255, 255, 255); font-family: Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-size: 21px; font-weight: bold; overflow: hidden; opacity: 0.85; z-index: 7; display: inline; cursor: default; transform: translateZ(0px);">-->
-        <!--Leaderboard-->
-    <!--</div>-->
-    <!--<div id="lb-rank" class="nsi"-->
-         <!--style="position: absolute; text-align: right; right: 230px; top: 32px; width: 30px; height: 800px; color: rgb(255, 255, 255); font-family: Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-size: 12px; overflow: hidden; opacity: 1; z-index: 9; display: inline; cursor: default; line-height: 150%; "></div>-->
-    <!--<div id="lb-name" class="nsi"-->
-         <!--style="position: relative; text-align: left; white-space: nowrap; right: 64px; top: 32px; width: 150px; height: 800px; color: rgb(255, 255, 255); font-family: Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-size: 12px; overflow: hidden; opacity: 1; z-index: 8; display: inline; cursor: default; line-height: 150%; "></div>-->
-
-    <!--<div id="lb-score" class="nsi"-->
-         <!--style="position: fixed; text-align: center; right: 4px; top: 32px; width: 50px; height: 800px; color: rgb(255, 255, 255); font-family: Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-size: 12px; overflow: hidden; opacity: 1; z-index: 7; display: inline; cursor: default; line-height: 150%;"></div>-->
-
-<!--</div>-->
-
 <div style="margin-left: auto; margin-right: auto; text-align: center; opacity: 1;">
     <div id="lb-title" class="nsi"
          style="opacity:0; position: relative;  text-align: center; width: 255px; height: 28px; color: rgb(255, 255, 255); font-family: Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-size: 21px; font-weight: bold; overflow: hidden; z-index: 7; display: inline; cursor: default; transform: translateZ(0px);">
         Leaderboard
     </div>
-<span id="lb-empty"></span>
-<table style="table-layout: fixed; width: 186px; margin-left: auto; margin-right: auto; font-family: Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-size: 16px;">
-    <colgroup>
-        <col style="width: 30px">
-        <col style="width: 150px">
-        <col style="width: 50px">
-    </colgroup>
-    <tr>
-        <th id="lb-rank" style="text-align: left;"></th>
-        <th id="lb-name" style="text-align: left;"></th>
-        <th id="lb-score" style="text-align: right;"></th>
-    </tr>
-</table>
+    <span id="lb-empty"></span>
+    <table style="table-layout: fixed; width: 186px; margin-left: auto; margin-right: auto; font-family: Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif; font-size: 16px;">
+        <colgroup>
+            <col style="width: 30px">
+            <col style="width: 150px">
+            <col style="width: 50px">
+        </colgroup>
+        <tr>
+            <th id="lb-rank" style="text-align: left;"></th>
+            <th id="lb-name" style="text-align: left;"></th>
+            <th id="lb-score" style="text-align: right;"></th>
+        </tr>
+    </table>
 </div>
 
 <script>
-	(function () {
+	(function start() {
 		var host = window.document.location.host.replace(/:.*/, '');
 		var ws;
-		if (host !== "urgame.me"){
-          ws = new WebSocket('ws://' + host + '/game/socket')
-        }else{
-          ws = new WebSocket('wss://' + host + '/game/socket')
-        }
-	
-		ws.onmessage = function (event) {
-
-	
-			makeLeaderboard(event.data);
-
+		if (host !== "urgame.me") {
+			ws = new WebSocket('ws://' + host + ':8080/game/socket')
+		} else {
+			ws = new WebSocket('wss://' + host + '/game/socket')
 		}
+
+		ws.onmessage = function (event) {
+			if (event.data)
+				makeLeaderboard(event.data);
+		}
+
+		ws.onclose = function () {
+			setTimeout(function () {
+				start()
+			}, 5000);
+		}
+
 		this.send = function (message, callback) {
 			this.waitForConnection(function () {
 				ws.send(message);
@@ -72,10 +62,7 @@
 		this.send(new Uint8Array([224, 1]));
 
 		function makeLeaderboard(data) {
-		
 			data = JSON.parse(data);
-		
-			var html = "";
 			var score = "";
 			var rank = "";
 			var name = "";
@@ -86,7 +73,7 @@
 				rank += '<span style="color:' + color + ';">#' + (i + 1) + "</span><BR>"
 			}
 
-            document.getElementById("lb-title").style.opacity = 1;
+			document.getElementById("lb-title").style.opacity = 1;
 			document.getElementById("lb-name").innerHTML = name;
 			document.getElementById("lb-score").innerHTML = score;
 			document.getElementById("lb-rank").innerHTML = rank;

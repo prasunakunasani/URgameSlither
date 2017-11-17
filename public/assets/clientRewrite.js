@@ -6,6 +6,8 @@ if (window.location.href.indexOf("/testing") > 0) {
 
 
 var spinner_shown = false;
+var server_full_noti_time;
+var server_full_notify;
 var ldmc = document.createElement("canvas");
 var playh = document.getElementById("playh");
 var pbdiv;
@@ -23,7 +25,138 @@ var profile_btn;
 var global_btn;
 var vfr;
 var snake = null;
+
 var wumsts;
+var mc = document.createElement("canvas");
+var ggbg = false;
+var gbgmc = null;
+var gbgi;
+var bgi2;
+var bgp2 = null;
+var bgw2 = 599;
+var bgh2 = 519
+var ii;
+var title_background;
+var flt_a = "ler did no;gas the;gas all;gas every;panis;panus;paynis;my ass;cut your;heil hit;flick your;fingerba;arse;naked;menstr;eat my;eat as;lick as;suck as;suck my;fuk;dong;cunn;penil;suck a;foresk;puto;puta;suck;mierd;bit.ly;ween;wein;wien;peen;turd;wank;crap;ur mom;tu madre;chinga;pu$$;phalus;phallus;verga;culo;kurwa;erect;schlong;ureth;taint;pene".split(";"),
+		flt_g = "buttlov buttf smegm therplu eatmy suckm sucka chither entmpw chlther ch1ther erioorg eri0org erio0rg eri00rg erloorg erl0org erlo0rg erl00rg erioco lithere eriodo odskinpr therbot therb0t ragapw mydik urdik heriobo mistik ki11all agarbots rcomwith brazz iomods cunt suckdik slibot iogamep siibot garb0t herioha itherhac sucksdik sukdik deltaloves suksdik hitler assmunch lickmy fuqall fukall tobils yourmom yourmother muslimsare allmuslims themuslim jewsare alljews thejews hateblack lackpeop".split(" "),
+		flt_w = ["ass", "kkk"];
+
+var boost_notif_time;
+var notify;
+
+function boostNotification() {
+	"use strict";
+	toastr.options = {
+		"closeButton": false,
+		"debug": false,
+		"newestOnTop": false,
+		"progressBar": false,
+		"positionClass": "toast-bottom-center",
+		"preventDuplicates": true,
+		"onclick": null,
+		"showDuration": "300",
+		"hideDuration": "1000",
+		"timeOut": "2000",
+		"extendedTimeOut": "1000",
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
+	}
+	toastr.info("Increase your length to boost!");
+}
+
+function serverNotification() {
+	"use strict";
+	toastr.options = {
+		"closeButton": true,
+		"debug": false,
+		"newestOnTop": false,
+		"progressBar": false,
+		"positionClass": "toast-bottom-center",
+		"preventDuplicates": true,
+		"onclick": null,
+		"showDuration": "300",
+		"hideDuration": "1000",
+		"timeOut": "0",
+		"extendedTimeOut": "0",
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
+	}
+	toastr.error("The server appears to be full. You will connect when a spot becomes available.");
+}
+
+function noNameNotification() {
+	"use strict";
+	toastr.options = {
+		"closeButton": true,
+		"debug": false,
+		"newestOnTop": false,
+		"progressBar": false,
+		"positionClass": "toast-bottom-center",
+		"onclick": null,
+		"showDuration": "300",
+		"hideDuration": "1000",
+		"timeOut": "2000",
+		"extendedTimeOut": "0",
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
+	}
+	toastr.error("Please enter a name.");
+}
+
+function badNameNotification() {
+	"use strict";
+	toastr.options = {
+		"closeButton": true,
+		"debug": false,
+		"newestOnTop": false,
+		"progressBar": false,
+		"positionClass": "toast-bottom-center",
+		"onclick": null,
+		"showDuration": "300",
+		"hideDuration": "1000",
+		"timeOut": "2000",
+		"extendedTimeOut": "0",
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
+	}
+	toastr.error("Inappropriate names are not allowed. Choose another name.");
+}
+
+function gdnm(b) {
+	var f = "",
+			c = "",
+			h = "",
+			u = 0,
+			q, e = !1,
+			w, C;
+	for (w = 0; w < b.length; w++) C = b.charCodeAt(w), 32 == C ? e || (e = !0, f += " ") : (e = !1, f += String.fromCharCode(C));
+	e = !1;
+	for (w = 0; w < b.length; w++)
+		if (C = b.charCodeAt(w), (q = 48 <= C && 57 >= C) || 65 <= C && 90 >= C || 97 <= C && 122 >= C)
+			if (c += String.fromCharCode(C), h += String.fromCharCode(C), e = !1, q) {
+				if (u++, 7 <= u) return !1
+			} else u = 0;
+		else e || (e = !0, h += " ");
+	b = f.toLowerCase();
+	for (w = flt_a.length - 1; 0 <= w; w--)
+		if (0 <= b.indexOf(flt_a[w])) return !1;
+	c = c.toLowerCase();
+	for (w = flt_g.length - 1; 0 <= w; w--)
+		if (0 <= c.indexOf(flt_g[w])) return !1;
+	h = h.toLowerCase().split(" ");
+	for (w = h.length - 1; 0 <= w; w--)
+		for (c = flt_w.length - 1; 0 <= c; c--)
+			if (h[w] == flt_w[c]) return !1;
+	return !0
+}
 
 const GameScene = Object.freeze({
 	MAIN_MENU: Symbol('MAIN_MENU'),
@@ -120,7 +253,7 @@ function UI() {
 	const title_fade_rate = 0.05;
 
 	var lastww, lasthh;
-	var title_background;
+
 	var title_fadout = false;
 	var time_last_update;
 
@@ -313,9 +446,21 @@ function UI() {
 
 		play_btn.elem.onclick = function () {
 			if (!play_btn.disabled) {
+				if (nick.value == "") {
+					noNameNotification();
+					return;
+				}
+				if (!gdnm(nick.value)) {
+					badNameNotification();
+					return;
+				}
+
+
 				GameClient.setReadyToPlay();
 				play_btn.setEnabled(false);
 				spinner_shown = nick.disabled = true;
+				server_full_noti_time = Date.now() + 2000;
+				server_full_notify = true;
 				ldmc.style.display = "inline";
 			}
 
@@ -594,7 +739,7 @@ function GameClient() {
 	var lbp = document.createElement("div");
 	var lbf = document.createElement("div");
 	var vcm = document.createElement("div");
-	var mc = document.createElement("canvas");
+
 	var loch = document.createElement("div");
 	var myloc = document.createElement("img");
 	var asmc = document.createElement("canvas");
@@ -643,7 +788,7 @@ function GameClient() {
 			last_packet_time = 0,
 			lpstm = 0,
 			last_ping_mtm = 0,
-			lagging = !1,
+			lagging = false,
 			lag_mult = 1,
 			wfpr = !1,
 			high_quality = !0,
@@ -758,15 +903,15 @@ function GameClient() {
 			csc, game_radius = 16384;
 
 
-	var bgi2 = document.createElement("canvas"),
-			bgp2 = null,
-			bgw2 = 599,
-			bgh2 = 519,
-			ii = document.createElement("img");
+	bgi2 = document.createElement("canvas");
+	bgp2 = null;
+	bgw2 = 599;
+	bgh2 = 519;
+	ii = document.createElement("img");
 
-	var ggbg = !1,
-			gbgmc = null,
-			gbgi = document.createElement("img");
+	ggbg = !1;
+	gbgmc = null;
+	gbgi = document.createElement("img");
 
 	var mww = 850,
 			mhh = 700,
@@ -789,11 +934,6 @@ function GameClient() {
 			rr, gg, bb, render_mode = 2;
 
 	var lsfr;
-
-
-	var flt_a = "ler did no;gas the;gas all;gas every;panis;panus;paynis;my ass;cut your;heil hit;flick your;fingerba;arse;naked;menstr;eat my;eat as;lick as;suck as;suck my;fuk;dong;cunn;penil;suck a;foresk;puto;puta;suck;mierd;bit.ly;ween;wein;wien;peen;turd;wank;crap;ur mom;tu madre;chinga;pu$$;phalus;phallus;verga;culo;kurwa;erect;schlong;ureth;taint;pene".split(";"),
-			flt_g = "buttlov buttf smegm therplu eatmy suckm sucka chither entmpw chlther ch1ther erioorg eri0org erio0rg eri00rg erloorg erl0org erlo0rg erl00rg erioco lithere eriodo odskinpr therbot therb0t ragapw mydik urdik heriobo mistik ki11all agarbots rcomwith brazz iomods cunt suckdik slibot iogamep siibot garb0t herioha itherhac sucksdik sukdik deltaloves suksdik hitler assmunch lickmy fuqall fukall tobils yourmom yourmother muslimsare allmuslims themuslim jewsare alljews thejews hateblack lackpeop".split(" "),
-			flt_w = ["ass", "kkk"];
 
 
 	var csk = document.getElementById("csk"),
@@ -834,8 +974,8 @@ function GameClient() {
 	var pba = new Float32Array(32767);
 	var pbu = new Uint8Array(32767);
 
-	var max_skin_cv = 9;
-	var b_max_skin_cv = 10;
+	var max_skin_cv = 8;
+	var b_max_skin_cv = 8;
 
 	var bgx = 0, bgy = 0, bgx2 = 0, bgy2 = 0, fgfr = 0, px, py, lpx, lpy, ax, ay, lax, lay, pax, pay, fx, fy, fs,
 			dfa = [];
@@ -1061,7 +1201,7 @@ function GameClient() {
 		rank = 0;
 		best_rank = 999999999;
 		biggest_snake_count = snake_count = 0;
-		lagging = wfpr = playing = connected = !1;
+		lagging = wfpr = playing = connected = false;
 		for (j = vfc - 1; 0 <= j; j--) {
 			fvxs[j] = 0;
 			fvys[j] = 0;
@@ -1093,33 +1233,6 @@ function GameClient() {
 		}
 	}
 
-	function gdnm(b) {
-		var f = "",
-				c = "",
-				h = "",
-				u = 0,
-				q, e = !1,
-				w, C;
-		for (w = 0; w < b.length; w++) C = b.charCodeAt(w), 32 == C ? e || (e = !0, f += " ") : (e = !1, f += String.fromCharCode(C));
-		e = !1;
-		for (w = 0; w < b.length; w++)
-			if (C = b.charCodeAt(w), (q = 48 <= C && 57 >= C) || 65 <= C && 90 >= C || 97 <= C && 122 >= C)
-				if (c += String.fromCharCode(C), h += String.fromCharCode(C), e = !1, q) {
-					if (u++, 7 <= u) return !1
-				} else u = 0;
-			else e || (e = !0, h += " ");
-		b = f.toLowerCase();
-		for (w = flt_a.length - 1; 0 <= w; w--)
-			if (0 <= b.indexOf(flt_a[w])) return !1;
-		c = c.toLowerCase();
-		for (w = flt_g.length - 1; 0 <= w; w--)
-			if (0 <= c.indexOf(flt_g[w])) return !1;
-		h = h.toLowerCase().split(" ");
-		for (w = h.length - 1; 0 <= w; w--)
-			for (c = flt_w.length - 1; 0 <= c; c--)
-				if (h[w] == flt_w[c]) return !1;
-		return !0
-	}
 
 	function setMscps(_mscps) {
 		//Update mscps if not same
@@ -1156,6 +1269,7 @@ function GameClient() {
 		llgmtm = Date.now();
 		login_iv = setInterval(loginFade, 25);
 		UI.beginTitleFadeOut();
+		console.log("mc 0");
 		mc.style.opacity = 0;
 		mc.style.display = "inline";
 		lbh.style.opacity = lbs.style.opacity = lbn.style.opacity = lbp.style.opacity = lbf.style.opacity = vcm.style.opacity = 0;
@@ -1573,7 +1687,6 @@ function GameClient() {
 			pskh.style.opacity = login_fade_rate;
 			nskh.style.opacity = login_fade_rate;
 			save_skin.style.opacity = login_fade_rate;
-
 			mc.style.opacity = login_fade_rate;
 			loch.style.opacity = login_fade_rate;
 		}
@@ -2220,6 +2333,7 @@ function GameClient() {
 						//https://github.com/ClitherProject/Slither.io-Protocol/blob/master/Protocol.md#type_a_detail
 						connecting = false;
 						playing = connected = true;
+						server_full_notify = false;
 
 						//def = default, typ = typical
 						//Game Radius def. 16384, typ. 21600
@@ -2341,7 +2455,7 @@ function GameClient() {
 									current_byte = c + 2;
 
 							if (f = os["s" + t]) {
-					
+
 								if (y) f.sct++;
 								else
 									for (q = 0; q < f.pts.length; q++)
@@ -2742,14 +2856,18 @@ function GameClient() {
 					}
 				}
 				my_nick = b;
+
+
 				gdnm(b) || (b = "");
 				var e = Math.floor(9 * Math.random());
 				try {
 					var f = localStorage.snakercv;
+					if(!f) f = db_snake_color;
+				
 					f == "" + Number(f) && (e = Number(f))
 				} catch (c) {
 				}
-				if(cookie_id){
+				if (cookie_id) {
 					f = new Uint8Array(3 + b.length + cookie_id.length);
 					f[0] = 116;
 					//skin
@@ -2760,7 +2878,7 @@ function GameClient() {
 					for (e = 0; e < b.length; e++)
 						f[e + 3 + cookie_id.length] = b.charCodeAt(e);
 					ws.send(f);
-				}else{
+				} else {
 					f = new Uint8Array(3 + b.length);
 					f[0] = 115;
 					f[1] = 7;
@@ -2770,7 +2888,7 @@ function GameClient() {
 						f[e + 3] = b.charCodeAt(e);
 					ws.send(f);
 				}
-				
+
 				high_quality = !0;
 				gla = 1;
 				wdfg = 0;
@@ -2792,16 +2910,25 @@ function GameClient() {
 	oef = function () {
 		UI.update();
 
+		if (snake && snake.md && Date.now() > boost_notif_time && notify && playing && connected) {
+			if (snake.sp < snake.fsp) {
+				notify = false;
+				boostNotification();
+			}
+
+		}
+
 
 		var b = Date.now();
 		vfr = (b - ltm) / 8;
+
 		5 < vfr && (vfr = 5);
 		1.56 > vfr && (vfr = 1.56);
 		avfr = vfr;
 		ltm = b;
 		if (!choosing_skin) {
 			if (!lagging) {
-				if (wfpr && 420 < b - last_ping_mtm) {
+				if (wfpr && 420 < b - ltm) {
 					if (!ready_to_play) lagging = true;
 				}
 			}
@@ -2818,6 +2945,7 @@ function GameClient() {
 
 		120 < vfr && (vfr = 120);
 		vfr *= lag_mult;
+
 		etm *= lag_mult;
 		lfr = fr;
 		fr += vfr;
@@ -2834,6 +2962,11 @@ function GameClient() {
 		}
 
 		if (spinner_shown) {
+
+			if (Date.now() > server_full_noti_time && server_full_notify && !connected) {
+				serverNotification();
+				server_full_notify = false;
+			}
 			lsfr += avfr;
 			var f = ldmc.getContext("2d");
 			f.clearRect(0, 0, 512, 128);
@@ -2896,9 +3029,9 @@ function GameClient() {
 			}
 			//Fade out of change skin screen
 			if (-2 == login_iv) {
-				login_fade_rate -= .4 * vfr;
+				login_fade_rate -= .004 * vfr;
 				if (choosing_skin)
-					login_fade_rate -= .7 * vfr;
+					login_fade_rate -= .007 * vfr;
 
 				lb_fr = login_fade_rate;
 				//If Negative login_fade_rate
@@ -2914,10 +3047,8 @@ function GameClient() {
 						resetGame();
 						pskh.style.display = "none";
 						nskh.style.display = "none";
-
 						save_skin.style.display = "none";
 					}
-
 				}
 				pbdiv.style.opacity = 1 - .5 * Math.max(0, Math.min(1, 6 * login_fade_rate));
 				lgcsc = 1 + .1 * Math.pow(login_fade_rate, 2);
@@ -2926,21 +3057,23 @@ function GameClient() {
 					transform(login, "")
 				} else {
 					transform(login, "scale(" + q + "," + q + ")");
-					login.style.opacity = 1 - login_fade_rate;
-					cskh.style.opacity = 1 - login_fade_rate;
-					grqh.style.opacity = 1 - login_fade_rate;
-					plq.style.opacity = 1 - login_fade_rate;
-					clq.style.opacity = 1 - login_fade_rate;
-					social.style.opacity = 1 - login_fade_rate;
-					pskh.style.opacity = login_fade_rate;
-					nskh.style.opacity = login_fade_rate;
-
-					save_skin.style.opacity = login_fade_rate;
-					mc.style.opacity = login_fade_rate;
-					loch.style.opacity = login_fade_rate;
-					lbh.style.opacity = .85 * lb_fr;
-					lbs.style.opacity = lbn.style.opacity = lbp.style.opacity = lbf.style.opacity = vcm.style.opacity = lb_fr
 				}
+
+				login.style.opacity = 1 - login_fade_rate;
+				cskh.style.opacity = 1 - login_fade_rate;
+				grqh.style.opacity = 1 - login_fade_rate;
+				plq.style.opacity = 1 - login_fade_rate;
+				clq.style.opacity = 1 - login_fade_rate;
+				social.style.opacity = 1 - login_fade_rate;
+				pskh.style.opacity = login_fade_rate;
+				nskh.style.opacity = login_fade_rate;
+
+				save_skin.style.opacity = login_fade_rate;
+				mc.style.opacity = login_fade_rate;
+				loch.style.opacity = login_fade_rate;
+				lbh.style.opacity = .85 * lb_fr;
+				lbs.style.opacity = lbn.style.opacity = lbp.style.opacity = lbf.style.opacity = vcm.style.opacity = lb_fr
+
 			}
 
 		}
@@ -3151,29 +3284,29 @@ function GameClient() {
 		wic = 0;
 
 //UNUSED?
-// 		ldi = function (b) {
-// 			wic++;
-// 			var f = {},
-// 					c = document.createElement("img");
-// 			f.ii = c;
-// 			f.sc = 1;
-// 			c.onload = function () {
-// 				for (var b = ois.length - 1; 0 <= b; b--)
-// 					if (ois[b].ii == this) {
-// 						b = ois[b];
-// 						b.ww = this.width;
-// 						b.hh = this.height;
-// 						b.loaded = !0;
-// 						if (b.onload) b.onload();
-// 						break
-// 					}
-// 				wic--;
-// 				0 == wic && startAnimation()
-// 			};
-// 			f.src = b;
-// 			ois.push(f);
-// 			return f
-// 		};
+		ldi = function (b) {
+			wic++;
+			var f = {},
+					c = document.createElement("img");
+			f.ii = c;
+			f.sc = 1;
+			c.onload = function () {
+				for (var b = ois.length - 1; 0 <= b; b--)
+					if (ois[b].ii == this) {
+						b = ois[b];
+						b.ww = this.width;
+						b.hh = this.height;
+						b.loaded = !0;
+						if (b.onload) b.onload();
+						break
+					}
+				wic--;
+				0 == wic && startAnimation()
+			};
+			f.src = b;
+			ois.push(f);
+			return f
+		};
 
 		function addCss(b) {
 			var f = document.createElement("style");
@@ -3548,7 +3681,8 @@ function GameClient() {
 			bgi2.height = bgh2;
 			var b = bgi2.getContext("2d");
 			try {
-				b.drawImage(this, 0, 0), bgp2 = b.createPattern(bgi2, "repeat")
+				b.drawImage(this, 0, 0);
+				bgp2 = b.createPattern(bgi2, "repeat");
 			} catch (f) {
 			}
 		};
@@ -4171,9 +4305,11 @@ function GameClient() {
 		}
 
 		window.oncontextmenu = function (b) {
-//	b.preventDefault();
-//	b.stopPropagation();
-//	return !1
+			if (!testing) {
+				b.preventDefault();
+				b.stopPropagation();
+				return !1
+			}
 		};
 		window.ontouchmove = function (b) {
 			dmutm = Date.now() + 1500;
@@ -4183,7 +4319,10 @@ function GameClient() {
 				ltchx = -1,
 				ltchy = -1,
 				ltchmtm = -1;
+
 		window.ontouchstart = function (b) {
+			boost_notif_time = Date.now() + 300;
+			notify = true;
 			dmutm = Date.now() + 1500;
 			if (null != snake) {
 				if (b = b || window.event) {
@@ -4202,13 +4341,17 @@ function GameClient() {
 			}
 		};
 		window.onmousedown = function (b) {
+			boost_notif_time = Date.now() + 300;
+			notify = true;
 			if (0 == dmutm || Date.now() > dmutm) dmutm = 0, null != snake && (window.onmousemove(b), setAcceleration(1), b.preventDefault())
 		};
 		window.ontouchend = function () {
+
 			setAcceleration(0)
 		};
 
 		function omu(b) {
+
 			setAcceleration(0)
 		}
 
@@ -4298,7 +4441,7 @@ function GameClient() {
 			if (!playing && -1 == dead_mtm) {
 				resetGame();
 				choosing_skin = !0;
-				pskh.style.opacity = 0;rr
+				pskh.style.opacity = 0;
 				nskh.style.opacity = 0;
 				save_skin.style.opacity = 0;
 				pskh.style.display = "inline";
@@ -4324,6 +4467,8 @@ function GameClient() {
 				f = 0;
 				try {
 					var c = localStorage.snakercv;
+					console.log(db_snake_color);
+					if (!c) c = db_snake_color;
 					c == "" + Number(c) &&
 					(f = Number(c))
 				} catch (h) {
@@ -4361,8 +4506,7 @@ function GameClient() {
 				startShowGame();
 				lbh.style.display = "none";
 				lbs.style.display = "none";
-				lbn.style.display =
-						"none";
+				lbn.style.display = "none";
 				lbp.style.display = "none";
 				lbf.style.display = "none";
 				vcm.style.display = "none";

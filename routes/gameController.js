@@ -1,5 +1,6 @@
 let express = require('express');
 let router = express.Router();
+let Users = require('../models/users');
 let UserService = require('../services/userService');
 let UserSnakeService = require('../services/usersSnakesService');
 let StatsService = require('../services/statsService');
@@ -11,13 +12,19 @@ var globalFunctions = new StatsService(express);
 
 class GameController {
 
-    constructor(express) {
-        this.express = express;
-    }
+	constructor(express) {
+		this.express = express;
+	}
 
-    Index(req, res, next) {
-        res.render('game/index');
-    }
+	Index(req, res, next) {
+		var user = null;
+		Users.findOne({'cookie_id': req.cookies.cookie_id}, function (err, user) {
+			if (err) {
+				return next(err);
+			}
+			res.render('game/index',{user: user?user:new Users()});
+		});
+	}
 
     //todo - change the service functions to static
     //todo - in UML , if underlined, static
