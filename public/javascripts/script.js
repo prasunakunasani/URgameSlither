@@ -56,30 +56,51 @@ function loadProfileCharts() {
     // console.log('Printing best here:');
     // console.log(bestScoreAndKillsChartData);
 
-    var avgSnakeLengthChart = makeChart("avgSnakeLengthchartdiv", avgSnakeLengthChartData, "length","second","#AE3F69");
-    var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData, "length","second","#ffca74");
-    var bestScoreAndKillsChart = makeChart("bestScoreAndKillschartdiv", bestScoreAndKillsChartData, "length","second","#AE3F69");
-    var cummulativeMovingScoreChart = makeChart("cummulativeMovingScorechartdiv",cummulativeMovingScoreChartData,"score","game","#ffca74")
+    var avgSnakeLengthChart = makeChart("avgSnakeLengthchartdiv", avgSnakeLengthChartData, "length","second","#AE3F69","Average Score over time","Score","5 second interval");
+    var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData, "length","second","#ffca74","Maximum Score over time","Score","5 second interval");
+    var bestScoreAndKillsChart = makeChart("bestScoreAndKillschartdiv", bestScoreAndKillsChartData, "length","second","#AE3F69","Best Score and Kills over time","Score/Kills","5 second interval");
+    var cummulativeMovingScoreChart = makeChart("cummulativeMovingScorechartdiv",cummulativeMovingScoreChartData,"score","game","#ffca74","Cummulative Score per game","Score","Game Number")
 }
 function loadGlobalCharts() {
 
 
     console.log(highestSnakeLengthAllChart);
-    var avgSnakeLengthAllChart = makeChart("avgSnakeLengthAllchartdiv", avgSnakeLengthAllChartData, "length","second","#60C57C");
-    var highestSnakeLengthAllChart = makeChart("highestSnakeLengthAllchartdiv", highestSnakeLengthAllChartData, "length","second","#60C57C");
+    var avgSnakeLengthAllChart = makeChart("avgSnakeLengthAllchartdiv", avgSnakeLengthAllChartData, "length","second","#AE3F69","Average Score of all users over time","Score","5 second interval");
+    var highestSnakeLengthAllChart = makeChart("highestSnakeLengthAllchartdiv", highestSnakeLengthAllChartData, "length","second","#AE3F69","Highest Score of all users over time","Score","5 second interval");
 }
 
-function makeChart(chartDiv, chartData, yAxisName,xAxisName,graphColor) {
+function makeChart(chartDiv, chartData, yAxisFieldName,xAxisFieldName,graphColor,title,xAxisLabel,yAxisLabel) {
     console.log('Graph color is: '+graphColor);
 
     return AmCharts.makeChart(chartDiv, {
         "type": "serial",
         "theme": "black",
+        "titles": [{
+            "text": title,
+            "size": 15
+        }],
+        "allLabels": [{
+            "text": yAxisLabel,
+            "y": "!20",
+            "width": "50%",
+            "size": 15,
+            "bold": true,
+            "align": "center"
+        }, {
+            "text": xAxisLabel,
+            "x": "10",
+            "y": "!20",
+            "rotation": 270,
+            "width": "50%",
+            "size": 15,
+            "bold": true,
+            "align": "center"
+        }],
         "marginRight": 80,
         "autoMarginOffset": 20,
         "marginTop": 7,
         "dataProvider": chartData,
-        "categoryField": xAxisName, //field of x-axis
+        "categoryField": xAxisFieldName, //field of x-axis
         "categoryAxis":
             {},
         "valueAxis": [
@@ -98,7 +119,7 @@ function makeChart(chartDiv, chartData, yAxisName,xAxisName,graphColor) {
                 "bulletColor": "#ffffff",
                 "hideBulletsCount": 50, //"If there are more data points than hideBulletsCount, the bullets will not be shown. 0 means the bullets will always be visible.
                 "title": "title goes here", //just a variable for the ballonText
-                "valueField": yAxisName, //the name of the field in data in Y-axis
+                "valueField": yAxisFieldName, //the name of the field in data in Y-axis
                 "useLineColorForBulletBorder": true, //determines border of value dot(bullet)
                 "type": "smoothedLine", //typeofgraph - line, column, step, smoothedLine, candlestick,ohIc
                 "balloon":
