@@ -53,22 +53,24 @@ loadGlobalCharts();
 
 function loadProfileCharts() {
 
-    var avgSnakeLengthChart = makeChart("avgSnakeLengthchartdiv", avgSnakeLengthChartData, "length");
-    var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData, "length");
-    var timeOfKillsChart = makeChart("timeOfKillschartdiv", timeOfKillsChartData, "kills");
+    // console.log('Printing best here:');
+    // console.log(bestScoreAndKillsChartData);
 
+    var avgSnakeLengthChart = makeChart("avgSnakeLengthchartdiv", avgSnakeLengthChartData, "length","second","#AE3F69");
+    var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData, "length","second","#ffca74");
+    var bestScoreAndKillsChart = makeChart("bestScoreAndKillschartdiv", bestScoreAndKillsChartData, "length","second","#AE3F69");
+    var cummulativeMovingScoreChart = makeChart("cummulativeMovingScorechartdiv",cummulativeMovingScoreChartData,"score","game","#ffca74")
 }
-
 function loadGlobalCharts() {
-    console.log('Printing kills here:');
-    console.log(avgSnakeLengthAllChart);
-    console.log('Printing kills here:');
+
+
     console.log(highestSnakeLengthAllChart);
-    var avgSnakeLengthAllChart = makeChart("avgSnakeLengthAllchartdiv", avgSnakeLengthAllChartData, "length");
-    var highestSnakeLengthAllChart = makeChart("highestSnakeLengthAllchartdiv", highestSnakeLengthAllChartData, "length");
+    var avgSnakeLengthAllChart = makeChart("avgSnakeLengthAllchartdiv", avgSnakeLengthAllChartData, "length","second","#60C57C");
+    var highestSnakeLengthAllChart = makeChart("highestSnakeLengthAllchartdiv", highestSnakeLengthAllChartData, "length","second","#60C57C");
 }
 
-function makeChart(chartDiv, chartData, yAxisName) {
+function makeChart(chartDiv, chartData, yAxisName,xAxisName,graphColor) {
+    console.log('Graph color is: '+graphColor);
 
     return AmCharts.makeChart(chartDiv, {
         "type": "serial",
@@ -77,7 +79,7 @@ function makeChart(chartDiv, chartData, yAxisName) {
         "autoMarginOffset": 20,
         "marginTop": 7,
         "dataProvider": chartData,
-        "categoryField": "second", //field of x-axis
+        "categoryField": xAxisName, //field of x-axis
         "categoryAxis":
             {},
         "valueAxis": [
@@ -89,10 +91,11 @@ function makeChart(chartDiv, chartData, yAxisName) {
         "graphs": [
             {
                 "id": "g1",
-                "balloonText": "[[value]]", //what the pop up when hovered is
+                "balloonText": "[[value]]", //what the pop up has when hovered is
+                "fillColors": graphColor,
                 "bullet": "round", //available: none, square, triangleUp, traingleDown, bubble, custom, round
                 "bulletBorderAlpha": 1, //bulletborderopacity
-                "bulletColor": "#FFFFFF",
+                "bulletColor": "#ffffff",
                 "hideBulletsCount": 50, //"If there are more data points than hideBulletsCount, the bullets will not be shown. 0 means the bullets will always be visible.
                 "title": "title goes here", //just a variable for the ballonText
                 "valueField": yAxisName, //the name of the field in data in Y-axis
@@ -103,6 +106,12 @@ function makeChart(chartDiv, chartData, yAxisName) {
                         "drop": true  //if you want the balloon to be in a tear shape
                     },
                 "fillAlphas": 0.7
+
+            },
+            {
+                "id": "g2",
+                "valueField": "kills",
+                "type": "column"
             }],
         "chartScrollbar":
             {
@@ -116,11 +125,11 @@ function makeChart(chartDiv, chartData, yAxisName) {
             },
         "export":
             {
-                "enabled": true
+                "enabled": false
             },
         "legend":
             {
-                "enabled": true,
+                "enabled": false, //allow a legend to turn on/off the graphs.
                 "useGraphSettings": true
             }
     });
@@ -135,5 +144,41 @@ function makeChart(chartDiv, chartData, yAxisName) {
 //     // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
 //     chart.zoomToIndexes(chartData.length - 40, chartData.length - 1);
 // }
+//
 
+if (totalGamesPlayed<=0)
+{
+    runPlayGameToast();
+}
 
+function runPlayGameToast(){
+
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-left",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "slideDown",
+        "hideMethod": "fadeOut"
+    }
+
+    toastr.info('Play a game first');
+
+}
+
+var bars = [];
+for(var n=0; n<3; n++) {
+    bars.push( new tinyProgressbar(document.getElementById("progress" + n)) );
+}
+bars[0].progress(avgScore);
+bars[1].progress(avgKills);
+bars[2].progress(avgBoosts);

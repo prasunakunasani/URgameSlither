@@ -4,6 +4,11 @@ body {
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+.hidden#grqh
+{
+    visibility:hidden;
+}
+
 .holder {
     margin-left: auto;
     margin-right: auto;
@@ -114,12 +119,31 @@ body {
 }
 
 .well
-{ background-color: #242F39;
-
+{
+    background-color: #242F39;
 }
 
-#avgSnakeLengthchartdiv, #highestSnakeLengthchartdiv, #timeOfKillschartdiv, #avgSnakeLengthAllchartdiv, #highestSnakeLengthAllchartdiv {
-    width: 100%;
+.well.imp
+{
+    text-align: center;
+}
+
+#mainred{
+    color: #AE3F69;
+}
+
+
+#maingreen{
+    color: #60C57C;
+}
+
+
+#mainorange{
+    color: #F4B46D;
+}
+
+#avgSnakeLengthchartdiv, #highestSnakeLengthchartdiv, #bestScoreAndKillschartdiv, #cummulativeMovingScorechartdiv, #avgSnakeLengthAllchartdiv, #highestSnakeLengthAllchartdiv {
+    width: 110%;
     height: 500px;
 }
 
@@ -180,17 +204,15 @@ svg {
 /* Import fonts */
 @import url(http://fonts.googleapis.com/css?family=Ruda:400,700,900);
 
-#spacing
+#spacingBelowBox
 {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
-
-
 
 .box1 {
     padding: 15px;
     text-align: center;
-    color: #989898;
+    color: #ffffff;
     border-bottom: 1px solid #989898;
 }
 
@@ -201,6 +223,20 @@ svg {
 
 .box1 h3 {
     text-align: center;
+}
+
+.box1.boosts{
+    color: #F4B46D;
+}
+
+.box1.best
+{
+    color: #AE3F69;
+}
+
+.box1.kills
+{
+    color: #60C57C;
 }
 
 .box0:hover .box1 {
@@ -218,7 +254,7 @@ svg {
 }
 
 .box0:hover {
-    background: #ffffff;
+    background: #000000;
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2);
 }
 

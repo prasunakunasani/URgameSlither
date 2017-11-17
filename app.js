@@ -13,8 +13,6 @@ var oauth2 = require('./lib/oauth2');
 var cookie = require('./lib/cookie');
 var statsController = require('./routes/statsController');
 var gameController = require('./routes/gameController');
-var gameServer = require('./routes/removeGameServer');  //fixme - remove me after testing
-
 
 const passport = require('passport');
 const session = require('express-session');
@@ -75,7 +73,6 @@ app.use(oauth2.template);
 //Routes
 app.use('/', index);
 app.use('/stats',statsController);
-app.use('/something',gameServer); //fixme - remove me after testing
 app.use('/game',gameController);
 
 

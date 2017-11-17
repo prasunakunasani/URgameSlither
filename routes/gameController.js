@@ -26,26 +26,27 @@ class GameController {
 		});
 	}
 
-	saveUserAndSnake(req, res, next) {
-		if (req.body.secret !== config.get("DATA_SECRET"))
+    //todo - change the service functions to static
+    //todo - in UML , if underlined, static
 
-			console.log(JSON.stringify(req.body));
-		userSnakeFunctions.InsertUsersSnakeData(req.body.usersSnake, next);
-		userFunctions.InsertUserDetails(req.body.user, next);
-		userFunctions.UpdateUsersStats(req.body.usersSnake, next);
-		globalFunctions.UpdateDailyStats(req.body.usersSnake, req.body.currentPlayerCount, next);
-		globalFunctions.UpdateCalculatedStats(req.body.usersSnake, next);
+    //takes too long to calculate all of them.
 
-		//create a record for dailyStats if doesn't exist, else update - //fixme - wouldn't this be too much checking? Is that okay?
-		//use player count coming in form Game Server
-		//create a record for calculatedStats if doesn't exist, else update //fixme - again, maybe this can just be created and updated only...? Am I thinking too much?
-	}
+    saveUserAndSnake(req, res, next) {
+        if (req.body.secret !== config.get("DATA_SECRET"))
+            return next();
+
+        userSnakeFunctions.InsertUsersSnakeData(req.body.usersSnake, next);
+        UserService.InsertUserDetails(req.body.user, next);
+        userFunctions.UpdateUsersStats(req.body.usersSnake, next);
+        globalFunctions.UpdateDailyStats(req.body.usersSnake, req.body.currentPlayerCount, next);
+        globalFunctions.UpdateCalculatedStats(req.body.usersSnake, next);
+    }
 }
 
 var gameController = new GameController(express);
 
 router.get('/', gameController.Index.bind(gameController));
-router.get('/testing', gameController.Index.bind(gameController));
+router.get('/testing', gameController.Index.bind(gameController)); //fixme - what's this for? Ask Chris
 router.post('/saveUserAndSnake', gameController.saveUserAndSnake.bind(gameController));
 
 module.exports = router;

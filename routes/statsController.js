@@ -1,6 +1,5 @@
 let express = require('express');
 let router = express.Router();
-//let statsService = require('../services/statsService');
 
 let Users = require('../models/users');
 let UsersStats = require('../models/usersStats');
@@ -12,8 +11,7 @@ function generateAvgChartData(usersStats) {
 
     var avgSnakeLengthChartData = [];
 
-    if (!usersStats)
-    {
+    if (!usersStats) {
         return [{
             second: 0,
             length: 0
@@ -34,8 +32,7 @@ function generateHighChartData(usersStats) {
 
     var highestSnakeLengthChartData = [];
 
-    if (!usersStats)
-    {
+    if (!usersStats) {
         return [{
             second: 0,
             length: 0
@@ -52,32 +49,55 @@ function generateHighChartData(usersStats) {
     return highestSnakeLengthChartData;
 };
 
-function generateKillsChartData(usersStats) {
-    var timeOfKillsChartData = [];
+function generateCummulativeMovingScoreData(userStats) {
+    var cummulativeMovingScoreChartData = [];
 
-    if (!usersStats)
+    if (!userStats)
     {
         return [{
+            game: 0,
+            score: 0
+        }];
+    }
+
+    for (var x=0; x<userStats.cumulative_moving_average_snake_length.length; x++)
+    {
+        cummulativeMovingScoreChartData.push(
+               {
+                   game: x,
+                   score: userStats.cumulative_moving_average_snake_length[x]
+               }
+           );
+    }
+    return cummulativeMovingScoreChartData;
+}
+
+function generateBestScoreAndKillsChartData(usersStats) {
+    var bestScoreAndKillsChartData = [];
+
+    if (!usersStats) {
+        return [{
             second: 0,
+            length: 0,
             kills: 0
         }];
     }
 
-    for (var x = 0; x < usersStats.best_snake.interval_data.kills.length; x++) {
-        timeOfKillsChartData.push({
+    for (var x = 0; x < usersStats.best_snake.interval_data.length.length; x++) {
+        bestScoreAndKillsChartData.push({
             second: x * 5,
+            length: usersStats.best_snake.interval_data.length[x],
             kills: usersStats.best_snake.interval_data.kills[x]
         });
     }
-    return timeOfKillsChartData;
+    return bestScoreAndKillsChartData;
 
 };
 
 function generateAllAvgChartData(dailyStats) {
     var avgSnakeLengthAllChartData = [];
 
-    if (!dailyStats)
-    {
+    if (!dailyStats) {
         return [{
             second: 0,
             length: 0
@@ -91,14 +111,12 @@ function generateAllAvgChartData(dailyStats) {
         });
     }
     return avgSnakeLengthAllChartData;
-
 };
 
 function generateAllHighChartData(dailyStats) {
     var highestSnakeLengthAllChartData = [];
 
-    if (!dailyStats)
-    {
+    if (!dailyStats) {
         return [{
             second: 0,
             length: 0
@@ -119,8 +137,7 @@ function secondsToHms(s) {
     return (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s;
 };
 
-function getMinutesAgo(date)
-{
+function getMinutesAgo(date) {
 
     var seconds = Math.floor((new Date() - date) / 1000);
 
@@ -156,8 +173,8 @@ class StatsController {
     }
 
     Index(req, res, next) {
-        
-        var cookie_id= req.cookies.cookie_id;
+
+        var cookie_id = req.cookies.cookie_id;
 //fixme - the data for dailystats should come from today's date
         Users.count({'cookie_id': cookie_id}, function (err, count) {
             if (err) {
@@ -179,22 +196,23 @@ class StatsController {
                             if (err) {
                                 return next(err);
                             }
-                            CalculatedStats.find(function (err, calculatedStats) {
+                            CalculatedStats.findOne(function (err, calculatedStats) {
                                 if (err) {
                                     return next(err);
                                 }
-
                                 res.render('stats',
                                     {
                                         totalgames: count,
-                                        usersList: users?users:new Users(),
-                                        usersSnakesList: usersSnakes?usersSnakes:new UsersSnakes(),
-                                        usersStatsList: usersStats?usersStats:new UsersStats({best_snake:new UsersSnakes()}),
-                                        dailyStatsList: dailyStats?dailyStats:new DailyStats,
-                                        calculatedStatsList: calculatedStats?calculatedStats:new CalculatedStats(),
+                                        //Same as: If users is not null, send users. Else, create a new Users model and send that.
+                                        usersList: users ? users : new Users(),
+                                        usersSnakesList: usersSnakes ? usersSnakes : new UsersSnakes(),
+                                        usersStatsList: usersStats ? usersStats : new UsersStats({best_snake: new UsersSnakes()}), //cause' best_snake can't be defaulted in the model
+                                        dailyStatsList: dailyStats ? dailyStats : new DailyStats,
+                                        calculatedStatsList: calculatedStats ? calculatedStats : new CalculatedStats(),
                                         avgSnakeLengths: generateAvgChartData(usersStats),
                                         highestSnakeLengths: generateHighChartData(usersStats),
-                                        timeOfKills: generateKillsChartData(usersStats),
+                                        bestScoreAndKills: generateBestScoreAndKillsChartData(usersStats),
+                                        cummulativeMovingScore: generateCummulativeMovingScoreData(usersStats),
                                         avgSnakeLengthAll: generateAllAvgChartData(dailyStats),
                                         highestSnakeLengthAll: generateAllHighChartData(dailyStats),
                                         secondsToHms: secondsToHms,
@@ -218,10 +236,10 @@ class StatsController {
         res.redirect('/stats' + '#global');
     }
 
-//fixme -  This is probably not the data that needs to be loaded for AJAX calls. Look at Index function.
+//fixme -  Fix all the stupid Ajax calls. Chris suggested to first see if data is loaded. If yes, then just get JSON and update. Else, call the Index function.
     AjaxUpdateProfileStats(req, res, next) {
         if (req.xhr) {
-            var cookie_id= req.cookies.cookie_id;
+            var cookie_id = req.cookies.cookie_id;
             Users.count({'cookie_id': cookie_id}, function (err, count) {
                 if (err) {
                     return next(err);
@@ -266,9 +284,9 @@ class StatsController {
         }
     }
 
-    AjaxUpdateGlobalStats(req, res, next) { 
+    AjaxUpdateGlobalStats(req, res, next) {
         if (req.xhr) {
-            var cookie_id= req.cookies.cookie_id;
+            var cookie_id = req.cookies.cookie_id;
             Users.count({'cookie_id': cookie_id}, function (err, count) {
                 if (err) {
                     return next(err);
@@ -293,9 +311,6 @@ class StatsController {
                                     if (err) {
                                         return next(err);
                                     }
-
-
-
                                     res.render('globalstats',
                                         {
                                             totalgames: count,
