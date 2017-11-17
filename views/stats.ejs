@@ -218,28 +218,28 @@
             <div class="row" id="spacingBelowBox">
                 <div class="col-sm-6">
                     <div class="row">
-                        <div class="col-sm box0">
+                        <div class="col-sm--3 box0">
                             <div class="box1">
                                 <span class="fa fa-gamepad"></span>
                                 <h3><%= dailyStatsList.totals.boosts %></h3>
                                 <div>Total Boosts today</div>
                             </div>
                         </div>
-                        <div class="col-sm box0">
+                        <div class="col-sm-3 box0">
                             <div class="box1">
                                 <span class="fa fa-gamepad"></span>
                                 <h3><%= dailyStatsList.totals.deaths %></h3>
                                 <div>Total Deaths today</div>
                             </div>
                         </div>
-                        <div class="col-sm box0">
+                        <div class="col-sm-3 box0">
                             <div class="box1">
                                 <span class="fa fa-gamepad"></span>
                                 <h3><%= secondsToHms((dailyStatsList.totals.duration).toFixed(0)) %></h3>
                                 <div>Total game play time today</div>
                             </div>
                         </div>
-                        <div class="col-sm box0">
+                        <div class="col-sm-3 box0">
                             <div class="box1 kills">
                                 <span class="fa fa-gamepad"></span>
                                 <h3><%= dailyStatsList.totals.kills %></h3>
@@ -250,28 +250,28 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="row">
-                        <div class="col-sm box0">
+                        <div class="col-sm-3 box0">
                             <div class="box1">
                                 <span class="fa fa-gamepad"></span>
                                 <h3><%= calculatedStatsList.totals.all_time.boosts %></h3>
                                 <div>Total Boosts Used Ever</div>
                             </div>
                         </div>
-                        <div class="col-sm box0">
+                        <div class="col-sm-3 box0">
                             <div class="box1">
                                 <span class="fa fa-gamepad"></span>
                                 <h3><%= calculatedStatsList.totals.all_time.deaths %></h3>
                                 <div>Total Deaths Ever</div>
                             </div>
                         </div>
-                        <div class="col-sm box0">
+                        <div class="col-sm-3 box0">
                             <div class="box1">
                                 <span class="fa fa-gamepad"></span>
                                 <h3><%= secondsToHms((calculatedStatsList.totals.all_time.duration).toFixed(0)) %></h3>
                                 <div>Total Game play time ever</div>
                             </div>
                         </div>
-                        <div class="col-sm box0">
+                        <div class="col-sm-3 box0">
                             <div class="box1 kills">
                                 <span class="fa fa-gamepad"></span>
                                 <h3><%= calculatedStatsList.totals.all_time.kills %></h3>
@@ -279,7 +279,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>  <!--for row-->
 
@@ -293,8 +292,6 @@
                     <div id="highestSnakeLengthAllchartdiv"></div>
                 </div>
             </div>
-
-
 
         </div> <!--for ajax call-->
 
