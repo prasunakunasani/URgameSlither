@@ -3,13 +3,8 @@ let CalculatedStats = require('../models/calculatedstats');
 let Users = require('../models/users');
 let DailyStats = require('../models/dailyStats');
 let instance = null;
-let uniqueUsers = 0;
 var now = new Date();
-var startOfToday = new Date(now.getFullYear(),now.getMonth(),now.getDate());
-
-Users.count({'updatedAt': {$gt: startOfToday}}, function (err, count) {
-    uniqueUsers = count;
-});
+var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
 class StatsService {
 
@@ -23,7 +18,11 @@ class StatsService {
 
         DailyStats.findOne({'createdOn': {$gt: startOfToday}}, function (err, result) {
 
+            console.log("Result in constructor for daily stats is: " + JSON.stringify(result));
+
             if (!result) {
+
+                console.log("Daily Stats is empty so creating a new record");
                 result = new DailyStats();
 
                 result.save(function (err) {
@@ -35,14 +34,16 @@ class StatsService {
 
         CalculatedStats.findOne({}, function (err, result) {
 
+            // console.log("Result in constructor for daily stats is: "+result);
+
             if (!result) {
+                //   console.log("There was nothing in calculatedstats collection so I'm creating a new one");
                 result = new CalculatedStats();
 
                 result.save(function (err) {
                     if (err) console.error(err);
                 })
             }
-
             this.cachedCalculatedStats = result;
         }.bind(this));
 
@@ -55,13 +56,13 @@ class StatsService {
         //var statsCache = new CachedVariables(express,0,calculatedstats);
         //todo - check if good data - check if day flipped over.
 
-        //LTE IS WRONG.
+
         DailyStats.update({'createdOn': {$gt: startOfToday}}, {}, {
             upsert: true,
             setDefaultsOnInsert: true
         }, function (err, result) {
 
-            console.log('This ran and result is: '+JSON.stringify(result));
+            console.log("Tried to find today's record and result is: " + JSON.stringify(result));
             if (err) return next(err);
             else if (result.ok == '0') return next(JSON.stringify(result));
 
@@ -86,6 +87,10 @@ class StatsService {
                         unique_users: 0
                     }
             };
+
+
+            console.log("Before calculating anything. This is what's in daily stats THIS: " + JSON.stringify(this.cachedDailyStats));
+
             //Calculate the interval_data
             for (var i = 0; i < snakeDetails.interval_data.length.length; i++) {
                 if (this.cachedDailyStats.interval_data.sums[i] != null)
@@ -112,22 +117,26 @@ class StatsService {
             tempRecord.totals.kills = this.cachedDailyStats.totals.kills + snakeDetails.kills;
             tempRecord.totals.length = this.cachedDailyStats.totals.length + snakeDetails.length;
 
-            tempRecord.totals.unique_users = this.cachedDailyStats.totals.unique_users + uniqueUsers;
-
-            if ((this.cachedDailyStats.totals.unique_users === null) || (this.cachedDailyStats.totals.unique_users < uniqueUsers)) {
-                tempRecord.totals.unique_users = uniqueUsers;
-            }
-
-            DailyStats.findOneAndUpdate({'createdOn': {$gt: startOfToday}}, tempRecord, function (err, result) {
-                //todo - double check what result is sending back..
-
+            Users.count({'updatedAt': {$gt: startOfToday}}, function (err, uniqueUsers) {
                 if (err) return next(err);
-                //else if (result.ok == '0') return next(JSON.stringify(result));
 
-            });
+                tempRecord.totals.unique_users = this.cachedDailyStats.totals.unique_users + uniqueUsers;
 
+                if ((this.cachedDailyStats.totals.unique_users === null) || (this.cachedDailyStats.totals.unique_users < uniqueUsers)) {
+                    tempRecord.totals.unique_users = uniqueUsers;
+                }
+
+                DailyStats.findOneAndUpdate({'createdOn': {$gt: startOfToday}}, tempRecord, function (err, result) {
+                    //todo - double check what result is sending back..
+
+                    if (err) return next(err);
+                    //else if (result.ok == '0') return next(JSON.stringify(result));
+
+                    console.log("Result from saving daily stats into db is: " + JSON.stringify(result));
+                });
+
+            }.bind(this));
         }.bind(this));
-
     }
 
     UpdateCalculatedStats(snakeDetails, next) {
@@ -154,7 +163,7 @@ class StatsService {
 
         CalculatedStats.findOneAndUpdate({}, tempRecord, function (err, result) {
             if (err) return next(err);
-          //  else if (result.ok == '0') return next(JSON.stringify(result));
+            //  else if (result.ok == '0') return next(JSON.stringify(result));
 
         });
     }
