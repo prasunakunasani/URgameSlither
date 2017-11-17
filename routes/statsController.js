@@ -6,6 +6,8 @@ let UsersStats = require('../models/usersStats');
 let UsersSnakes = require('../models/userssnakes');
 let DailyStats = require('../models/dailyStats');
 let CalculatedStats = require('../models/calculatedstats');
+var now = new Date();
+var startOfToday = new Date(now.getFullYear(),now.getMonth(),now.getDate());
 
 function generateAvgChartData(usersStats) {
 
@@ -192,7 +194,8 @@ class StatsController {
                         if (err) {
                             return next(err);
                         } //todo -  check here that the stats are from today. Else, blank and create a new record.
-                        DailyStats.findOne({'createdOn': {$lt: new Date().toISOString()}}, function (err, dailyStats) {
+                        DailyStats.findOne({'createdOn': {$gt: startOfToday}}, function (err, dailyStats) {
+
                             if (err) {
                                 return next(err);
                             }
@@ -257,6 +260,7 @@ class StatsController {
                                 return next(err);
                             }
                             DailyStats.find(function (err, dailyStats) {
+
                                 if (err) {
                                     return next(err);
                                 }

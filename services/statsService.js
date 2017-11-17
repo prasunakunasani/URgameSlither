@@ -4,9 +4,16 @@ let Users = require('../models/users');
 let DailyStats = require('../models/dailyStats');
 let instance = null;
 let uniqueUsers = 0;
+var now = new Date();
+var startOfToday = new Date(now.getFullYear(),now.getMonth(),now.getDate());
 
-Users.count({'updatedAt': {$lt: new Date().toISOString()}}, function (err, count) {
+Users.count({'updatedAt': {$gt: startOfToday}}, function (err, count) {
+
+    console.log('Today is: '+startOfToday);
+
     uniqueUsers = count;
+
+    console.log('count is : '+uniqueUsers);
 });
 
 class StatsService {
@@ -19,7 +26,7 @@ class StatsService {
             instance = this;
         }
 
-        DailyStats.findOne({'createdOn': {$lte: new Date().toISOString()}}, function (err, result) {
+        DailyStats.findOne({'createdOn': {$gt: startOfToday}}, function (err, result) {
 
             if (!result) {
                 result = new DailyStats();
@@ -28,8 +35,6 @@ class StatsService {
                     if (err) console.error(err);
                 })
             }
-
-
             this.cachedDailyStats = result;
         }.bind(this));
 
@@ -55,14 +60,15 @@ class StatsService {
         //var statsCache = new CachedVariables(express,0,calculatedstats);
         //todo - check if good data - check if day flipped over.
 
-        DailyStats.update({'createdOn': {$lt: new Date().toISOString()}}, {}, {
+        //LTE IS WRONG.
+        DailyStats.update({'createdOn': {$gt: startOfToday}}, {}, {
             upsert: true,
             setDefaultsOnInsert: true
         }, function (err, result) {
 
+            console.log('This ran and result is: '+JSON.stringify(result));
             if (err) return next(err);
             else if (result.ok == '0') return next(JSON.stringify(result));
-
 
             var tempRecord = {
                 interval_data:
@@ -110,13 +116,14 @@ class StatsService {
             tempRecord.totals.duration = this.cachedDailyStats.totals.duration + snakeDetails.duration;
             tempRecord.totals.kills = this.cachedDailyStats.totals.kills + snakeDetails.kills;
             tempRecord.totals.length = this.cachedDailyStats.totals.length + snakeDetails.length;
+
             tempRecord.totals.unique_users = this.cachedDailyStats.totals.unique_users + uniqueUsers;
 
             if ((this.cachedDailyStats.totals.unique_users === null) || (this.cachedDailyStats.totals.unique_users < uniqueUsers)) {
                 tempRecord.totals.unique_users = uniqueUsers;
             }
 
-            DailyStats.findOneAndUpdate({'createdOn': {$lt: new Date().toISOString()}}, tempRecord, function (err, result) {
+            DailyStats.findOneAndUpdate({'createdOn': {$gt: startOfToday}}, tempRecord, function (err, result) {
                 //todo - double check what result is sending back..
 
                 if (err) return next(err);
@@ -139,8 +146,7 @@ class StatsService {
                             deaths: 0,
                             duration: 0,
                             kills: 0,
-                            length: 0,
-                            unique_users: 0
+                            length: 0
                         }
                 }
         };
