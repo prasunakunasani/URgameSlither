@@ -109,8 +109,31 @@ body {
     border: none;
 }
 
+.block{
+    display:block;
+}
+
 .card {
+    
+    padding-top: 5px;
     background-color: #242F39;
+}
+
+a{
+	color:lightgrey
+}
+
+a:hover{
+	color:lightgrey;
+}
+
+.tinyProgressbar{
+    margin-bottom: 0.5em;
+}
+
+.card>.row{
+    
+    margin:0;
 }
 
 .well
@@ -120,26 +143,32 @@ body {
 
 .well.imp
 {
+    font-weight: bold;
     text-align: center;
+    
 }
 
-#mainred{
+.row{
+    margin-bottom: 10px;
+}
+
+.main-red{
     color: #AE3F69;
 }
 
 
-#maingreen{
+.main-green{
     color: #60C57C;
 }
 
 
-#mainorange{
+.main-orange{
     color: #F4B46D;
 }
 
-#avgSnakeLengthchartdiv, #highestSnakeLengthchartdiv, #bestScoreAndKillschartdiv, #cummulativeMovingScorechartdiv, #avgSnakeLengthAllchartdiv, #highestSnakeLengthAllchartdiv {
-    width: 110%;
-    height: 500px;
+.amchart{
+    width: 105%;
+    height: 290px;
 }
 
 #content {
@@ -205,19 +234,19 @@ svg {
 }
 
 .box1 {
-    padding: 15px;
+    padding: 10px 0  10px 0;
     text-align: center;
     color: #ffffff;
     border-bottom: 1px solid #989898;
 }
 
-.box1 span {
-    font-size: 50px;
-
-}
 
 .box1 h3 {
     text-align: center;
+}
+
+.fa{
+    font-size: 3rem;
 }
 
 .box1.boosts{
@@ -253,3 +282,6 @@ svg {
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2);
 }
 
+.one-line{
+    white-space:nowrap;
+}
