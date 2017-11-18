@@ -15,19 +15,16 @@ $(document).ready(function () {
 
 function makeTabActive(tab) {
 
-    console.log("Making " + tab + " active!");
     $('.nav-tabs a[href="#' + tab + '"]').tab('show');
 };
 
 
 $("#profiletab").click(function () {
-    console.log("Button was clicked. Time for AJAX call");
     $.ajax(
         {
             type: "GET",
             url: "stats/ajaxUpdate/profile",
             success: function (result) {
-                console.log("I just finished the call and got updated data");
                 console.log(result);
                 $("#ajaxUpdateProfileStats").html(result);
             }
@@ -35,13 +32,11 @@ $("#profiletab").click(function () {
 });
 
 $("#globaltab").click(function () {
-    console.log("Button was clicked. Time for AJAX call");
     $.ajax(
         {
             type: "GET",
             url: "stats/ajaxUpdate/global",
             success: function (result) {
-                console.log("I just finished the call and got updated data");
                 console.log(result);
                 $("#ajaxUpdateGlobalStats").html(result);
             }
@@ -52,26 +47,18 @@ loadProfileCharts();
 loadGlobalCharts();
 
 function loadProfileCharts() {
-
-    // console.log('Printing best here:');
-    // console.log(bestScoreAndKillsChartData);
-
     var avgSnakeLengthChart = makeChart("avgSnakeLengthchartdiv", avgSnakeLengthChartData, "length","second","#AE3F69","Average Score over time","Score","5 second interval");
     var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData, "length","second","#ffca74","Maximum Score over time","Score","5 second interval");
     var bestScoreAndKillsChart = makeChart("bestScoreAndKillschartdiv", bestScoreAndKillsChartData, "length","second","#AE3F69","Best Score and Kills over time","Score/Kills","5 second interval");
-    var cummulativeMovingScoreChart = makeChart("cummulativeMovingScorechartdiv",cummulativeMovingScoreChartData,"score","game","#ffca74","Cummulative Score per game","Score","Game Number")
+    var cumulativeMovingScoreChart = makeChart("cumulativeMovingScorechartdiv",cumulativeMovingScoreChartData,"score","game","#ffca74","Cumulative Score per game","Score","Game Number")
 }
+
 function loadGlobalCharts() {
-
-
-    console.log(highestSnakeLengthAllChart);
     var avgSnakeLengthAllChart = makeChart("avgSnakeLengthAllchartdiv", avgSnakeLengthAllChartData, "length","second","#AE3F69","Average Score of all users over time","Score","5 second interval");
     var highestSnakeLengthAllChart = makeChart("highestSnakeLengthAllchartdiv", highestSnakeLengthAllChartData, "length","second","#AE3F69","Highest Score of all users over time","Score","5 second interval");
 }
 
 function makeChart(chartDiv, chartData, yAxisFieldName,xAxisFieldName,graphColor,title,xAxisLabel,yAxisLabel) {
-    console.log('Graph color is: '+graphColor);
-
     return AmCharts.makeChart(chartDiv, {
         "type": "serial",
         "theme": "black",
@@ -167,7 +154,7 @@ function makeChart(chartDiv, chartData, yAxisFieldName,xAxisFieldName,graphColor
 // }
 //
 
-if (totalGamesPlayed<=0)
+if (totalGamesPlayedByUser<=0)
 {
     runPlayGameToast();
 }
