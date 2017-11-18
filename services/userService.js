@@ -77,50 +77,47 @@ class UserService {
                 if (!userStatsRecord)
                     userStatsRecord = new UsersStats();
 
-               var tempRecord = userStatsRecord; //todo - replace tempRecord with userStatsRecord
-
                 //update best snake
                 if (snakeDetails.length > userStatsRecord.best_snake.length) {
-                    tempRecord.best_snake = snakeDetails;
+                    userStatsRecord.best_snake = snakeDetails;
                 }
 
                 //  update totals
-                tempRecord.totals.boosts = userStatsRecord.totals.boosts + snakeDetails.boosts;
-                tempRecord.totals.deaths = userStatsRecord.totals.deaths + 1;
-                tempRecord.totals.duration = userStatsRecord.totals.duration + snakeDetails.duration;
-                tempRecord.totals.kills = userStatsRecord.totals.kills + snakeDetails.kills;
-                tempRecord.totals.length = userStatsRecord.totals.length + snakeDetails.length;
+                userStatsRecord.totals.boosts = userStatsRecord.totals.boosts + snakeDetails.boosts;
+                userStatsRecord.totals.deaths = userStatsRecord.totals.deaths + 1;
+                userStatsRecord.totals.duration = userStatsRecord.totals.duration + snakeDetails.duration;
+                userStatsRecord.totals.kills = userStatsRecord.totals.kills + snakeDetails.kills;
+                userStatsRecord.totals.length = userStatsRecord.totals.length + snakeDetails.length;
 
                 //update cumulative_moving_average_snake_length
-                tempRecord.cumulative_moving_average_snake_length.push(tempRecord.totals.length / tempRecord.totals.deaths);
+                userStatsRecord.cumulative_moving_average_snake_length.push(userStatsRecord.totals.length / userStatsRecord.totals.deaths);
 
                 //update interval_data
                 //fixme - maybe think about what happens when length is less than zero.
                 for (var i = 0; i < snakeDetails.interval_data.length.length; i++) {
                     if (userStatsRecord.interval_data.sums[i])
-                        tempRecord.interval_data.sums[i] = userStatsRecord.interval_data.sums[i] + snakeDetails.interval_data.length[i];
+                        userStatsRecord.interval_data.sums[i] = userStatsRecord.interval_data.sums[i] + snakeDetails.interval_data.length[i];
                     else
-                        tempRecord.interval_data.sums[i] = snakeDetails.interval_data.length[i];
+                        userStatsRecord.interval_data.sums[i] = snakeDetails.interval_data.length[i];
                 }
 
                 for (var i = 0; i < snakeDetails.interval_data.length.length; i++) {
                     //adding 1 to the death because' for the first record, the deaths haven't been calculated yet.
-                    tempRecord.interval_data.averages[i] = tempRecord.interval_data.sums[i] / (userStatsRecord.totals.deaths + 1);
+                    userStatsRecord.interval_data.averages[i] = userStatsRecord.interval_data.sums[i] / (userStatsRecord.totals.deaths + 1);
                 }
 
                 //update records
                 if (snakeDetails.kills > userStatsRecord.records.highest_kills)
-                    tempRecord.records.highest_kills = snakeDetails.kills;
+                    userStatsRecord.records.highest_kills = snakeDetails.kills;
 
                 if (snakeDetails.largestSnake > userStatsRecord.records.largest_snake_killed_length)
-                    tempRecord.records.largest_snake_killed_length = snakeDetails.largestSnake;
+                    userStatsRecord.records.largest_snake_killed_length = snakeDetails.largestSnake;
 
                 //update last modified date
-                tempRecord.lastModifiedOn = new Date();
+                userStatsRecord.lastModifiedOn = new Date();
 
                 //save the new calculate data into the cookie_id record.
-                UsersStats.findOneAndUpdate({cookie_id: snakeDetails.cookie_id}, tempRecord, function (err, result) {
-
+                UsersStats.findOneAndUpdate({cookie_id: snakeDetails.cookie_id}, userStatsRecord, function (err, result) {
                     if (err) return next(err);
                     else if (result.ok == '0') return next(JSON.stringify(result));
 
