@@ -2,7 +2,7 @@ var c = {
 	port: 8080,
 	path: '/game/socket',
 	bots: 0, // Not Implemented
-	maxConnections: 20,
+	maxConnections: 40,
 	highscoreName: "How to change Highscore Msg",
 	highscoreMsg: "Set this message in the config",
 	food: 1000,

@@ -102,7 +102,7 @@ class Snake extends EventEmitter {
 	}
 
 	finalRecord() {
-		console.log(this.parts.length);console.log(this.parts);
+		
 		this._data.length = this.getScore();
 		this._data.duration = (Date.now() - this._initTime) / 1000;
 		this._data.interval_data.length.push(this.getScore());
@@ -358,8 +358,7 @@ class Snake extends EventEmitter {
 
 			var xdiff = this.head.x - this.parts[this.parts.length - 1].x;
 			var ydiff = this.head.y - this.parts[this.parts.length - 1].y;
-			console.log(JSON.stringify(this.head));
-			console.log(JSON.stringify(this.parts[this.parts.length - 1]));
+
 			this._parts.push({
 				dx: xdiff,
 				dy: ydiff,
