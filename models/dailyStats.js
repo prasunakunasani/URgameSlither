@@ -67,7 +67,7 @@ var dailyStatsSchema = new mongoose.Schema({
 
         }
 
-});
+},{timestamps: true});
 
 var dailyStats = mongoose.model('dailystats', dailyStatsSchema);
 module.exports = dailyStats;

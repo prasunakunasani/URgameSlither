@@ -6,9 +6,11 @@ let instance = null;
 var now = new Date();
 var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-class StatsService {
+class StatsSingleton {
 
     constructor(express) {
+
+        this.foo = 10;
 
         this.express = express;
 
@@ -18,11 +20,7 @@ class StatsService {
 
         DailyStats.findOne({'createdOn': {$gt: startOfToday}}, function (err, result) {
 
-            console.log("Result in constructor for daily stats is: " + JSON.stringify(result));
-
             if (!result) {
-
-                console.log("Daily Stats is empty so creating a new record");
                 result = new DailyStats();
 
                 result.save(function (err) {
@@ -34,10 +32,7 @@ class StatsService {
 
         CalculatedStats.findOne({}, function (err, result) {
 
-            // console.log("Result in constructor for daily stats is: "+result);
-
             if (!result) {
-                //   console.log("There was nothing in calculatedstats collection so I'm creating a new one");
                 result = new CalculatedStats();
 
                 result.save(function (err) {
@@ -47,24 +42,46 @@ class StatsService {
             this.cachedCalculatedStats = result;
         }.bind(this));
 
-
         return instance;
+    }
+
+    GetCalculatedStats(res, next, Callback) {
+        CalculatedStats.findOne({}, function (err, calculatedStats) {
+            if (err) {
+                return next(err);
+            }
+            if (!calculatedStats) {
+                new CalculatedStats();
+            }
+            Callback(calculatedStats);
+        });
+    }
+
+    GetDailyStats(res, next, Callback) {
+        DailyStats.findOne({'createdOn': {$gt: startOfToday}}, function (err, dailyStats) {
+            if (err) {
+                return next(err);
+            }
+            if (!dailyStats) {
+                new DailyStats();
+            }
+
+            Callback(dailyStats);
+        });
     }
 
     UpdateDailyStats(snakeDetails, playerCount, next) {
 
-        //var statsCache = new CachedVariables(express,0,calculatedstats);
-        //todo - check if good data - check if day flipped over.
-
+        //todo - check if good data - check if day flipped over. - what was this again? Chris mentioned it..ask him
 
         DailyStats.update({'createdOn': {$gt: startOfToday}}, {}, {
             upsert: true,
             setDefaultsOnInsert: true
         }, function (err, result) {
 
-            console.log("Tried to find today's record and result is: " + JSON.stringify(result));
             if (err) return next(err);
             else if (result.ok == '0') return next(JSON.stringify(result));
+
 
             var tempRecord = {
                 interval_data:
@@ -88,9 +105,6 @@ class StatsService {
                     }
             };
 
-
-            console.log("Before calculating anything. This is what's in daily stats THIS: " + JSON.stringify(this.cachedDailyStats));
-
             //Calculate the interval_data
             for (var i = 0; i < snakeDetails.interval_data.length.length; i++) {
                 if (this.cachedDailyStats.interval_data.sums[i] != null)
@@ -105,9 +119,9 @@ class StatsService {
             }
 
             //calculate the peak
-            if (playerCount > this.cachedDailyStats.peak.concurrent) {
+            if (this.cachedDailyStats.peak.concurrent < playerCount) {
                 tempRecord.peak.concurrent = playerCount;
-                tempRecord.peak = new Date();
+                tempRecord.peak.time = new Date();
             }
 
             //calculate the totals
@@ -127,12 +141,12 @@ class StatsService {
                 }
 
                 DailyStats.findOneAndUpdate({'createdOn': {$gt: startOfToday}}, tempRecord, function (err, result) {
-                    //todo - double check what result is sending back..
-
                     if (err) return next(err);
-                    //else if (result.ok == '0') return next(JSON.stringify(result));
 
-                    console.log("Result from saving daily stats into db is: " + JSON.stringify(result));
+                    //find record that's either created after or at the same time as correct dialy record. But make sure it's a duplicate created after start of today.
+                    DailyStats.findOneAndRemove({$and:[{$or: [{'createdOn': {$gt: result.createdOn}}, {'updatedAt': {$lt: result.updatedAt}}]},{'createdAt': {$gt: startOfToday}}]}, function (err, result2) {
+                        if (err) return next(err);
+                    });
                 });
 
             }.bind(this));
@@ -163,11 +177,13 @@ class StatsService {
 
         CalculatedStats.findOneAndUpdate({}, tempRecord, function (err, result) {
             if (err) return next(err);
-            //  else if (result.ok == '0') return next(JSON.stringify(result));
-
+            //find record that's either created after or at the same time as correct dialy record. But make sure it's a duplicate created after start of today.
+            CalculatedStats.findOneAndRemove({$and:[{$or: [{'createdAt': {$gt: result.createdAt}}, {'updatedAt': {$lt: result.updatedAt}}]},{'createdAt': {$gt: startOfToday}}]}, function (err, result2) {
+                if (err) return next(err);
+            });
         });
     }
 
 }
 
-module.exports = StatsService;
+module.exports = StatsSingleton;

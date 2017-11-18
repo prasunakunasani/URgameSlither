@@ -6,10 +6,10 @@
     var avgSnakeLengthChartData = <%- JSON.stringify(avgSnakeLengths) %>
     var highestSnakeLengthChartData = <%- JSON.stringify(highestSnakeLengths) %>
     var bestScoreAndKillsChartData = <%- JSON.stringify(bestScoreAndKills) %>
-    var cummulativeMovingScoreChartData = <%- JSON.stringify(cummulativeMovingScore) %>
+    var cumulativeMovingScoreChartData = <%- JSON.stringify(cumulativeMovingScore) %>
     var avgSnakeLengthAllChartData = <%- JSON.stringify(avgSnakeLengthAll) %>
     var highestSnakeLengthAllChartData = <%- JSON.stringify(highestSnakeLengthAll) %>
-    var totalGamesPlayed = <%= totalgames %>
+    var totalGamesPlayedByUser = <%= usersStatsList.totals.deaths %>
     var avgScore = <%= (usersStatsList.totals.length / usersStatsList.totals.deaths).toFixed(0) %>
     var avgKills = <%= (usersStatsList.totals.boosts / usersStatsList.totals.deaths).toFixed(0) %>
     var avgBoosts = <%= (usersStatsList.totals.kills / usersStatsList.totals.deaths).toFixed(0) %>
@@ -26,7 +26,7 @@
             <div class="row card block">
                 <div class="row">
                     <div class="col-sm-6 well">
-                        <% if (totalgames <= 0) { %>
+                        <% if (usersStatsList.totals.deaths <= 0) { %>
                         Please play a game
                         <% } else { %>
                         <h5><%= usersList.snake.name %></h5>
@@ -129,11 +129,11 @@
                 <div class="col-sm box0">
                     <div class="box1">
                         <span class="fa fa-play"></span>
-                        <h4><%= totalgames %></h4>
+                        <h4><%= usersStatsList.totals.deaths %></h4>
                         <span class="one-line">Games Played</span>
                     </div>
                 </div>
-            </div>  <!--row-->
+            </div>  <!--end of row -> Single data value section -> Profile section-->
 
             <div class="row">
                 <div class="col-sm-12 card">
@@ -170,7 +170,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-12 card">
-                    <div  id="cummulativeMovingScorechartdiv" class="amchart" aria-label="Cummulative score per game"></div>
+                    <div  id="cumulativeMovingScorechartdiv" class="amchart" aria-label="Cumulative score per game"></div>
                 </div>
             </div>
 
@@ -197,7 +197,7 @@
                     </div>
                     <div class="col-sm-2 well imp main-orange">
                         <div> Peak Users</div>
-                        <% if (!dailyStatsList.peak.concurrent) { %>
+                        <% if (dailyStatsList.peak.concurrent == 0) { %>
                         Not Available
                         <% } else { %>
                         <%= dailyStatsList.peak.concurrent %>
