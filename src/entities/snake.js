@@ -28,7 +28,7 @@ class Snake extends EventEmitter {
 			angle: ((3 / 4) * Math.PI * 2),
 			expectedAngle: ((3 / 4) * Math.PI * 2)
 		};
-		
+
 
 		//Variables to record data
 		this._data = {
@@ -50,7 +50,7 @@ class Snake extends EventEmitter {
 				color: color
 			}
 		};
-		
+
 		this._initTime = Date.now();
 		this._time = this._initTime;
 		this._lastIntervalTime = this._initTime - config["intervalRate"];
@@ -77,13 +77,15 @@ class Snake extends EventEmitter {
 		//Tail grows downwards
 		for (var i = this._sct - 2; i >= 0; i--) {
 			this._parts.push({
+				dx: 0,
+				dy: config["maxSpeed"],
 				x: this._head.x,
-				y: this._head.y + 25 * i
+				y: this._head.y + config["maxSpeed"] * i
 			});
 		}
-		this._cookie = cookie;
+
 	}
-	
+
 	//PUBLIC FUNCTIONS
 	update(deltaTime, count, fast_count) {
 		if (this._boost && this._length > 2 && this._speed > 7 || this._speed > 11) {
@@ -100,6 +102,7 @@ class Snake extends EventEmitter {
 	}
 
 	finalRecord() {
+		console.log(this.parts.length);console.log(this.parts);
 		this._data.length = this.getScore();
 		this._data.duration = (Date.now() - this._initTime) / 1000;
 		this._data.interval_data.length.push(this.getScore());
@@ -134,7 +137,7 @@ class Snake extends EventEmitter {
 		return this._parts[0];
 		//return this._parts[this._parts.length-1];
 	}
-	
+
 	setBoost(enabled) {
 		this._boost = enabled;
 	}
@@ -157,7 +160,7 @@ class Snake extends EventEmitter {
 		return;
 	}
 
-	
+
 	//GETTERS
 	get name() {
 		return this._name;
@@ -196,11 +199,11 @@ class Snake extends EventEmitter {
 		return this._data;
 	}
 
-	get parts(){
+	get parts() {
 		return this._parts;
 	}
-	
-	get direction(){
+
+	get direction() {
 		return this._direction;
 	}
 
@@ -208,7 +211,7 @@ class Snake extends EventEmitter {
 		return this._speed;
 	}
 
-	get head(){
+	get head() {
 		return this._head;
 	}
 
@@ -220,9 +223,10 @@ class Snake extends EventEmitter {
 		return this._length;
 	}
 
-	get fam(){
+	get fam() {
 		return this._fam;
 	}
+
 	//PRIVATE FUNCTIONS
 	_updatePosition(deltaTime) {
 		var sc = Math.min(6, 1 + (this._sct - 2) / 106);
@@ -254,7 +258,7 @@ class Snake extends EventEmitter {
 		if (sizeChange !== 0)
 			this._increaseSize(sizeChange * 4);
 
-		this._updateParts();
+		//this._updateParts();
 		if (Math.abs(this._direction.x) < 120 && Math.abs(this._direction.y) < 120) {
 			this.emit("updateSmall", this);
 		} else {
@@ -266,15 +270,16 @@ class Snake extends EventEmitter {
 
 	_updateParts() {
 		var p = this._parts;
-		var lastx = this._head.x;
-		var lasty = this._head.y;
+		var last = Object.assign({},this.head);
+		
 		for (var i = this._parts.length - 1; i >= 0; i--) {
-			var tempx = p[i].x;
-			var tempy = p[i].y;
-			p[i].x = lastx;
-			p[i].y = lasty;
-			lastx = tempx;
-			lasty = tempy;
+			var temp = Object.assign({}, p[i]);
+			p[i] = Object.assign({},last);
+			p[i].dx = last.x - temp.x;
+			p[i].dy = last.y - temp.y;
+			//temp.x += p[i].dx* 0.4;
+			//temp.y += p[i].dy* 0.4;
+			last = temp;
 		}
 
 	}
@@ -349,11 +354,20 @@ class Snake extends EventEmitter {
 			this._fam -= 1;
 			this._sct += 1;
 			this.emit("increase", this);
+
+
+			var xdiff = this.head.x - this.parts[this.parts.length - 1].x;
+			var ydiff = this.head.y - this.parts[this.parts.length - 1].y;
+			console.log(JSON.stringify(this.head));
+			console.log(JSON.stringify(this.parts[this.parts.length - 1]));
 			this._parts.push({
+				dx: xdiff,
+				dy: ydiff,
 				x: this._head.x,
 				y: this._head.y
 			});
-
+			this._updateParts();
+			
 		} else if (this._fam < 0) {
 			if (this._sct > 2) {
 				this._sct -= 1;

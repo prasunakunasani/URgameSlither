@@ -22,11 +22,12 @@ var c = {
 	maxSpeed: 12,
 	snakeStartSize: 2,
 	spangdv: 4.8,
-	foodToGrow: 200,
+	foodToGrow: 2,
 	speedMult: 1,
 	speedBonus: 0,
 	//5 seconds
-	intervalRate: 5000
+	intervalRate: 5000,
+	shrinkFactor: 1
 };
 
 
