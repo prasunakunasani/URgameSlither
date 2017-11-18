@@ -48,7 +48,7 @@ loadGlobalCharts();
 
 function loadProfileCharts() {
     var avgSnakeLengthChart = makeChart("avgSnakeLengthchartdiv", avgSnakeLengthChartData, "length","second","#AE3F69","Average Score over time","Score","5 second interval");
-    var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData, "length","second","#ffca74","Maximum Score over time","Score","5 second interval");
+    var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData, "length","second","#ffca74","Best Score over time","Score","5 second interval");
     var bestScoreAndKillsChart = makeChart("bestScoreAndKillschartdiv", bestScoreAndKillsChartData, "length","second","#AE3F69","Best Score and Kills over time","Score/Kills","5 second interval");
     var cumulativeMovingScoreChart = makeChart("cumulativeMovingScorechartdiv",cumulativeMovingScoreChartData,"score","game","#ffca74","Cumulative Score per game","Score","Game Number")
 }

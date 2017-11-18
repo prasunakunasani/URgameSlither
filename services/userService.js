@@ -77,28 +77,7 @@ class UserService {
                 if (!userStatsRecord)
                     userStatsRecord = new UsersStats();
 
-                var tempRecord = {
-                    cumulative_moving_average_snake_length: userStatsRecord.cumulative_moving_average_snake_length,
-                    interval_data:
-                        {
-                            averages: [],
-                            sums: []
-                        },
-                    records:
-                        {
-                            highest_kills: 0,
-                            largest_snake_killed_length: 0
-                        },
-                    totals:
-                        {
-                            boosts: 0,
-                            deaths: 0,
-                            duration: 0,
-                            kills: 0,
-                            length: 0
-                        },
-                    lastModifiedOn: new Date()
-                };
+               var tempRecord = userStatsRecord; //todo - replace tempRecord with userStatsRecord
 
                 //update best snake
                 if (snakeDetails.length > userStatsRecord.best_snake.length) {
@@ -124,7 +103,7 @@ class UserService {
                         tempRecord.interval_data.sums[i] = snakeDetails.interval_data.length[i];
                 }
 
-                for (var i = 0; i < tempRecord.interval_data.sums.length; i++) {
+                for (var i = 0; i < snakeDetails.interval_data.length.length; i++) {
                     //adding 1 to the death because' for the first record, the deaths haven't been calculated yet.
                     tempRecord.interval_data.averages[i] = tempRecord.interval_data.sums[i] / (userStatsRecord.totals.deaths + 1);
                 }

@@ -14,14 +14,19 @@ class StatsSingleton {
 
         this.express = express;
 
+        //if instance is null
         if (!instance) {
             instance = this;
         }
+        else
+         return instance;
 
         DailyStats.findOne({'createdOn': {$gt: startOfToday}}, function (err, result) {
 
             if (!result) {
                 result = new DailyStats();
+
+                    console.log("Found nothing. Created: "+JSON.stringify(result._id)+","+JSON.stringify(result.createdOn));
 
                 result.save(function (err) {
                     if (err) console.error(err);
@@ -143,10 +148,15 @@ class StatsSingleton {
                 DailyStats.findOneAndUpdate({'createdOn': {$gt: startOfToday}}, tempRecord, function (err, result) {
                     if (err) return next(err);
 
-                    //find record that's either created after or at the same time as correct dialy record. But make sure it's a duplicate created after start of today.
-                    DailyStats.findOneAndRemove({$and:[{$or: [{'createdOn': {$gt: result.createdOn}}, {'updatedAt': {$lt: result.updatedAt}}]},{'createdAt': {$gt: startOfToday}}]}, function (err, result2) {
-                        if (err) return next(err);
-                    });
+                    console.log("the record that'll get updated is: "+JSON.stringify(result._id));
+                    console.log("it's data is: "+JSON.stringify(result));
+                    console.log("The temp record that's added to daily stats is: "+JSON.stringify(tempRecord));
+
+
+                    // //find record that's either created after or at the same time as correct dialy record. But make sure it's a duplicate created after start of today.
+                    // DailyStats.findOneAndRemove({$and:[{$or: [{'createdOn': {$gt: result.createdOn}}, {'updatedAt': {$lt: result.updatedAt}}]},{'createdAt': {$gt: startOfToday}}]}, function (err, removedRecord) {
+                    //     if (err) return next(err);
+                    // });
                 });
 
             }.bind(this));
@@ -177,10 +187,10 @@ class StatsSingleton {
 
         CalculatedStats.findOneAndUpdate({}, tempRecord, function (err, result) {
             if (err) return next(err);
-            //find record that's either created after or at the same time as correct dialy record. But make sure it's a duplicate created after start of today.
-            CalculatedStats.findOneAndRemove({$and:[{$or: [{'createdAt': {$gt: result.createdAt}}, {'updatedAt': {$lt: result.updatedAt}}]},{'createdAt': {$gt: startOfToday}}]}, function (err, result2) {
-                if (err) return next(err);
-            });
+            // //find record that's either created after or at the same time as correct dialy record. But make sure it's a duplicate created after start of today.
+            // CalculatedStats.findOneAndRemove({$and:[{$or: [{'createdAt': {$gt: result.createdAt}}, {'updatedAt': {$lt: result.updatedAt}}]},{'createdAt': {$gt: startOfToday}}]}, function (err, result2) {
+            //     if (err) return next(err);
+            // });
         });
     }
 
