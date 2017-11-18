@@ -2,13 +2,10 @@ let express = require('express');
 let router = express.Router();
 let Users = require('../models/users');
 let UserService = require('../services/userService');
-let UserSnakeService = require('../services/usersSnakesService');
-let StatsService = require('../services/statsService');
+let StatsSingleton = require('../services/statsSingleton');
 let config = require('../config');
 
-var userFunctions = new UserService(express);
-var userSnakeFunctions = new UserSnakeService(express);
-var globalFunctions = new StatsService(express);
+var globalFunctions = new StatsSingleton(express);
 
 class GameController {
 
@@ -35,9 +32,9 @@ class GameController {
         if (req.body.secret !== config.get("DATA_SECRET"))
             return next();
 
-        userSnakeFunctions.InsertUsersSnakeData(req.body.usersSnake, next);
-        UserService.InsertUserDetails(req.body.user, next);
-        userFunctions.UpdateUsersStats(req.body.usersSnake, next);
+        UserService.InsertUsersSnake(req.body.usersSnake, next);
+        UserService.UpdateUsers(req.body.user, next);
+        UserService.UpdateUsersStats(req.body.usersSnake, next);
         globalFunctions.UpdateDailyStats(req.body.usersSnake, req.body.currentPlayerCount, next);
         globalFunctions.UpdateCalculatedStats(req.body.usersSnake, next);
     }

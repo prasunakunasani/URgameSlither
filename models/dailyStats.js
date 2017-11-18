@@ -11,18 +11,21 @@ var dailyStatsSchema = new mongoose.Schema({
         {
             averages:
                 {
-                    type: [Number]
+                    type: [Number],
+                    default: []
                 },
             sums:
                 {
-                    type: [Number]
+                    type: [Number],
+                    default: []
                 }
         },
     peak:
         {
             concurrent:
                 {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
             time:
                 {
@@ -64,7 +67,7 @@ var dailyStatsSchema = new mongoose.Schema({
 
         }
 
-});
+},{timestamps: true});
 
 var dailyStats = mongoose.model('dailystats', dailyStatsSchema);
 module.exports = dailyStats;

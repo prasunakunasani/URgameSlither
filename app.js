@@ -8,11 +8,11 @@ var bodyParser = require('body-parser');
 var config = require('./config');
 
 //The .js files
-var index = require('./routes/index');
+var index = require('./controllers/index');
 var oauth2 = require('./lib/oauth2');
 var cookie = require('./lib/cookie');
-var statsController = require('./routes/statsController');
-var gameController = require('./routes/gameController');
+var statsController = require('./controllers/statsController');
+var gameController = require('./controllers/gameController');
 
 const passport = require('passport');
 const session = require('express-session');
@@ -91,7 +91,6 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  
   res.render('error');
 });
 

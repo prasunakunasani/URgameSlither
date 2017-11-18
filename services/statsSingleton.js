@@ -3,15 +3,14 @@ let CalculatedStats = require('../models/calculatedstats');
 let Users = require('../models/users');
 let DailyStats = require('../models/dailyStats');
 let instance = null;
-let uniqueUsers = 0;
+var now = new Date();
+var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-Users.count({'updatedAt': {$lt: new Date().toISOString()}}, function (err, count) {
-    uniqueUsers = count;
-});
-
-class StatsService {
+class StatsSingleton {
 
     constructor(express) {
+
+        this.foo = 10;
 
         this.express = express;
 
@@ -19,7 +18,7 @@ class StatsService {
             instance = this;
         }
 
-        DailyStats.findOne({'createdOn': {$lte: new Date().toISOString()}}, function (err, result) {
+        DailyStats.findOne({'createdOn': {$gt: startOfToday}}, function (err, result) {
 
             if (!result) {
                 result = new DailyStats();
@@ -28,8 +27,6 @@ class StatsService {
                     if (err) console.error(err);
                 })
             }
-
-
             this.cachedDailyStats = result;
         }.bind(this));
 
@@ -42,20 +39,42 @@ class StatsService {
                     if (err) console.error(err);
                 })
             }
-
             this.cachedCalculatedStats = result;
         }.bind(this));
-
 
         return instance;
     }
 
+    GetCalculatedStats(res, next, Callback) {
+        CalculatedStats.findOne({}, function (err, calculatedStats) {
+            if (err) {
+                return next(err);
+            }
+            if (!calculatedStats) {
+                new CalculatedStats();
+            }
+            Callback(calculatedStats);
+        });
+    }
+
+    GetDailyStats(res, next, Callback) {
+        DailyStats.findOne({'createdOn': {$gt: startOfToday}}, function (err, dailyStats) {
+            if (err) {
+                return next(err);
+            }
+            if (!dailyStats) {
+                new DailyStats();
+            }
+
+            Callback(dailyStats);
+        });
+    }
+
     UpdateDailyStats(snakeDetails, playerCount, next) {
 
-        //var statsCache = new CachedVariables(express,0,calculatedstats);
-        //todo - check if good data - check if day flipped over.
+        //todo - check if good data - check if day flipped over. - what was this again? Chris mentioned it..ask him
 
-        DailyStats.update({'createdOn': {$lt: new Date().toISOString()}}, {}, {
+        DailyStats.update({'createdOn': {$gt: startOfToday}}, {}, {
             upsert: true,
             setDefaultsOnInsert: true
         }, function (err, result) {
@@ -85,6 +104,7 @@ class StatsService {
                         unique_users: 0
                     }
             };
+
             //Calculate the interval_data
             for (var i = 0; i < snakeDetails.interval_data.length.length; i++) {
                 if (this.cachedDailyStats.interval_data.sums[i] != null)
@@ -99,9 +119,9 @@ class StatsService {
             }
 
             //calculate the peak
-            if (playerCount > this.cachedDailyStats.peak.concurrent) {
+            if (this.cachedDailyStats.peak.concurrent < playerCount) {
                 tempRecord.peak.concurrent = playerCount;
-                tempRecord.peak = new Date();
+                tempRecord.peak.time = new Date();
             }
 
             //calculate the totals
@@ -110,22 +130,27 @@ class StatsService {
             tempRecord.totals.duration = this.cachedDailyStats.totals.duration + snakeDetails.duration;
             tempRecord.totals.kills = this.cachedDailyStats.totals.kills + snakeDetails.kills;
             tempRecord.totals.length = this.cachedDailyStats.totals.length + snakeDetails.length;
-            tempRecord.totals.unique_users = this.cachedDailyStats.totals.unique_users + uniqueUsers;
 
-            if ((this.cachedDailyStats.totals.unique_users === null) || (this.cachedDailyStats.totals.unique_users < uniqueUsers)) {
-                tempRecord.totals.unique_users = uniqueUsers;
-            }
-
-            DailyStats.findOneAndUpdate({'createdOn': {$lt: new Date().toISOString()}}, tempRecord, function (err, result) {
-                //todo - double check what result is sending back..
-
+            Users.count({'updatedAt': {$gt: startOfToday}}, function (err, uniqueUsers) {
                 if (err) return next(err);
-                //else if (result.ok == '0') return next(JSON.stringify(result));
 
-            });
+                tempRecord.totals.unique_users = this.cachedDailyStats.totals.unique_users + uniqueUsers;
 
+                if ((this.cachedDailyStats.totals.unique_users === null) || (this.cachedDailyStats.totals.unique_users < uniqueUsers)) {
+                    tempRecord.totals.unique_users = uniqueUsers;
+                }
+
+                DailyStats.findOneAndUpdate({'createdOn': {$gt: startOfToday}}, tempRecord, function (err, result) {
+                    if (err) return next(err);
+
+                    //find record that's either created after or at the same time as correct dialy record. But make sure it's a duplicate created after start of today.
+                    DailyStats.findOneAndRemove({$and:[{$or: [{'createdOn': {$gt: result.createdOn}}, {'updatedAt': {$lt: result.updatedAt}}]},{'createdAt': {$gt: startOfToday}}]}, function (err, result2) {
+                        if (err) return next(err);
+                    });
+                });
+
+            }.bind(this));
         }.bind(this));
-
     }
 
     UpdateCalculatedStats(snakeDetails, next) {
@@ -139,8 +164,7 @@ class StatsService {
                             deaths: 0,
                             duration: 0,
                             kills: 0,
-                            length: 0,
-                            unique_users: 0
+                            length: 0
                         }
                 }
         };
@@ -153,11 +177,13 @@ class StatsService {
 
         CalculatedStats.findOneAndUpdate({}, tempRecord, function (err, result) {
             if (err) return next(err);
-          //  else if (result.ok == '0') return next(JSON.stringify(result));
-
+            //find record that's either created after or at the same time as correct dialy record. But make sure it's a duplicate created after start of today.
+            CalculatedStats.findOneAndRemove({$and:[{$or: [{'createdAt': {$gt: result.createdAt}}, {'updatedAt': {$lt: result.updatedAt}}]},{'createdAt': {$gt: startOfToday}}]}, function (err, result2) {
+                if (err) return next(err);
+            });
         });
     }
 
 }
 
-module.exports = StatsService;
+module.exports = StatsSingleton;

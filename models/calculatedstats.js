@@ -33,7 +33,7 @@ var calculatedStatsSchema = new mongoose.Schema({
                         }
                 }
         }
-});
+},{timestamps: true});
 
 var calculatedStats = mongoose.model('calculatedstats', calculatedStatsSchema);
 module.exports = calculatedStats;
