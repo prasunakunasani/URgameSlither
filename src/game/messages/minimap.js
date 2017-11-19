@@ -1,6 +1,6 @@
 // TODO? unused for now
  var message = require('../utils/message');
-var config = require('../../config/config');
+var config = require('../config/config');
 
 var type = 'u'.charCodeAt(0);
 

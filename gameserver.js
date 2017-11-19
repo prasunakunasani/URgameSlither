@@ -1,4 +1,4 @@
-const GameServer = require("./src/gameserver");
+const GameServer = require("./src/game/gameserver");
 
 
  let gameServer = new GameServer();

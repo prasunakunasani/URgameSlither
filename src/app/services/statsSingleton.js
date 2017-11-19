@@ -3,7 +3,7 @@ let CalculatedStats = require('../models/calculatedstats');
 let Users = require('../models/users');
 let DailyStats = require('../models/dailyStats');
 
-let UserService = require('../services/userService');
+let UserService = require('./userService');
 
 let instance = null;
 var now = new Date();

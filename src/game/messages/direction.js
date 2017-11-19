@@ -1,5 +1,5 @@
 const message = require('../utils/message');
-const config = require('../../config/config.js');
+const config = require('../config/config.js');
 
 exports.build = function (snake) {
 	var arr;

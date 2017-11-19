@@ -16,7 +16,7 @@ console.log("top of Auth2");
 const express = require('express');
 var shortid = require('shortid');
 var Users = require('../models/users');
-var config = require('../config');
+var config = require('../../../config');
 
 // [START setup]
 const passport = require('passport');

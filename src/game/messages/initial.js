@@ -1,6 +1,6 @@
 var message = require('../utils/message.js');
 
-var config = require('../../config/config.js');
+var config = require('../config/config.js');
 
 var arr = new Uint8Array(26);
 

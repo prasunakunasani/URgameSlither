@@ -3,7 +3,7 @@ const Leaderboard = require("../subjects/leaderboard");
 const Snake = require("./snake");
 const LeaderboardObserver = require("../observers/leaderboardObserver");
 const EventEmitter = require('events');
-const config = require('../../config/config');
+const config = require('../config/config');
 const message = require('../utils/message');
 const math = require('../utils/math');
 

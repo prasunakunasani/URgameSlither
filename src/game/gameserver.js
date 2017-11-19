@@ -2,7 +2,7 @@ const Game = require("./entities/game");
 const NetworkSystem = require("./networksystem");
 
 const WebSocket = require('ws');
-let config = require('../config/config.js');
+let config = require('./config/config.js');
 
 //const messages = require('messages');
 

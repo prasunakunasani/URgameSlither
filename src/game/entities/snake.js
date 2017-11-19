@@ -1,5 +1,5 @@
 const EventEmitter = require('events');
-const config = require('../../config/config.js');
+const config = require('../config/config.js');
 
 class Snake extends EventEmitter {
 

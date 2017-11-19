@@ -3,9 +3,9 @@ let router = express.Router();
 let Users = require('../models/users');
 let UserService = require('../services/userService');
 let StatsSingleton = require('../services/statsSingleton');
-let config = require('../config');
+let config = require('../../../config');
 
-var globalFunctions = new StatsSingleton(express);
+
 
 //StatsSingleton(express).getInstance();
 
@@ -13,10 +13,11 @@ class GameController {
 
 	constructor(express) {
 		this.express = express;
+        this.globalFunctions = new StatsSingleton(express);
 	}
 
 	Index(req, res, next) {
-		var user = null;
+
 		Users.findOne({'cookie_id': req.cookies.cookie_id}, function (err, user) {
 			if (err) {
 				return next(err);
@@ -37,9 +38,8 @@ class GameController {
         UserService.InsertUsersSnake(req.body.usersSnake, next);
         UserService.UpdateUsers(req.body.user, next);
         UserService.UpdateUsersStats(req.body.usersSnake, next);
-        globalFunctions.UpdateDailyStats(req.body.usersSnake, req.body.currentPlayerCount, next);
-        globalFunctions.UpdateCalculatedStats(req.body.usersSnake, next);
-
+        this.globalFunctions.UpdateDailyStats(req.body.usersSnake, req.body.currentPlayerCount, next);
+        this.globalFunctions.UpdateCalculatedStats(req.body.usersSnake, next);
 
     }
 }

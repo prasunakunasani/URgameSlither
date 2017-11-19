@@ -8,11 +8,11 @@ var bodyParser = require('body-parser');
 var config = require('./config');
 
 //The .js files
-var index = require('./controllers/index');
-var oauth2 = require('./lib/oauth2');
-var cookie = require('./lib/cookie');
-var statsController = require('./controllers/statsController');
-var gameController = require('./controllers/gameController');
+var index = require('./src/app/controllers/index');
+var oauth2 = require('./src/app/lib/oauth2');
+var cookie = require('./src/app/lib/cookie');
+var statsController = require('./src/app/controllers/statsController');
+var gameController = require('./src/app/controllers/gameController');
 
 const passport = require('passport');
 const session = require('express-session');
@@ -40,7 +40,7 @@ db.on('error', function (err) {
 //your node process. Which is why you used path and dirname
 app.use(express.static(path.join(__dirname, 'public')));
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'src/app/views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public

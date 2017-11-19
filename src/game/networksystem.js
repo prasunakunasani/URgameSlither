@@ -1,6 +1,6 @@
-const messages = require('./messages');
+const messages = require('./messages/index');
 const message = require('./utils/message');
-const config = require('../config');
+const config = require('../../config');
 const requestify = require('requestify');
 
 //This class manages sending the clients the correct game information over the network
