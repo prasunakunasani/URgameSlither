@@ -27,7 +27,10 @@ $("#profiletab").click(function () {
 				success: function (result) {
 					console.log(result);
 					$("#ajaxUpdateProfileStats").html(result);
-				}
+				},
+                complete: function () {
+                    loadProfileCharts();
+                }
 			});
 });
 
@@ -39,7 +42,10 @@ $("#globaltab").click(function () {
 				success: function (result) {
 					console.log(result);
 					$("#ajaxUpdateGlobalStats").html(result);
-				}
+				},
+                complete: function () {
+                    loadGlobalCharts();
+                }
 			});
 });
 

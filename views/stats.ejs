@@ -189,7 +189,7 @@
                     </div>
                     <div class="col-sm-2 well imp main-red">
                         <div> Peak Time</div>
-                        <% if (!dailyStatsList.peak.time) { %>
+                        <% if (!dailyStatsList.peak) { %>
                         Not Available
                         <% } else { %>
                         <%= getMinutesAgo(dailyStatsList.peak.time) %> ago

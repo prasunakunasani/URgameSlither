@@ -182,7 +182,6 @@ class StatsController {
                     globalFunctions.GetCalculatedStats(res, next, function (calculatedStats) {
                         res.render('stats',
                             {
-                                //Same as: If users is not null, send users. Else, create a new Users model and send that.
                                 usersList: users,
                                 usersStatsList: usersStats,
                                 dailyStatsList: dailyStats,
@@ -223,7 +222,9 @@ class StatsController {
                                     usersList: users,
                                     usersStatsList: usersStats,
                                     dailyStatsList: dailyStats,
-                                    calculatedStatsList: calculatedStats
+                                    calculatedStatsList: calculatedStats,
+                                    secondsToHms: secondsToHms,
+                                    getMinutesAgo: getMinutesAgo
                                 }); //for res.render
                         }); //for  globalFunctions.GetCalculatedStats
                     }); //for globalFunctions.GetDailyStats
@@ -244,7 +245,9 @@ class StatsController {
                                     usersList: users,
                                     usersStatsList: usersStats,
                                     dailyStatsList: dailyStats,
-                                    calculatedStatsList: calculatedStats
+                                    calculatedStatsList: calculatedStats,
+                                    secondsToHms: secondsToHms,
+                                    getMinutesAgo: getMinutesAgo
                                 }); //for res.render
                         }); //for  globalFunctions.GetCalculatedStats
                     }); //for globalFunctions.GetDailyStats
