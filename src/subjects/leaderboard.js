@@ -9,14 +9,11 @@ class Leaderboard extends Subject {
 
 	attach(observer) {
 		super.attach(observer);
-		console.log("registered to leaderboard");
+
 	}
 
 	detach(observer) {
-		console.log("trying to detach from leaderboard");
-		let success = super.detach(observer);
-		if (success)
-			console.log("unregistered from leaderboard");
+		super.detach(observer);
 	}
 
 	getState() {
