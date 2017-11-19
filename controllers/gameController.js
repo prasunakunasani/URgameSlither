@@ -30,7 +30,7 @@ class GameController {
 
     //takes too long to calculate all of them.
 
-    saveUserAndSnake(req, res, next) {
+    SaveUserAndSnake(req, res, next) {
         if (req.body.secret !== config.get("DATA_SECRET"))
             return next();
 
@@ -48,6 +48,6 @@ var gameController = new GameController(express);
 
 router.get('/', gameController.Index.bind(gameController));
 router.get('/testing', gameController.Index.bind(gameController)); //fixme - what's this for? Ask Chris
-router.post('/saveUserAndSnake', gameController.saveUserAndSnake.bind(gameController));
+router.post('/saveUserAndSnake', gameController.SaveUserAndSnake.bind(gameController));
 
 module.exports = router;

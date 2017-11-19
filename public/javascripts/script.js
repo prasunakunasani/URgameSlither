@@ -30,6 +30,7 @@ $("#profiletab").click(function () {
 				},
                 complete: function () {
                     loadProfileCharts();
+                    loadProgressBars();
                 }
 			});
 });
@@ -51,6 +52,7 @@ $("#globaltab").click(function () {
 
 loadProfileCharts();
 loadGlobalCharts();
+loadProgressBars();
 
 
 function loadProfileCharts() {
@@ -225,10 +227,14 @@ function runPlayGameToast() {
 
 }
 
-var bars = [];
-for (var n = 0; n < 3; n++) {
-	bars.push(new tinyProgressbar(document.getElementById("progress" + n)));
+function loadProgressBars() {
+
+    var bars = [];
+    for (var n = 0; n < 3; n++) {
+        bars.push(new tinyProgressbar(document.getElementById("progress" + n)));
+    }
+    bars[0].progress(avgScore);
+    bars[1].progress(avgKills);
+    bars[2].progress(avgBoosts);
+
 }
-bars[0].progress(avgScore);
-bars[1].progress(avgKills);
-bars[2].progress(avgBoosts);
