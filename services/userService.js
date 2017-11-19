@@ -24,11 +24,10 @@ class UserService {
         });
     }
 
-    //not being used for now
-    static GetUsersSnakes(res, next, Callback) {
-        UsersSnakes.find(function (err, usersSnakes) {
+    static GetUsersSnakes(startOfToday, Callback) {
+        UsersSnakes.find({'createdOn': {$gte: startOfToday}},function (err, usersSnakes) {
             if (err) {
-                return next(err);
+                throw("Wasn't able to find usersSnakes in GetUsersSnakes in userService "+err);
             }
             if (!usersSnakes) {
                 usersSnakes=  new UsersSnakes();

@@ -2,6 +2,9 @@ let express = require('express');
 let CalculatedStats = require('../models/calculatedstats');
 let Users = require('../models/users');
 let DailyStats = require('../models/dailyStats');
+
+let UserService = require('../services/userService');
+
 let instance = null;
 var now = new Date();
 var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -21,28 +24,65 @@ class StatsSingleton {
         else
             return instance;
 
-        DailyStats.findOne({'createdOn': {$gt: startOfToday}}, function (err, result) {
+        DailyStats.findOne({'createdOn': {$gt: startOfToday}}, function (err, initDailyStats) {
 
-            if (!result) {
-                result = new DailyStats();
+            if (!initDailyStats) {
+                initDailyStats = new DailyStats();
 
-                result.save(function (err) {
-                    if (err) console.error(err);
-                })
+                //calculate initial records when the server starts
+                UserService.GetUsersSnakes(startOfToday, function (usersSnakes) {
+                    for (var x = 0; x < usersSnakes.length; x++) {
+                        initDailyStats.totals.boosts += usersSnakes[x].boosts;
+                        initDailyStats.totals.deaths += 1;
+                        initDailyStats.totals.duration += usersSnakes[x].duration;
+                        initDailyStats.totals.kills += usersSnakes[x].kills;
+                        initDailyStats.totals.length += usersSnakes[x].length;
+
+                        //Calculate the interval_data
+                        for (var i = 0; i < usersSnakes[x].interval_data.length.length; i++) {
+
+                            if (isNaN(initDailyStats.interval_data.sums[i])) {
+                                initDailyStats.interval_data.sums[i] = 0;
+                            }
+                            initDailyStats.interval_data.sums[i] += usersSnakes[x].interval_data.length[i];
+
+                            if (isNaN(initDailyStats.interval_data.averages[i])) {
+                                initDailyStats.interval_data.averages[i] = 0;
+                            }
+                            initDailyStats.interval_data.averages[i] = initDailyStats.interval_data.sums[i] / (initDailyStats.totals.deaths);
+                        }
+                    }
+                    initDailyStats.save(function (err) {
+                        if (err) console.error(err);
+                    })
+                });
             }
-            this.cachedDailyStats = result;
+
+            this.cachedDailyStats = initDailyStats;
+
         }.bind(this));
 
-        CalculatedStats.findOne({}, function (err, result) {
+        CalculatedStats.findOne({}, function (err, initCalcStats) {
 
-            if (!result) {
-                result = new CalculatedStats();
+            if (!initCalcStats) {
+                initCalcStats = new CalculatedStats();
 
-                result.save(function (err) {
-                    if (err) console.error(err);
-                })
+                UserService.GetUsersSnakes((startOfToday - startOfToday), function (usersSnakes) {
+                    for (var x = 0; x < usersSnakes.length; x++) {
+                        initCalcStats.totals.all_time.boosts += usersSnakes[x].boosts;
+                        initCalcStats.totals.all_time.deaths += 1;
+                        initCalcStats.totals.all_time.duration += usersSnakes[x].duration;
+                        initCalcStats.totals.all_time.kills += usersSnakes[x].kills;
+                        initCalcStats.totals.all_time.length += usersSnakes[x].length;
+
+                    }
+
+                    initCalcStats.save(function (err) {
+                        if (err) console.error(err);
+                    })
+                });
             }
-            this.cachedCalculatedStats = result;
+            this.cachedCalculatedStats = initCalcStats;
         }.bind(this));
 
         return instance;
@@ -79,7 +119,6 @@ class StatsSingleton {
             upsert: true,
             setDefaultsOnInsert: true
         }, function (err, dailyStats) {
-
             if (err) return next(err);
 
             //Calculate the interval_data
@@ -117,6 +156,8 @@ class StatsSingleton {
                     dailyStats.totals.unique_users = uniqueUsers;
                 }
 
+                this.cachedDailyStats = dailyStats;
+
                 DailyStats.findOneAndUpdate({'createdOn': {$gt: startOfToday}}, dailyStats, function (err, result) {
                     if (err) return next(err);
                 });
@@ -127,10 +168,9 @@ class StatsSingleton {
 
     UpdateCalculatedStats(snakeDetails, next) {
 
-        CalculatedStats.findOne({}, function (err,calculatedStats) {
+        CalculatedStats.findOne({}, function (err, calculatedStats) {
 
-            if (!calculatedStats)
-            {
+            if (!calculatedStats) {
                 return next("Calculated stats in UpdateCalculatedStats in statsSingleton returned null");
             }
 
@@ -139,6 +179,8 @@ class StatsSingleton {
             calculatedStats.totals.all_time.duration = this.cachedCalculatedStats.totals.all_time.duration + snakeDetails.duration;
             calculatedStats.totals.all_time.kills = this.cachedCalculatedStats.totals.all_time.kills + snakeDetails.kills;
             calculatedStats.totals.all_time.length = this.cachedCalculatedStats.totals.all_time.length + snakeDetails.length
+
+            this.cachedCalculatedStats = calculatedStats;
 
             CalculatedStats.findOneAndUpdate({}, calculatedStats, function (err, result) {
                 if (err) return next(err);
