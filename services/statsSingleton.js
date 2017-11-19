@@ -41,15 +41,19 @@ class StatsSingleton {
                         //Calculate the interval_data
                         for (var i = 0; i < usersSnakes[x].interval_data.length.length; i++) {
 
-                            if (isNaN(initDailyStats.interval_data.sums[i])) {
-                                initDailyStats.interval_data.sums[i] = 0;
+                            if (initDailyStats.interval_data.sums[i]) {
+                                initDailyStats.interval_data.sums[i] += usersSnakes[x].interval_data.length[i];
+                                initDailyStats.interval_data.counter[i]++;
                             }
-                            initDailyStats.interval_data.sums[i] += usersSnakes[x].interval_data.length[i];
+                            else {
+                                initDailyStats.interval_data.sums[i] = usersSnakes[x].interval_data.length[i];
+                                initDailyStats.interval_data.counter[i] = 1;
+                            }
 
                             if (isNaN(initDailyStats.interval_data.averages[i])) {
                                 initDailyStats.interval_data.averages[i] = 0;
                             }
-                            initDailyStats.interval_data.averages[i] = initDailyStats.interval_data.sums[i] / (initDailyStats.totals.deaths);
+                            initDailyStats.interval_data.averages[i] = initDailyStats.interval_data.sums[i] / (initDailyStats.interval_data.counter[i]);
                         }
                     }
                     initDailyStats.save(function (err) {
@@ -74,7 +78,6 @@ class StatsSingleton {
                         initCalcStats.totals.all_time.duration += usersSnakes[x].duration;
                         initCalcStats.totals.all_time.kills += usersSnakes[x].kills;
                         initCalcStats.totals.all_time.length += usersSnakes[x].length;
-
                     }
 
                     initCalcStats.save(function (err) {
@@ -123,15 +126,20 @@ class StatsSingleton {
 
             //Calculate the interval_data
             for (var i = 0; i < snakeDetails.interval_data.length.length; i++) {
-                if (this.cachedDailyStats.interval_data.sums[i] != null)
+
+                if (this.cachedDailyStats.interval_data.sums[i]) {
                     dailyStats.interval_data.sums[i] = this.cachedDailyStats.interval_data.sums[i] + snakeDetails.interval_data.length[i];
-                else
+                    dailyStats.interval_data.counter[i]++;
+                }
+                else {
                     dailyStats.interval_data.sums[i] = snakeDetails.interval_data.length[i];
+                    dailyStats.interval_data.counter[i] = 1;
+                }
             }
 
             for (var i = 0; i < dailyStats.interval_data.sums.length; i++) {
                 //adding 1 to the death because' for the first record, the deaths haven't been calculated yet.
-                dailyStats.interval_data.averages[i] = dailyStats.interval_data.sums[i] / (this.cachedDailyStats.totals.deaths + 1);
+                dailyStats.interval_data.averages[i] = dailyStats.interval_data.sums[i] / (dailyStats.interval_data.counter[i]);
             }
 
             //calculate the peak
@@ -139,8 +147,7 @@ class StatsSingleton {
                 dailyStats.peak.concurrent = playerCount;
                 dailyStats.peak.time = new Date();
             }
-            else if (this.cachedDailyStats == playerCount)
-            {
+            else if (this.cachedDailyStats == playerCount) {
                 dailyStats.peak.time = new Date();
             }
 
@@ -155,7 +162,7 @@ class StatsSingleton {
                 if (err) return next(err);
 
                 if (this.cachedDailyStats.totals.unique_users < uniqueUsers)
-                dailyStats.totals.unique_users = this.cachedDailyStats.totals.unique_users + uniqueUsers;
+                    dailyStats.totals.unique_users = this.cachedDailyStats.totals.unique_users + uniqueUsers;
 
 
                 if ((this.cachedDailyStats.totals.unique_users === null) || (this.cachedDailyStats.totals.unique_users < uniqueUsers)) {
