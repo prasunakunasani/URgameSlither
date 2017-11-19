@@ -370,7 +370,7 @@ class Snake extends EventEmitter {
 			this._updateParts();
 			this._updateParts();
 			this._updateParts();
-
+			this._updateParts();
 		} else if (this._fam < 0) {
 			if (this._sct > 2) {
 				this._sct -= 1;
