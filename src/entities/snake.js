@@ -258,7 +258,7 @@ class Snake extends EventEmitter {
 		if (sizeChange !== 0)
 			this._increaseSize(sizeChange * 4);
 
-		//this._updateParts();
+		this._updateParts();
 		if (Math.abs(this._direction.x) < 120 && Math.abs(this._direction.y) < 120) {
 			this.emit("updateSmall", this);
 		} else {
@@ -275,8 +275,8 @@ class Snake extends EventEmitter {
 		for (var i = this._parts.length - 1; i >= 0; i--) {
 			var temp = Object.assign({}, p[i]);
 			p[i] = Object.assign({},last);
-			p[i].dx = last.x - temp.x;
-			p[i].dy = last.y - temp.y;
+			//p[i].dx = last.x - temp.x;
+			//p[i].dy = last.y - temp.y;
 			//temp.x += p[i].dx* 0.4;
 			//temp.y += p[i].dy* 0.4;
 			last = temp;
@@ -356,17 +356,21 @@ class Snake extends EventEmitter {
 			this.emit("increase", this);
 
 
-			var xdiff = this.head.x - this.parts[this.parts.length - 1].x;
-			var ydiff = this.head.y - this.parts[this.parts.length - 1].y;
-
+			var xdiff = this.head.x - this.parts[this.parts.length - 2].x;
+			var ydiff = this.head.y - this.parts[this.parts.length - 2].y;
+			console.log("xdiff:" + xdiff + ", ydiff: " + ydiff);
 			this._parts.push({
 				dx: xdiff,
 				dy: ydiff,
 				x: this._head.x,
 				y: this._head.y
 			});
-			this._updateParts();
 			
+			//Hack to make server side snake shorter
+			this._updateParts();
+			this._updateParts();
+			this._updateParts();
+
 		} else if (this._fam < 0) {
 			if (this._sct > 2) {
 				this._sct -= 1;
