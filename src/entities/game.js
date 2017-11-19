@@ -95,7 +95,7 @@ class Game extends EventEmitter {
 			return e;
 		});
 		if (Object.keys(this._snakes).length <= 0) {
-			this._leaderboard.setLeaderboard(JSON.stringify([{name: "No one is playing", score: 0}]));
+			this._leaderboard.setState(JSON.stringify([{name: "No one is playing", score: 0}]));
 			return;
 		}
 
@@ -119,7 +119,7 @@ class Game extends EventEmitter {
 		}
 
 		console.log("snakes count " + Object.keys(this._snakes).length);
-		this._leaderboard.setLeaderboard(JSON.stringify(cleanSnakes));
+		this._leaderboard.setState(JSON.stringify(cleanSnakes));
 
 	}
 
@@ -175,9 +175,8 @@ class Game extends EventEmitter {
 
 	_newLeaderboardObserver(client, data) {
 		console.log(client.id + " attached");
-		let lo = new LeaderboardObserver(client, client.id);
+		let lo = new LeaderboardObserver(client, client.id, this._leaderboard);
 		this._leaderboardObservers.set(client.id, lo);
-		this._leaderboard.attach(lo);
 	}
 
 	_snakeMovementMessage(client, data) {

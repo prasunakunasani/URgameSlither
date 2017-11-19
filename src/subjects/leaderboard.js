@@ -19,11 +19,11 @@ class Leaderboard extends Subject {
 			console.log("unregistered from leaderboard");
 	}
 
-	getLeaderboard() {
+	getState() {
 		return this._leaderboard;
 	}
 
-	setLeaderboard(leaderboard) {
+	setState(leaderboard) {
 		this._leaderboard = leaderboard;
 		this.notifyObservers();
 	}
