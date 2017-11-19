@@ -356,8 +356,8 @@ class Snake extends EventEmitter {
 			this.emit("increase", this);
 
 
-			var xdiff = this.head.x - this.parts[this.parts.length - 2].x;
-			var ydiff = this.head.y - this.parts[this.parts.length - 2].y;
+			var xdiff = this.head.x - this.parts[this.parts.length - 1].x;
+			var ydiff = this.head.y - this.parts[this.parts.length - 1].y;
 			console.log("xdiff:" + xdiff + ", ydiff: " + ydiff);
 			this._parts.push({
 				dx: xdiff,
