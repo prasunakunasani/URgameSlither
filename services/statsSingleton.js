@@ -41,6 +41,17 @@ class StatsSingleton {
                         //Calculate the interval_data
                         for (var i = 0; i < usersSnakes[x].interval_data.length.length; i++) {
 
+
+                            if (initDailyStats.interval_data.highScore[i]) {
+                                if (initDailyStats.interval_data.highScore[i] < usersSnakes[x].interval_data.length[i]) {
+                                    initDailyStats.interval_data.highScore[i] = usersSnakes[x].interval_data.length[i];
+                                }
+                            }
+                            else {
+                                initDailyStats.interval_data.highScore[i] = usersSnakes[x].interval_data.length[i]
+                            }
+
+
                             if (initDailyStats.interval_data.sums[i]) {
                                 initDailyStats.interval_data.sums[i] += usersSnakes[x].interval_data.length[i];
                                 initDailyStats.interval_data.counter[i]++;
@@ -126,6 +137,15 @@ class StatsSingleton {
 
             //Calculate the interval_data
             for (var i = 0; i < snakeDetails.interval_data.length.length; i++) {
+
+                if (this.cachedDailyStats.interval_data.highScore[i]) {
+                    if (this.cachedDailyStats.interval_data.highScore[i] < snakeDetails.interval_data.length[i]) {
+                        dailyStats.interval_data.highScore[i] = snakeDetails.interval_data.length[i];
+                    }
+                }
+                else {
+                    dailyStats.interval_data.highScore[i] = snakeDetails.interval_data.length[i]
+                }
 
                 if (this.cachedDailyStats.interval_data.sums[i]) {
                     dailyStats.interval_data.sums[i] = this.cachedDailyStats.interval_data.sums[i] + snakeDetails.interval_data.length[i];

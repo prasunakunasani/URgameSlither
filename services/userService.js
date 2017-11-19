@@ -94,6 +94,15 @@ class UserService {
                 //update interval_data
                 for (var i = 0; i < snakeDetails.interval_data.length.length; i++) {
 
+                    if (userStatsRecord.interval_data.highScore[i]) {
+                        if (userStatsRecord.interval_data.highScore[i] < snakeDetails.interval_data.length[i]) {
+                            userStatsRecord.interval_data.highScore[i] = snakeDetails.interval_data.length[i];
+                        }
+                    }
+                    else {
+                        userStatsRecord.interval_data.highScore[i] = snakeDetails.interval_data.length[i];
+                    }
+
                     //if there's already something in sums at i
                     if (userStatsRecord.interval_data.sums[i]) {
                         userStatsRecord.interval_data.sums[i] = userStatsRecord.interval_data.sums[i] + snakeDetails.interval_data.length[i];

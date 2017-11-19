@@ -23,6 +23,11 @@ var dailyStatsSchema = new mongoose.Schema({
                 {
                     type: [Number],
                     default: []
+                },
+            highScore:
+                {
+                    type: [Number],
+                    default: []
                 }
         },
     peak:

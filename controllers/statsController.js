@@ -32,17 +32,17 @@ function generateHighChartData(usersStats) {
 
     var highestSnakeLengthChartData = [];
 
-    if (!usersStats || usersStats.interval_data.sums.length == 0) {
+    if (!usersStats || usersStats.interval_data.highScore.length == 0) {
         return [{
             second: 0,
             length: 0
         }];
     }
 
-    for (var x = 0; x < usersStats.interval_data.sums.length; x++) {
+    for (var x = 0; x < usersStats.interval_data.highScore.length; x++) {
         highestSnakeLengthChartData.push({
             second: x * 5,
-            length: usersStats.interval_data.sums[x]
+            length: usersStats.interval_data.highScore[x]
         });
     }
 
@@ -116,17 +116,17 @@ function generateAllAvgChartData(dailyStats) {
 function generateAllHighChartData(dailyStats) {
     var highestSnakeLengthAllChartData = [];
 
-    if (!dailyStats || dailyStats.interval_data.sums.length == 0) {
+    if (!dailyStats || dailyStats.interval_data.highScore.length == 0) {
         return [{
             second: 0,
             length: 0
         }];
     }
 
-    for (var x = 0; x < dailyStats.interval_data.sums.length; x++) {
+    for (var x = 0; x < dailyStats.interval_data.highScore.length; x++) {
         highestSnakeLengthAllChartData.push({
             second: x * 5,
-            length: dailyStats.interval_data.sums[x]
+            length: dailyStats.interval_data.highScore[x]
         });
     }
 
