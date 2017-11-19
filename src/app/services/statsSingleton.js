@@ -30,7 +30,7 @@ class StatsSingleton {
                 initDailyStats = new DailyStats();
 
                 //calculate initial records when the server starts
-                UserService.GetUsersSnakes(startOfToday, function (usersSnakes) {
+                UserService.GetUsersSnakesAfterDate(startOfToday, function (usersSnakes) {
                     for (var x = 0; x < usersSnakes.length; x++) {
                         initDailyStats.totals.boosts += usersSnakes[x].boosts;
                         initDailyStats.totals.deaths += 1;
@@ -82,7 +82,7 @@ class StatsSingleton {
             if (!initCalcStats) {
                 initCalcStats = new CalculatedStats();
 
-                UserService.GetUsersSnakes((startOfToday - startOfToday), function (usersSnakes) {
+                UserService.GetUsersSnakesAfterDate((startOfToday - startOfToday), function (usersSnakes) {
                     for (var x = 0; x < usersSnakes.length; x++) {
                         initCalcStats.totals.all_time.boosts += usersSnakes[x].boosts;
                         initCalcStats.totals.all_time.deaths += 1;

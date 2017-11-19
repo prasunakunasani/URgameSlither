@@ -176,7 +176,7 @@ class StatsController {
 
         var cookie_id = req.cookies.cookie_id;
 
-        UserService.GetUsers(cookie_id, res, next, function (users) {
+        UserService.GetUser(cookie_id, res, next, function (users) {
             UserService.GetUsersStats(cookie_id, res, next, function (usersStats) {
                 globalFunctions.GetDailyStats(res, next, function (dailyStats) {
                     globalFunctions.GetCalculatedStats(res, next, function (calculatedStats) {
@@ -198,7 +198,7 @@ class StatsController {
                     }); //for  globalFunctions.GetCalculatedStats
                 }); //for globalFunctions.GetDailyStats
             }); //for UserService.GetUsersStats
-        });//for UserService.GetUsers
+        });//for UserService.GetUser
     }
 
     ProfileStats(req, res, next) {
@@ -213,7 +213,7 @@ class StatsController {
     AjaxUpdateProfileStats(req, res, next) {
         if (req.xhr) {
             var cookie_id = req.cookies.cookie_id;
-            UserService.GetUsers(cookie_id, res, next, function (users) {
+            UserService.GetUser(cookie_id, res, next, function (users) {
                 UserService.GetUsersStats(cookie_id, res, next, function (usersStats) {
                     globalFunctions.GetDailyStats(res, next, function (dailyStats) {
                         globalFunctions.GetCalculatedStats(res, next, function (calculatedStats) {
@@ -229,14 +229,14 @@ class StatsController {
                         }); //for  globalFunctions.GetCalculatedStats
                     }); //for globalFunctions.GetDailyStats
                 }); //for UserService.GetUsersStats
-            });//for UserService.GetUsers
+            });//for UserService.GetUser
         }
     }
 
     AjaxUpdateGlobalStats(req, res, next) {
         if (req.xhr) {
             var cookie_id = req.cookies.cookie_id;
-            UserService.GetUsers(cookie_id, res, next, function (users) {
+            UserService.GetUser(cookie_id, res, next, function (users) {
                 UserService.GetUsersStats(cookie_id, res, next, function (usersStats) {
                     globalFunctions.GetDailyStats(res, next, function (dailyStats) {
                         globalFunctions.GetCalculatedStats(res, next, function (calculatedStats) {
@@ -252,7 +252,7 @@ class StatsController {
                         }); //for  globalFunctions.GetCalculatedStats
                     }); //for globalFunctions.GetDailyStats
                 }); //for UserService.GetUsersStats
-            });//for UserService.GetUsers
+            });//for UserService.GetUser
         }
     }
 }

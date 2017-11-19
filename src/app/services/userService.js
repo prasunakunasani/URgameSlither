@@ -10,7 +10,7 @@ class UserService {
         this.express = express;
     }
 
-    static GetUsers(cookie_id, res, next, Callback) {
+    static GetUser(cookie_id, res, next, Callback) {
         Users.findOne({'cookie_id': cookie_id}, function (err, users) {
             if (err) {
                 return next(err);
@@ -24,10 +24,10 @@ class UserService {
         });
     }
 
-    static GetUsersSnakes(startOfToday, Callback) {
+    static GetUsersSnakesAfterDate(startOfToday, Callback) {
         UsersSnakes.find({'createdOn': {$gte: startOfToday}}, function (err, usersSnakes) {
             if (err) {
-                throw("Wasn't able to find usersSnakes in GetUsersSnakes in userService " + err);
+                throw("Wasn't able to find usersSnakes in GetUsersSnakesAfterDate in userService " + err);
             }
             if (!usersSnakes) {
                 usersSnakes = new UsersSnakes();
