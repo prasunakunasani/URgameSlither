@@ -139,6 +139,10 @@ class StatsSingleton {
                 dailyStats.peak.concurrent = playerCount;
                 dailyStats.peak.time = new Date();
             }
+            else if (this.cachedDailyStats == playerCount)
+            {
+                dailyStats.peak.time = new Date();
+            }
 
             //calculate the totals
             dailyStats.totals.boosts = this.cachedDailyStats.totals.boosts + snakeDetails.boosts;
@@ -150,7 +154,9 @@ class StatsSingleton {
             Users.count({'updatedAt': {$gt: startOfToday}}, function (err, uniqueUsers) {
                 if (err) return next(err);
 
+                if (this.cachedDailyStats.totals.unique_users < uniqueUsers)
                 dailyStats.totals.unique_users = this.cachedDailyStats.totals.unique_users + uniqueUsers;
+
 
                 if ((this.cachedDailyStats.totals.unique_users === null) || (this.cachedDailyStats.totals.unique_users < uniqueUsers)) {
                     dailyStats.totals.unique_users = uniqueUsers;
