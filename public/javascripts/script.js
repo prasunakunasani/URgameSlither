@@ -52,7 +52,7 @@ function loadProfileCharts() {
 	var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData, "length", "second", "#ffca74", "Maximum Score over time", "Score", "Seconds");
 	var bestScoreAndKillsChart = makeChart("bestScoreAndKillschartdiv", bestScoreAndKillsChartData, "length", "second", "#AE3F69", "Best Score and Kills over time", "Score/Kills", "Seconds");
 	var max = 0;
-	for(var i = 0; i < bestScoreAndKillsChart.dataProvider.length; i++) {
+	for (var i = 0; i < bestScoreAndKillsChart.dataProvider.length; i++) {
 		var dp = bestScoreAndKillsChart.dataProvider[i];
 		if (dp["kills"] > max) {
 			max = dp["kills"];
@@ -108,9 +108,9 @@ function makeChart(chartDiv, chartData, yAxisFieldName, xAxisFieldName, graphCol
 			},
 			{
 				"id": "ValueAxis-2",
-				"labelsEnabled":false,
-				"stackType":"regular",
-				"gridThickness":0
+				"labelsEnabled": false,
+				"stackType": "regular",
+				"gridThickness": 0
 			}],
 		"mouseWheelZoomEnabled": true,
 		"graphs": [
@@ -120,11 +120,12 @@ function makeChart(chartDiv, chartData, yAxisFieldName, xAxisFieldName, graphCol
 				"fillColors": graphColor,
 				"bullet": "round", //available: none, square, triangleUp, traingleDown, bubble, custom, round
 				"bulletBorderAlpha": 1, //bulletborderopacity
+				"bulletBorderColor": graphColor,
 				"bulletColor": "#ffffff",
+				"lineAlpha": 0,
 				"hideBulletsCount": 50, //"If there are more data points than hideBulletsCount, the bullets will not be shown. 0 means the bullets will always be visible.
 				"title": "title goes here", //just a variable for the ballonText
 				"valueField": yAxisFieldName, //the name of the field in data in Y-axis
-				"useLineColorForBulletBorder": true, //determines border of value dot(bullet)
 				"type": "smoothedLine", //typeofgraph - line, column, step, smoothedLine, candlestick,ohIc
 				"balloon":
 						{
@@ -141,13 +142,12 @@ function makeChart(chartDiv, chartData, yAxisFieldName, xAxisFieldName, graphCol
 				"valueField": "kills",
 				"type": "column",
 				"balloonText": "[[kills]]",
-				"balloonFunction": function(item, graph) {
+				"balloonFunction": function (item, graph) {
 					var value = graph.balloonText;
 					var result = "";
-					for( var key in item.dataContext){
-						if(item.dataContext.hasOwnProperty(key)){
-							if("kills" == key && item.dataContext[key] != "0")
-							{
+					for (var key in item.dataContext) {
+						if (item.dataContext.hasOwnProperty(key)) {
+							if ("kills" == key && item.dataContext[key] != "0") {
 								var snake = item.dataContext[key] > 1 ? " Snakes" : " Snake";
 								result += value.replace("[[" + key + "]]",
 										item.dataContext[key] + snake + " Killed");
