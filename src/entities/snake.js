@@ -91,7 +91,6 @@ class Snake extends EventEmitter {
 	update(deltaTime, count, fast_count) {
 		for (; this._shrinkCount < parseInt(this.parts.length / 20); this._shrinkCount++) {
 			this._shrink();
-			console.log(this._shrinkCount);
 		}
 
 		if (this._boost && this._length > 2 && this._speed > 7 || this._speed > 11) {
@@ -191,7 +190,14 @@ class Snake extends EventEmitter {
 	get user() {
 		return this._user;
 	}
+	
+	get angle(){
+		return this._direction.angle;
+	}
 
+	get expectedAngle(){
+		return this._direction.expectedAngle;
+	}
 
 	get time() {
 		return this._time;
@@ -277,7 +283,7 @@ class Snake extends EventEmitter {
 	_shrink() {
 		var p = this.parts;
 		var last = Object.assign({}, this.head);
-		var shrink = 0.8;
+		var shrink = 1.1;
 		for (var i = this.parts.length - 1; i >= 0; i--) {
 			p[i].x += last.dx * shrink;
 			p[i].y += last.dy * shrink;
@@ -285,8 +291,8 @@ class Snake extends EventEmitter {
 			p[i] = Object.assign({}, last);
 			p[i].dx = last.x - temp.x;
 			p[i].dy = last.y - temp.y;
-			temp.x += p[i].dx * shrink/8;
-			temp.y += p[i].dy * shrink/8;
+			temp.x += p[i].dx * shrink/2;
+			temp.y += p[i].dy * shrink/2;
 			last = temp;
 		}
 	}
