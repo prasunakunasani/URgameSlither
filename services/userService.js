@@ -17,7 +17,7 @@ class UserService {
             }
 
             if (!users) {
-                users= new Users();
+                users = new Users();
             }
 
             Callback(users);
@@ -25,12 +25,12 @@ class UserService {
     }
 
     static GetUsersSnakes(startOfToday, Callback) {
-        UsersSnakes.find({'createdOn': {$gte: startOfToday}},function (err, usersSnakes) {
+        UsersSnakes.find({'createdOn': {$gte: startOfToday}}, function (err, usersSnakes) {
             if (err) {
-                throw("Wasn't able to find usersSnakes in GetUsersSnakes in userService "+err);
+                throw("Wasn't able to find usersSnakes in GetUsersSnakes in userService " + err);
             }
             if (!usersSnakes) {
-                usersSnakes=  new UsersSnakes();
+                usersSnakes = new UsersSnakes();
             }
 
             Callback(usersSnakes);
@@ -43,7 +43,7 @@ class UserService {
                 return next(err);
             }
             if (!usersStats) {
-                usersStats= new UsersStats({best_snake: new UsersSnakes()}); //cause' best_snake can't be defaulted in the model
+                usersStats = new UsersStats({best_snake: new UsersSnakes()}); //cause' best_snake can't be defaulted in the model
             }
 
             Callback(usersStats);
@@ -54,8 +54,8 @@ class UserService {
 
         Users.update({cookie_id: userDetails.cookie_id}, userDetails, {upsert: true}, function (err, result) {
 
-            if (err) return next("Can't run Users.update in userService: "+err);
-            else if (result.ok == '0') return next("Result from Users.update in UserService: "+JSON.stringify(result));
+            if (err) return next("Can't run Users.update in userService: " + err);
+            else if (result.ok == '0') return next("Result from Users.update in UserService: " + JSON.stringify(result));
         });
     }
 
@@ -67,8 +67,8 @@ class UserService {
             setDefaultsOnInsert: true
         }, function (err, result) {
 
-            if (err) return next("UsersStats.update didn't work in UserService: "+err);
-            else if (result.ok == '0') return next("Result from UsersStats.update in UserService: "+JSON.stringify(result));
+            if (err) return next("UsersStats.update didn't work in UserService: " + err);
+            else if (result.ok == '0') return next("Result from UsersStats.update in UserService: " + JSON.stringify(result));
 
             //Now, find the created/exisiting record with this cookie_id
             UsersStats.findOne({cookie_id: snakeDetails.cookie_id}, function (err, userStatsRecord) {
@@ -92,17 +92,19 @@ class UserService {
                 userStatsRecord.cumulative_moving_average_snake_length.push(userStatsRecord.totals.length / userStatsRecord.totals.deaths);
 
                 //update interval_data
-                //fixme - maybe think about what happens when length is less than zero.
                 for (var i = 0; i < snakeDetails.interval_data.length.length; i++) {
-                    if (userStatsRecord.interval_data.sums[i])
-                        userStatsRecord.interval_data.sums[i] = userStatsRecord.interval_data.sums[i] + snakeDetails.interval_data.length[i];
-                    else
-                        userStatsRecord.interval_data.sums[i] = snakeDetails.interval_data.length[i];
-                }
 
-                for (var i = 0; i < snakeDetails.interval_data.length.length; i++) {
-                    //adding 1 to the death because' for the first record, the deaths haven't been calculated yet.
-                    userStatsRecord.interval_data.averages[i] = userStatsRecord.interval_data.sums[i] / (userStatsRecord.totals.deaths + 1);
+                    //if there's already something in sums at i
+                    if (userStatsRecord.interval_data.sums[i]) {
+                        userStatsRecord.interval_data.sums[i] = userStatsRecord.interval_data.sums[i] + snakeDetails.interval_data.length[i];
+                        userStatsRecord.interval_data.counter[i]++;
+                    }
+                    else {
+                        userStatsRecord.interval_data.sums[i] = snakeDetails.interval_data.length[i];
+                        userStatsRecord.interval_data.counter[i] = 1;
+                    }
+
+                    userStatsRecord.interval_data.averages[i] = userStatsRecord.interval_data.sums[i] / (userStatsRecord.interval_data.counter[i]);
                 }
 
                 //update records
@@ -131,7 +133,7 @@ class UserService {
         const saveSnakeDetails = new UsersSnakes(snakeDetails);
 
         saveSnakeDetails.save(function (err) {
-            if (err) return next("InsertUsersSnake wasn't able to save snake: "+err);
+            if (err) return next("InsertUsersSnake wasn't able to save snake: " + err);
         });
     }
 

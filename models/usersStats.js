@@ -25,6 +25,11 @@ var usersStatsSchema = new mongoose.Schema({
                 {
                     type: [Number],
                     default: []
+                },
+            counter:
+                {
+                    type: [Number],
+                    default: []
                 }
 
         },
