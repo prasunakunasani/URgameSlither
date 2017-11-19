@@ -22,7 +22,7 @@ var c = {
 	maxSpeed: 12,
 	snakeStartSize: 2,
 	spangdv: 4.8,
-	foodToGrow: 2,
+	foodToGrow: 200,
 	speedMult: 1,
 	speedBonus: 0,
 	//5 seconds

@@ -104,10 +104,10 @@
   <div id="google-login">
 
       <% if (!profile) { %>
-    <a class="loginBtn loginBtn--google" href="/auth/login">Sign in with Google | <%= cookie_id  %></a>
+    <a class="loginBtn loginBtn--google" href="/auth/login">Sign in with Google%></a>
       <% }else{ %>
     <span></span>
-    <a class="loginBtn loginBtn--google" href="/auth/logout">Logout | <%= profile.displayName %> | <%= cookie_id  %> </a>
+    <a class="loginBtn loginBtn--google" href="/auth/logout">Logout | <%= profile.displayName %></a>
       <% } %>
   </div>
 
