@@ -21,7 +21,7 @@ function generateAvgChartData(usersStats) {
     for (var x = 0; x < usersStats.interval_data.averages.length; x++) {
         avgSnakeLengthChartData.push({
             second: x * 5,
-            length: usersStats.interval_data.averages[x]
+            length: (usersStats.interval_data.averages[x]).toFixed(1)
         });
     }
 
@@ -63,7 +63,7 @@ function generateCumulativeMovingScoreData(userStats) {
         cumulativeMovingScoreChartData.push(
             {
                 game: x + 1,
-                score: userStats.cumulative_moving_average_snake_length[x]
+                score: (userStats.cumulative_moving_average_snake_length[x]).toFixed(1)
             }
         );
     }

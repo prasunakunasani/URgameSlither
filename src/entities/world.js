@@ -46,7 +46,7 @@ class World extends EventEmitter {
 	deadSnakeFood(snake){
 		var newFoods = [];
 		for(var i = 0; i < snake.parts.length; i++){
-			var f = this._newFoodAt(snake.parts[i].x, snake.parts[i].y, 110, snake.skin);
+			var f = this._newFoodAt(snake.parts[i].x, snake.parts[i].y, 110, snake.color);
 			newFoods.push(f);
 		}
 		this.emit("newFoods", newFoods);
