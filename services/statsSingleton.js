@@ -2,6 +2,9 @@ let express = require('express');
 let CalculatedStats = require('../models/calculatedstats');
 let Users = require('../models/users');
 let DailyStats = require('../models/dailyStats');
+
+let UserService = require('../services/userService');
+
 let instance = null;
 var now = new Date();
 var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -14,32 +17,75 @@ class StatsSingleton {
 
         this.express = express;
 
+        //if instance is null
         if (!instance) {
             instance = this;
         }
+        else
+            return instance;
 
-        DailyStats.findOne({'createdOn': {$gt: startOfToday}}, function (err, result) {
+        DailyStats.findOne({'createdOn': {$gt: startOfToday}}, function (err, initDailyStats) {
 
-            if (!result) {
-                result = new DailyStats();
+            if (!initDailyStats) {
+                initDailyStats = new DailyStats();
 
-                result.save(function (err) {
-                    if (err) console.error(err);
-                })
+                //calculate initial records when the server starts
+                UserService.GetUsersSnakes(startOfToday, function (usersSnakes) {
+                    for (var x = 0; x < usersSnakes.length; x++) {
+                        initDailyStats.totals.boosts += usersSnakes[x].boosts;
+                        initDailyStats.totals.deaths += 1;
+                        initDailyStats.totals.duration += usersSnakes[x].duration;
+                        initDailyStats.totals.kills += usersSnakes[x].kills;
+                        initDailyStats.totals.length += usersSnakes[x].length;
+
+                        //Calculate the interval_data
+                        for (var i = 0; i < usersSnakes[x].interval_data.length.length; i++) {
+
+                            if (initDailyStats.interval_data.sums[i]) {
+                                initDailyStats.interval_data.sums[i] += usersSnakes[x].interval_data.length[i];
+                                initDailyStats.interval_data.counter[i]++;
+                            }
+                            else {
+                                initDailyStats.interval_data.sums[i] = usersSnakes[x].interval_data.length[i];
+                                initDailyStats.interval_data.counter[i] = 1;
+                            }
+
+                            if (isNaN(initDailyStats.interval_data.averages[i])) {
+                                initDailyStats.interval_data.averages[i] = 0;
+                            }
+                            initDailyStats.interval_data.averages[i] = initDailyStats.interval_data.sums[i] / (initDailyStats.interval_data.counter[i]);
+                        }
+                    }
+                    initDailyStats.save(function (err) {
+                        if (err) console.error(err);
+                    })
+                });
             }
-            this.cachedDailyStats = result;
+
+            this.cachedDailyStats = initDailyStats;
+
         }.bind(this));
 
-        CalculatedStats.findOne({}, function (err, result) {
+        CalculatedStats.findOne({}, function (err, initCalcStats) {
 
-            if (!result) {
-                result = new CalculatedStats();
+            if (!initCalcStats) {
+                initCalcStats = new CalculatedStats();
 
-                result.save(function (err) {
-                    if (err) console.error(err);
-                })
+                UserService.GetUsersSnakes((startOfToday - startOfToday), function (usersSnakes) {
+                    for (var x = 0; x < usersSnakes.length; x++) {
+                        initCalcStats.totals.all_time.boosts += usersSnakes[x].boosts;
+                        initCalcStats.totals.all_time.deaths += 1;
+                        initCalcStats.totals.all_time.duration += usersSnakes[x].duration;
+                        initCalcStats.totals.all_time.kills += usersSnakes[x].kills;
+                        initCalcStats.totals.all_time.length += usersSnakes[x].length;
+                    }
+
+                    initCalcStats.save(function (err) {
+                        if (err) console.error(err);
+                    })
+                });
             }
-            this.cachedCalculatedStats = result;
+            this.cachedCalculatedStats = initCalcStats;
         }.bind(this));
 
         return instance;
@@ -72,81 +118,61 @@ class StatsSingleton {
 
     UpdateDailyStats(snakeDetails, playerCount, next) {
 
-        //todo - check if good data - check if day flipped over. - what was this again? Chris mentioned it..ask him
-
-        DailyStats.update({'createdOn': {$gt: startOfToday}}, {}, {
+        DailyStats.findOneAndUpdate({'createdOn': {$gt: startOfToday}}, {}, {
             upsert: true,
             setDefaultsOnInsert: true
-        }, function (err, result) {
-
+        }, function (err, dailyStats) {
             if (err) return next(err);
-            else if (result.ok == '0') return next(JSON.stringify(result));
-
-
-            var tempRecord = {
-                interval_data:
-                    {
-                        averages: [],
-                        sums: []
-                    },
-                peak:
-                    {
-                        concurrent: 0,
-                        time: this.cachedDailyStats.peak.time
-                    },
-                totals:
-                    {
-                        boosts: 0,
-                        deaths: 0,
-                        duration: 0,
-                        kills: 0,
-                        length: 0,
-                        unique_users: 0
-                    }
-            };
 
             //Calculate the interval_data
             for (var i = 0; i < snakeDetails.interval_data.length.length; i++) {
-                if (this.cachedDailyStats.interval_data.sums[i] != null)
-                    tempRecord.interval_data.sums[i] = this.cachedDailyStats.interval_data.sums[i] + snakeDetails.interval_data.length[i];
-                else
-                    tempRecord.interval_data.sums[i] = snakeDetails.interval_data.length[i];
+
+                if (this.cachedDailyStats.interval_data.sums[i]) {
+                    dailyStats.interval_data.sums[i] = this.cachedDailyStats.interval_data.sums[i] + snakeDetails.interval_data.length[i];
+                    dailyStats.interval_data.counter[i]++;
+                }
+                else {
+                    dailyStats.interval_data.sums[i] = snakeDetails.interval_data.length[i];
+                    dailyStats.interval_data.counter[i] = 1;
+                }
             }
 
-            for (var i = 0; i < tempRecord.interval_data.sums.length; i++) {
+            for (var i = 0; i < dailyStats.interval_data.sums.length; i++) {
                 //adding 1 to the death because' for the first record, the deaths haven't been calculated yet.
-                tempRecord.interval_data.averages[i] = tempRecord.interval_data.sums[i] / (this.cachedDailyStats.totals.deaths + 1);
+                dailyStats.interval_data.averages[i] = dailyStats.interval_data.sums[i] / (dailyStats.interval_data.counter[i]);
             }
 
             //calculate the peak
             if (this.cachedDailyStats.peak.concurrent < playerCount) {
-                tempRecord.peak.concurrent = playerCount;
-                tempRecord.peak.time = new Date();
+                dailyStats.peak.concurrent = playerCount;
+                dailyStats.peak.time = new Date();
+            }
+            else if (this.cachedDailyStats == playerCount) {
+                dailyStats.peak.time = new Date();
             }
 
             //calculate the totals
-            tempRecord.totals.boosts = this.cachedDailyStats.totals.boosts + snakeDetails.boosts;
-            tempRecord.totals.deaths = this.cachedDailyStats.totals.deaths + 1;
-            tempRecord.totals.duration = this.cachedDailyStats.totals.duration + snakeDetails.duration;
-            tempRecord.totals.kills = this.cachedDailyStats.totals.kills + snakeDetails.kills;
-            tempRecord.totals.length = this.cachedDailyStats.totals.length + snakeDetails.length;
+            dailyStats.totals.boosts = this.cachedDailyStats.totals.boosts + snakeDetails.boosts;
+            dailyStats.totals.deaths = this.cachedDailyStats.totals.deaths + 1;
+            dailyStats.totals.duration = this.cachedDailyStats.totals.duration + snakeDetails.duration;
+            dailyStats.totals.kills = this.cachedDailyStats.totals.kills + snakeDetails.kills;
+            dailyStats.totals.length = this.cachedDailyStats.totals.length + snakeDetails.length;
 
             Users.count({'updatedAt': {$gt: startOfToday}}, function (err, uniqueUsers) {
                 if (err) return next(err);
 
-                tempRecord.totals.unique_users = this.cachedDailyStats.totals.unique_users + uniqueUsers;
+                if (this.cachedDailyStats.totals.unique_users < uniqueUsers)
+                    dailyStats.totals.unique_users = this.cachedDailyStats.totals.unique_users + uniqueUsers;
+
 
                 if ((this.cachedDailyStats.totals.unique_users === null) || (this.cachedDailyStats.totals.unique_users < uniqueUsers)) {
-                    tempRecord.totals.unique_users = uniqueUsers;
+                    dailyStats.totals.unique_users = uniqueUsers;
                 }
 
-                DailyStats.findOneAndUpdate({'createdOn': {$gt: startOfToday}}, tempRecord, function (err, result) {
-                    if (err) return next(err);
+                this.cachedDailyStats = dailyStats;
 
-                    //find record that's either created after or at the same time as correct dialy record. But make sure it's a duplicate created after start of today.
-                    DailyStats.findOneAndRemove({$and:[{$or: [{'createdOn': {$gt: result.createdOn}}, {'updatedAt': {$lt: result.updatedAt}}]},{'createdAt': {$gt: startOfToday}}]}, function (err, result2) {
-                        if (err) return next(err);
-                    });
+                DailyStats.findOneAndUpdate({'createdOn': {$gt: startOfToday}}, dailyStats, function (err, result) {
+                    if (err) return next(err);
                 });
 
             }.bind(this));
@@ -155,33 +181,25 @@ class StatsSingleton {
 
     UpdateCalculatedStats(snakeDetails, next) {
 
-        var tempRecord = {
-            totals:
-                {
-                    all_time:
-                        {
-                            boosts: 0,
-                            deaths: 0,
-                            duration: 0,
-                            kills: 0,
-                            length: 0
-                        }
-                }
-        };
+        CalculatedStats.findOne({}, function (err, calculatedStats) {
 
-        tempRecord.totals.all_time.boosts = this.cachedCalculatedStats.totals.all_time.boosts + snakeDetails.boosts;
-        tempRecord.totals.all_time.deaths = this.cachedCalculatedStats.totals.all_time.deaths + 1;
-        tempRecord.totals.all_time.duration = this.cachedCalculatedStats.totals.all_time.duration + snakeDetails.duration;
-        tempRecord.totals.all_time.kills = this.cachedCalculatedStats.totals.all_time.kills + snakeDetails.kills;
-        tempRecord.totals.all_time.length = this.cachedCalculatedStats.totals.all_time.length + snakeDetails.length
+            if (!calculatedStats) {
+                return next("Calculated stats in UpdateCalculatedStats in statsSingleton returned null");
+            }
 
-        CalculatedStats.findOneAndUpdate({}, tempRecord, function (err, result) {
-            if (err) return next(err);
-            //find record that's either created after or at the same time as correct dialy record. But make sure it's a duplicate created after start of today.
-            CalculatedStats.findOneAndRemove({$and:[{$or: [{'createdAt': {$gt: result.createdAt}}, {'updatedAt': {$lt: result.updatedAt}}]},{'createdAt': {$gt: startOfToday}}]}, function (err, result2) {
+            calculatedStats.totals.all_time.boosts = this.cachedCalculatedStats.totals.all_time.boosts + snakeDetails.boosts;
+            calculatedStats.totals.all_time.deaths = this.cachedCalculatedStats.totals.all_time.deaths + 1;
+            calculatedStats.totals.all_time.duration = this.cachedCalculatedStats.totals.all_time.duration + snakeDetails.duration;
+            calculatedStats.totals.all_time.kills = this.cachedCalculatedStats.totals.all_time.kills + snakeDetails.kills;
+            calculatedStats.totals.all_time.length = this.cachedCalculatedStats.totals.all_time.length + snakeDetails.length
+
+            this.cachedCalculatedStats = calculatedStats;
+
+            CalculatedStats.findOneAndUpdate({}, calculatedStats, function (err, result) {
                 if (err) return next(err);
             });
-        });
+
+        }.bind(this));
     }
 
 }

@@ -9,7 +9,7 @@ var usersStatsSchema = new mongoose.Schema({
             type: String,
             default: ""
         },
-    cumulative_moving_average_snake_length:
+    cumulative_moving_average_snake_length:  //
         {
             type: [Number],
             default: []
@@ -22,6 +22,11 @@ var usersStatsSchema = new mongoose.Schema({
                     default: []
                 },
             sums:
+                {
+                    type: [Number],
+                    default: []
+                },
+            counter:
                 {
                     type: [Number],
                     default: []

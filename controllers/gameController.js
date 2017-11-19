@@ -7,6 +7,8 @@ let config = require('../config');
 
 var globalFunctions = new StatsSingleton(express);
 
+//StatsSingleton(express).getInstance();
+
 class GameController {
 
 	constructor(express) {
@@ -37,6 +39,8 @@ class GameController {
         UserService.UpdateUsersStats(req.body.usersSnake, next);
         globalFunctions.UpdateDailyStats(req.body.usersSnake, req.body.currentPlayerCount, next);
         globalFunctions.UpdateCalculatedStats(req.body.usersSnake, next);
+
+
     }
 }
 
