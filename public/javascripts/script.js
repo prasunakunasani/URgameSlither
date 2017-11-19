@@ -48,9 +48,9 @@ loadGlobalCharts();
 
 
 function loadProfileCharts() {
-	var avgSnakeLengthChart = makeChart("avgSnakeLengthchartdiv", avgSnakeLengthChartData, "length", "second", "#AE3F69", "Average Score over time", "Score", "5 second interval");
-	var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData, "length", "second", "#ffca74", "Maximum Score over time", "Score", "5 second interval");
-	var bestScoreAndKillsChart = makeChart("bestScoreAndKillschartdiv", bestScoreAndKillsChartData, "length", "second", "#AE3F69", "Best Score and Kills over time", "Score/Kills", "5 second interval");
+	var avgSnakeLengthChart = makeChart("avgSnakeLengthchartdiv", avgSnakeLengthChartData, "length", "second", "#AE3F69", "Average Score over time", "Score", "Seconds");
+	var highestSnakeLengthChart = makeChart("highestSnakeLengthchartdiv", highestSnakeLengthChartData, "length", "second", "#ffca74", "Maximum Score over time", "Score", "Seconds");
+	var bestScoreAndKillsChart = makeChart("bestScoreAndKillschartdiv", bestScoreAndKillsChartData, "length", "second", "#AE3F69", "Best Score and Kills over time", "Score/Kills", "Seconds");
 	var max = 0;
 	for(var i = 0; i < bestScoreAndKillsChart.dataProvider.length; i++) {
 		var dp = bestScoreAndKillsChart.dataProvider[i];
@@ -64,8 +64,8 @@ function loadProfileCharts() {
 }
 
 function loadGlobalCharts() {
-	var avgSnakeLengthAllChart = makeChart("avgSnakeLengthAllchartdiv", avgSnakeLengthAllChartData, "length", "second", "#AE3F69", "Average Score of all users over time", "Score", "5 second interval");
-	var highestSnakeLengthAllChart = makeChart("highestSnakeLengthAllchartdiv", highestSnakeLengthAllChartData, "length", "second", "#AE3F69", "Highest Score of all users over time", "Score", "5 second interval");
+	var avgSnakeLengthAllChart = makeChart("avgSnakeLengthAllchartdiv", avgSnakeLengthAllChartData, "length", "second", "#AE3F69", "Average Score of all users over time", "Score", "Seconds");
+	var highestSnakeLengthAllChart = makeChart("highestSnakeLengthAllchartdiv", highestSnakeLengthAllChartData, "length", "second", "#AE3F69", "Highest Score of all users over time", "Score", "Seconds");
 }
 
 function makeChart(chartDiv, chartData, yAxisFieldName, xAxisFieldName, graphColor, title, xAxisLabel, yAxisLabel) {
