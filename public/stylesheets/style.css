@@ -176,8 +176,6 @@ a:hover{
     background-image: url("../images/slitherbackgroundgrain.png");
 }
 
-@import url(https://fonts.googleapis.com/css?family=Montserrat);
-
 .nav-fill {
     background-color: black;
     width: 100%;
@@ -186,7 +184,7 @@ a:hover{
 /*Logo*/
 svg {
     display: block;
-    font: 300px 'Montserrat';
+    font-size: 300px ;
     margin: 0 auto;
 }
 
@@ -226,8 +224,6 @@ svg {
 
 /*End of Logo*/
 
-/* Import fonts */
-@import url(http://fonts.googleapis.com/css?family=Ruda:400,700,900);
 
 #spacingBelowBox
 {
