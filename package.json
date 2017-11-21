@@ -6,7 +6,8 @@
     "start": "node ./bin/www",
     "start-app": "node ./bin/www",
     "start-game": "node ./gameserver.js",
-    "dev": "concurrently --kill-others \"npm run start-app\" \"npm run start-game\""
+    "dev": "concurrently --kill-others \"npm run start-app\" \"npm run start-game\"",
+    "doc": "jsdoc -r src/ -p"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
