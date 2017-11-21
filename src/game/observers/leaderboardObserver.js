@@ -27,7 +27,7 @@ class LeaderboardObserver extends Observer{
 		this._subject = leaderboard;
 		/**@type {string}
 		 * @private */
-		this._leaderboard = null;
+		this._leaderboard = "";
 		
 		leaderboard.attach(this);	
 	}
