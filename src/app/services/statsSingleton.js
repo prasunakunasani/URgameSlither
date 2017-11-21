@@ -10,17 +10,23 @@ var now = new Date();
 var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
 /**
- *
+ * @classdesc Holds the calculated statistics data, and performas calculations to update it
+ * and store it in the database
+ * @class
  */
 class StatsSingleton {
+    
     /**
-     *
-     * @param express
+     * @param  express
      * @constructor
      */
     constructor(express) {
 
-        this.express = express;
+			/**
+       * @type {Object}
+       * @private
+			 */
+			this.express = express;
 
         //if instance is null
         if (!instance) {
@@ -77,7 +83,11 @@ class StatsSingleton {
                 });
             }
 
-            this.cachedDailyStats = initDailyStats;
+					/**
+           * @type {DailyStats}
+           * @private
+					 */
+					this.cachedDailyStats = initDailyStats;
 
         }.bind(this));
 
@@ -100,17 +110,21 @@ class StatsSingleton {
                     })
                 });
             }
-            this.cachedCalculatedStats = initCalcStats;
+					/**
+           * @type {CalculatedStats}
+           * @private
+					 */
+					this.cachedCalculatedStats = initCalcStats;
         }.bind(this));
 
         return instance;
     }
 
     /**
-     *
-     * @param res
-     * @param next
-     * @param Callback
+     * Gets the Calculated stats model
+     * @param {Object} res
+     * @param {function} next
+     * @param {function} Callback
      */
     GetCalculatedStats(res, next, Callback) {
         CalculatedStats.findOne({}, function (err, calculatedStats) {
@@ -125,10 +139,10 @@ class StatsSingleton {
     }
 
     /**
-     *
-     * @param res
-     * @param next
-     * @param Callback
+     * Gets the Daily Stats model
+		 * @param {Object} res
+		 * @param {function} next
+		 * @param {function} Callback
      */
     GetDailyStats(res, next, Callback) {
         DailyStats.findOne({'createdOn': {$gt: startOfToday}}, function (err, dailyStats) {
@@ -144,10 +158,10 @@ class StatsSingleton {
     }
 
     /**
-     *
-     * @param snakeDetails
-     * @param playerCount
-     * @param next
+     * Updates the daily stats with a new snake and player count
+     * @param {UsersSnakes} snakeDetails
+     * @param {number} playerCount
+     * @param {function} next
      */
     UpdateDailyStats(snakeDetails, playerCount, next) {
 
@@ -222,9 +236,9 @@ class StatsSingleton {
     }
 
     /**
-     *
-     * @param snakeDetails
-     * @param next
+     *  Updates calculated stats
+     * @param {UsersSnakes} snakeDetails
+     * @param {function} next
      */
     UpdateCalculatedStats(snakeDetails, next) {
 

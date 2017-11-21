@@ -1,6 +1,11 @@
 var message = require('../utils/message.js');
 var type = 's'.charCodeAt(0);
 
+/**
+ * @ignore
+ * @param {Snake} snake
+ * @return {Uint8Array}
+ */
 exports.build = function (snake) {
     var nameLength = snake.name.length;
     var part = snake.parts.length;

@@ -6,24 +6,28 @@ let StatsSingleton = require('../services/statsSingleton');
 let config = require('../../../config');
 
 /**
- * Class GameController called after Game Server sends snake data
+ *  Handles Http Requests to the /game/ URLS
  */
 class GameController {
     /**
      *
-     * @param express
+     * @param {Object} express
      * @constructor
      */
 	constructor(express) {
+			/**
+			 * @private
+			 * @type {Object}
+			 */
 		this.express = express;
         this.globalFunctions = new StatsSingleton(express);
 	}
 
     /**
-     *
-     * @param req
-     * @param res
-     * @param next
+     *	Renders the the game view
+     * @param {Object} req
+     * @param {Object} res
+     * @param {function} next
      */
 	Index(req, res, next) {
 
@@ -37,10 +41,12 @@ class GameController {
 
     //takes too long to calculate all of them.
     /**
-     *
-     * @param req
-     * @param res
-     * @param next
+     * Saves the data of valid post requests using the correct secret
+		 * A new snake will be in the req.body for a user and then their data
+		 * will be updated and the stats will be updated
+		 * @param {Object} req
+		 * @param {Object} res
+		 * @param {function} next
      */
     SaveUserAndSnake(req, res, next) {
         if (req.body.secret !== config.get("DATA_SECRET"))

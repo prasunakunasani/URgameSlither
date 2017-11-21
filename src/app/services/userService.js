@@ -5,24 +5,28 @@ let UsersStats = require('../models/usersStats');
 let UsersSnakes = require('../models/userssnakes');
 
 /**
- *
+ *  Static helper class to get and update model related to the User model
  */
 class UserService {
     /**
      *
-     * @param express
+     * @param {Object} express
      * @constructor
      */
     constructor(express) {
-        this.express = express;
+			/**
+       * @private
+			 * @type {Object}
+			 */
+			this.express = express;
     }
 
     /**
-     *
-     * @param cookie_id
-     * @param res
-     * @param next
-     * @param Callback
+     *  Gets a user model by the users cookie_id
+     * @param {String} cookie_id
+     * @param {Object} res
+     * @param {function} next
+     * @param {function} Callback
      */
     static GetUser(cookie_id, res, next, Callback) {
         Users.findOne({'cookie_id': cookie_id}, function (err, users) {
@@ -39,9 +43,9 @@ class UserService {
     }
 
     /**
-     *
-     * @param startOfToday
-     * @param Callback
+     *  Gets a list of UsersSnakes that were created after the specified date
+     * @param {Date} startOfToday
+     * @param {function} Callback
      */
     static GetUsersSnakesAfterDate(startOfToday, Callback) {
         UsersSnakes.find({'createdOn': {$gte: startOfToday}}, function (err, usersSnakes) {
@@ -57,11 +61,11 @@ class UserService {
     }
 
     /**
-     *
-     * @param cookie_id
-     * @param res
-     * @param next
-     * @param Callback
+     *  Gets the UsersStats model for a user by their cookie_id
+     * @param {String} cookie_id
+     * @param {Object} res
+     * @param {function} next
+     * @param {function} Callback
      */
     static GetUsersStats(cookie_id, res, next, Callback) {
         UsersStats.findOne({'cookie_id': cookie_id}, function (err, usersStats) {
@@ -77,9 +81,9 @@ class UserService {
     }
 
     /**
-     *
-     * @param userDetails
-     * @param next
+     *  Updates a user model or creates a new on if they dont exists in the database
+     * @param {Users} userDetails
+     * @param {function} next
      */
     static UpdateUsers(userDetails, next) {
 
@@ -91,9 +95,9 @@ class UserService {
     }
 
     /**
-     *
-     * @param snakeDetails
-     * @param next
+     *  Updates the users stats model with their new snake details
+     * @param {UsersSnakes} snakeDetails
+     * @param {function} next
      */
     static UpdateUsersStats(snakeDetails, next) {
 
@@ -174,9 +178,9 @@ class UserService {
     }
 
     /**
-     *
-     * @param snakeDetails
-     * @param next
+     *  Insert a new UsersSnakes model into the database
+     * @param {UsersSnakes} snakeDetails
+     * @param {function} next
      */
     static InsertUsersSnake(snakeDetails, next) {
 

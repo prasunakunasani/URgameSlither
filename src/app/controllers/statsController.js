@@ -165,7 +165,7 @@ function getMinutesAgo(date) {
 }
 
 /**
- *
+ *  Handles Http Requests to the /stats/ URLS
  */
 class StatsController {
     /**
@@ -178,10 +178,10 @@ class StatsController {
     }
 
     /**
-     *
-     * @param req
-     * @param res
-     * @param next
+     *  Renders the stats page
+     * @param {Object} req
+     * @param {Object} res
+     * @param {Object} next
      */
     Index(req, res, next) {
 
@@ -213,30 +213,30 @@ class StatsController {
     }
 
     /**
-     *
-     * @param req
-     * @param res
-     * @param next
+     *  Redirects to profile page
+		 * @param {Object} req
+		 * @param {Object} res
+		 * @param {Object} next
      */
     ProfileStats(req, res, next) {
         res.redirect('/stats' + '#profile');
     }
 
     /**
-     *
-     * @param req
-     * @param res
-     * @param next
+     *  Redirects to global stats page
+		 * @param {Object} req
+		 * @param {Object} res
+		 * @param {Object} next
      */
     GlobalStats(req, res, next) {
         res.redirect('/stats' + '#global');
     }
 
     /**
-     *
-     * @param req
-     * @param res
-     * @param next
+     *  Responds with the rendered view for the Profile stats tab
+		 * @param {Object} req
+		 * @param {Object} res
+		 * @param {Object} next
      */
     AjaxUpdateProfileStats(req, res, next) {
         if (req.xhr) {
@@ -262,10 +262,10 @@ class StatsController {
     }
 
     /**
-     *
-     * @param req
-     * @param res
-     * @param next
+     *  Responds with the rendered view for the Globals stats tab
+		 * @param {Object} req
+		 * @param {Object} res
+		 * @param {Object} next
      */
     AjaxUpdateGlobalStats(req, res, next) {
         if (req.xhr) {

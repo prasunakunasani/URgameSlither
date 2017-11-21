@@ -1,23 +1,24 @@
-
+/**
+ * @classdesc Interface class for Observer in Observer Pattern
+ * @interface
+ */
 class Observer
 {
-	
-	constructor(client,id){
+	/**
+	 * This constructor will throw an error if an object of this abstract
+	 * class tries to be constructed.
+	 * @constructor
+	 */
+	constructor(){
 		if (new.target === Observer) {
 			throw new TypeError("Cannot construct Abstract instances directly");
 		}
-		this._id = id;
-		this._client = client;
 	}
-	
-	get id(){
-		return this._id;
-	}
-	
-	get conn(){
-		return this._client;
-	}
-	
+
+	/**
+	 * Virtual update function
+	 * @virtual
+	 */
 	update(){};
 	
 }

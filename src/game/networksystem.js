@@ -2,23 +2,28 @@ const messages = require('./messages/index');
 const message = require('./utils/message');
 const config = require('../../config');
 const requestify = require('requestify');
+const WebSocket = require('ws');
 
-//This class manages sending the clients the correct game information over the network
-//It subscribes to entities to know when events occur that need to be relayed to the clients
+/**
+ * Represents the NetworkSystem that manages sending the clients the correct game
+ * information over the network. It subscribes to entities to know
+ * when events occur that need to be relayed to the clients
+ * @class
+ */
 class NetworkSystem {
 
 	constructor(game, world) {
+		/** @type {Map.<WebSocket>}*/
 		this._clients = new Map();
 
 		world.on('newFoods', this._newFood.bind(this));
-		game.on('collision', this._snakeCollision.bind(this));
 		game.on('newClientSnake', this._newClientSnake.bind(this));
 		game.on('snakeDied', this._snakeDied.bind(this));
 		game.on('clientPing', this._clientPing.bind(this));
 		game.on('foodEaten', this._foodEaten.bind(this));
-		game.on('leaderboard', this._leaderboard.bind(this));
-		game.on('highscore', this._highscore.bind(this));
-		game.on('minimap', this._minimap.bind(this));
+		game.on('leaderboardUpdate', this._leaderboardUpdate.bind(this));
+	//	game.on('highscore', this._highscore.bind(this));
+	//	game.on('minimap', this._minimap.bind(this));
 
 	}
 
@@ -55,7 +60,10 @@ class NetworkSystem {
 		this._broadcast(messages.highscore.build(name, message));
 	}
 
-	_leaderboard(topSnakes) {
+	/**
+	 * @listens Game#leaderboardUpdate
+	 */
+	_leaderboardUpdate(topSnakes) {
 		for (var i = 0; i < topSnakes.length; i++) {
 			this._send(topSnakes[i].id, messages.leaderboard.build(i + 1, topSnakes.length, topSnakes))
 		}
@@ -120,10 +128,6 @@ class NetworkSystem {
 
 	_snakeFam(snake) {
 		this._broadcast(messages.fullness.build(snake));
-	}
-
-	_snakeCollision(head, snake) {
-		this._snakeDecrease(head);
 	}
 
 	_newFood(foods) {

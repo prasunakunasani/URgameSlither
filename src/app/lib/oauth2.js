@@ -10,6 +10,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+/**
+ * @module Lib/Oauth2
+ */
+
 
 'use strict';
 console.log("top of Auth2");
@@ -22,16 +26,21 @@ var config = require('../../../config');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
+/**
+ * Extracts profile information from the google profile
+ * @param profile
+ * @return {{id, displayName: *, image: string}}
+ */
 function extractProfile(profile) {
-    let imageUrl = '';
-    if (profile.photos && profile.photos.length) {
-        imageUrl = profile.photos[0].value;
-    }
-    return {
-        id: profile.id,
-        displayName: profile.displayName,
-        image: imageUrl
-    };
+	let imageUrl = '';
+	if (profile.photos && profile.photos.length) {
+		imageUrl = profile.photos[0].value;
+	}
+	return {
+		id: profile.id,
+		displayName: profile.displayName,
+		image: imageUrl
+	};
 }
 
 // Configure the Google strategy for use by Passport.js.
@@ -43,46 +52,58 @@ function extractProfile(profile) {
 // authentication.
 passport.use(new GoogleStrategy({
 
-    clientID: config.get('OAUTH2_CLIENT_ID'),
-    clientSecret: config.get('OAUTH2_CLIENT_SECRET'),
-    callbackURL:  config.get('OAUTH2_CALLBACK'),
-    accessType: 'offline'
+	clientID: config.get('OAUTH2_CLIENT_ID'),
+	clientSecret: config.get('OAUTH2_CLIENT_SECRET'),
+	callbackURL: config.get('OAUTH2_CALLBACK'),
+	accessType: 'offline'
 }, (accessToken, refreshToken, profile, cb) => {
-    // Extract the minimal profile information we need from the profile object
-    // provided by Google
+	// Extract the minimal profile information we need from the profile object
+	// provided by Google
 
-    cb(null, extractProfile(profile));
+	cb(null, extractProfile(profile));
 }));
 
 passport.serializeUser((user, cb) => {
-    cb(null, user);
+	cb(null, user);
 });
 passport.deserializeUser((obj, cb) => {
-    cb(null, obj);
+	cb(null, obj);
 });
 // [END setup]
 
 const router = express.Router();
 
-// [START middleware]
-// Middleware that requires the user to be logged in. If the user is not logged
-// in, it will redirect the user to authorize the application and then return
-// them to the original URL they requested.
+/**<pre>
+ * [START middleware]
+ * Middleware that requires the user to be logged in. If the user is not logged
+ * in, it will redirect the user to authorize the application and then return
+ * them to the original URL they requested.
+ * </pre>
+ * @param {Object} req
+ * @param {Object} res
+ * @param {function} next
+ */
 function authRequired(req, res, next) {
-    if (!req.user) {
-        req.session.oauth2return = req.originalUrl;
-        return res.redirect('/auth/login')
-    }
-    next();
+	if (!req.user) {
+		req.session.oauth2return = req.originalUrl;
+		return res.redirect('/auth/login')
+	}
+	next();
 }
 
-// Middleware that exposes the user's profile as well as login/logout URLs to
-// any templates. These are available as `profile`, `login`, and `logout`.
+
+/**
+ * Middleware that exposes the user's profile as well as login/logout URLs to
+ * any templates. These are available as `profile`, `login`, and `logout`.
+ * @param {Object} req
+ * @param {Object} res
+ * @param {function} next
+ */
 function addTemplateVariables(req, res, next) {
-    res.locals.profile = req.user;
-    res.locals.login = `/auth/login?return=${encodeURIComponent(req.originalUrl)}`;
-    res.locals.logout = `/auth/logout?return=${encodeURIComponent(req.originalUrl)}`;
-    next();
+	res.locals.profile = req.user;
+	res.locals.login = `/auth/login?return=${encodeURIComponent(req.originalUrl)}`;
+	res.locals.logout = `/auth/logout?return=${encodeURIComponent(req.originalUrl)}`;
+	next();
 }
 
 // [END middleware]
@@ -94,102 +115,102 @@ function addTemplateVariables(req, res, next) {
 // then they will be redirected to that URL when the flow is finished.
 // [START authorize]
 router.get(
-    // Login url
-    '/auth/login',
+		// Login url
+		'/auth/login',
 
-    // Save the url of the user's current page so the app can redirect back to
-    // it after authorization
-    (req, res, next) => {
-        if (req.query.return) {
-            req.session.oauth2return = req.query.return;
-        }
-        next();
-    },
+		// Save the url of the user's current page so the app can redirect back to
+		// it after authorization
+		(req, res, next) => {
+			if (req.query.return) {
+				req.session.oauth2return = req.query.return;
+			}
+			next();
+		},
 
 // Start OAuth 2 flow using Passport.js
-    passport.authenticate('google', {scope: ['email', 'profile']})
+		passport.authenticate('google', {scope: ['email', 'profile']})
 );
 // [END authorize]
 
 // [START callback]
 router.get(
-    // OAuth 2 callback url. Use this url to configure your OAuth client in the
-    // Google Developers console
-    '/auth/google/callback',
+		// OAuth 2 callback url. Use this url to configure your OAuth client in the
+		// Google Developers console
+		'/auth/google/callback',
 
-    // Finish OAuth 2 flow using Passport.js
-    passport.authenticate('google'),
+		// Finish OAuth 2 flow using Passport.js
+		passport.authenticate('google'),
 
-    // Redirect back to the original page, if any
-    (req, res) => {
+		// Redirect back to the original page, if any
+		(req, res) => {
 
-        var cookie = req.cookies.cookie_id;
+			var cookie = req.cookies.cookie_id;
 
-        console.log('Right after geting the cookie from the request, it is:' + cookie);
+			console.log('Right after geting the cookie from the request, it is:' + cookie);
 
-        Users.findOne({ 'google.profile_id' : req.user.id }, function (err, user) {
-            if (err) return handleError(err);
+			Users.findOne({'google.profile_id': req.user.id}, function (err, user) {
+				if (err) return handleError(err);
 
-            if (user) {
-                //console.log("userid " + req.user.id);
-                //console.log("userid " + req.user.displayName);
-
-
-              //  res.clearCookie("cookie_id");
-              cookie = user.cookie_id;
-              console.log('Cookie from database is: '+user.cookie_id);
-              console.log('That got saved to cookie as: '+cookie);
-                console.log('cookie %s  google %s  snakeName is %s  snakecolor is %s.', user.cookie_id, user.google.profile_id, user.snake.name, user.snake.color) // Space Ghost is a talk show host.
-            }
-            else{
-                // console.log("New userid " + req.user.id);
-                // console.log("New userid " + req.user.displayName);
-                var cookie = req.cookies.cookie_id;
-
-                if (cookie === undefined)
-                    console.log("The cookie was undefined!!");
+				if (user) {
+					//console.log("userid " + req.user.id);
+					//console.log("userid " + req.user.displayName);
 
 
-                //create a new user and a cookie
-                var newUser = new Users ({
-                    cookie_id: cookie  ,
-                    google: {
-                        profile_id: req.user.id , token: cookie
-                    },
-                    snake: {
-                        name: '', color: ''
-                    }
-                });
-                newUser.save(function(err, newUser){
-                    if(err) return handleError(err);
-                    //saved
-                    console.log("Saved")
-                });
-            }
+					//  res.clearCookie("cookie_id");
+					cookie = user.cookie_id;
+					console.log('Cookie from database is: ' + user.cookie_id);
+					console.log('That got saved to cookie as: ' + cookie);
+					console.log('cookie %s  google %s  snakeName is %s  snakecolor is %s.', user.cookie_id, user.google.profile_id, user.snake.name, user.snake.color) // Space Ghost is a talk show host.
+				}
+				else {
+					// console.log("New userid " + req.user.id);
+					// console.log("New userid " + req.user.displayName);
+					var cookie = req.cookies.cookie_id;
 
-            // console.log("Inside pauth20 " + req.cookie);
-            const redirect = req.session.oauth2return || '/';
-            delete req.session.oauth2return;
-            console.log('cookie at this point is:'+ cookie);
-            res.cookie('cookie_id',cookie);
-            res.redirect(redirect);
+					if (cookie === undefined)
+						console.log("The cookie was undefined!!");
 
-        });
 
-    }
+					//create a new user and a cookie
+					var newUser = new Users({
+						cookie_id: cookie,
+						google: {
+							profile_id: req.user.id, token: cookie
+						},
+						snake: {
+							name: '', color: ''
+						}
+					});
+					newUser.save(function (err, newUser) {
+						if (err) return handleError(err);
+						//saved
+						console.log("Saved")
+					});
+				}
+
+				// console.log("Inside pauth20 " + req.cookie);
+				const redirect = req.session.oauth2return || '/';
+				delete req.session.oauth2return;
+				console.log('cookie at this point is:' + cookie);
+				res.cookie('cookie_id', cookie);
+				res.redirect(redirect);
+
+			});
+
+		}
 );
 // [END callback]
 
 // Deletes the user's credentials and profile from the session.
 // This does not revoke any active tokens.
 router.get('/auth/logout', (req, res) => {
-    req.logout();
-    res.redirect('/');
+	req.logout();
+	res.redirect('/');
 });
 
 module.exports = {
-    extractProfile: extractProfile,
-    router: router,
-    required: authRequired,
-    template: addTemplateVariables
+	extractProfile: extractProfile,
+	router: router,
+	required: authRequired,
+	template: addTemplateVariables
 };
