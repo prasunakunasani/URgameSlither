@@ -1,5 +1,8 @@
 var mongoose = require('mongoose');
-
+/**
+ * Daily Stats Schema
+ * @constructor DailyStats
+ */
 var dailyStatsSchema = new mongoose.Schema({
 
     createdOn:

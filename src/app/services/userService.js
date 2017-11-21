@@ -4,12 +4,26 @@ let Users = require('../models/users');
 let UsersStats = require('../models/usersStats');
 let UsersSnakes = require('../models/userssnakes');
 
+/**
+ *
+ */
 class UserService {
-
+    /**
+     *
+     * @param express
+     * @constructor
+     */
     constructor(express) {
         this.express = express;
     }
 
+    /**
+     *
+     * @param cookie_id
+     * @param res
+     * @param next
+     * @param Callback
+     */
     static GetUser(cookie_id, res, next, Callback) {
         Users.findOne({'cookie_id': cookie_id}, function (err, users) {
             if (err) {
@@ -24,6 +38,11 @@ class UserService {
         });
     }
 
+    /**
+     *
+     * @param startOfToday
+     * @param Callback
+     */
     static GetUsersSnakesAfterDate(startOfToday, Callback) {
         UsersSnakes.find({'createdOn': {$gte: startOfToday}}, function (err, usersSnakes) {
             if (err) {
@@ -37,6 +56,13 @@ class UserService {
         });
     }
 
+    /**
+     *
+     * @param cookie_id
+     * @param res
+     * @param next
+     * @param Callback
+     */
     static GetUsersStats(cookie_id, res, next, Callback) {
         UsersStats.findOne({'cookie_id': cookie_id}, function (err, usersStats) {
             if (err) {
@@ -50,6 +76,11 @@ class UserService {
         });
     }
 
+    /**
+     *
+     * @param userDetails
+     * @param next
+     */
     static UpdateUsers(userDetails, next) {
 
         Users.update({cookie_id: userDetails.cookie_id}, userDetails, {upsert: true}, function (err, result) {
@@ -59,6 +90,11 @@ class UserService {
         });
     }
 
+    /**
+     *
+     * @param snakeDetails
+     * @param next
+     */
     static UpdateUsersStats(snakeDetails, next) {
 
         //creating a user stats record if one doesn't exist already
@@ -137,6 +173,11 @@ class UserService {
         });
     }
 
+    /**
+     *
+     * @param snakeDetails
+     * @param next
+     */
     static InsertUsersSnake(snakeDetails, next) {
 
         const saveSnakeDetails = new UsersSnakes(snakeDetails);

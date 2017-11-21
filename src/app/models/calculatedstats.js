@@ -1,5 +1,8 @@
 var mongoose = require('mongoose');
-
+/**
+ * CalculatedStats Schema
+ * @constructor CalculatedStats
+ */
 var calculatedStatsSchema = new mongoose.Schema({
 
     totals:

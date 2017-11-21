@@ -1,7 +1,10 @@
 var mongoose = require('mongoose');
 let UsersSnakes = require('./userssnakes');
 
-
+/**
+ * Users Stats Schema
+ * @constructor UsersStats
+ */
 var usersStatsSchema = new mongoose.Schema({
     best_snake: UsersSnakes.schema,
     cookie_id:

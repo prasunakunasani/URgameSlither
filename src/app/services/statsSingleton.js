@@ -9,11 +9,16 @@ let instance = null;
 var now = new Date();
 var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
+/**
+ *
+ */
 class StatsSingleton {
-
+    /**
+     *
+     * @param express
+     * @constructor
+     */
     constructor(express) {
-
-        this.foo = 10;
 
         this.express = express;
 
@@ -40,8 +45,7 @@ class StatsSingleton {
 
                         //Calculate the interval_data
                         for (var i = 0; i < usersSnakes[x].interval_data.length.length; i++) {
-
-
+                            //calculate highscore data
                             if (initDailyStats.interval_data.highScore[i]) {
                                 if (initDailyStats.interval_data.highScore[i] < usersSnakes[x].interval_data.length[i]) {
                                     initDailyStats.interval_data.highScore[i] = usersSnakes[x].interval_data.length[i];
@@ -50,8 +54,7 @@ class StatsSingleton {
                             else {
                                 initDailyStats.interval_data.highScore[i] = usersSnakes[x].interval_data.length[i]
                             }
-
-
+                            //calculate sums data
                             if (initDailyStats.interval_data.sums[i]) {
                                 initDailyStats.interval_data.sums[i] += usersSnakes[x].interval_data.length[i];
                                 initDailyStats.interval_data.counter[i]++;
@@ -60,13 +63,14 @@ class StatsSingleton {
                                 initDailyStats.interval_data.sums[i] = usersSnakes[x].interval_data.length[i];
                                 initDailyStats.interval_data.counter[i] = 1;
                             }
-
+                            //calculate averages data
                             if (isNaN(initDailyStats.interval_data.averages[i])) {
                                 initDailyStats.interval_data.averages[i] = 0;
                             }
                             initDailyStats.interval_data.averages[i] = initDailyStats.interval_data.sums[i] / (initDailyStats.interval_data.counter[i]);
                         }
                     }
+                    //save new record with updated information into the DB
                     initDailyStats.save(function (err) {
                         if (err) console.error(err);
                     })
@@ -102,6 +106,12 @@ class StatsSingleton {
         return instance;
     }
 
+    /**
+     *
+     * @param res
+     * @param next
+     * @param Callback
+     */
     GetCalculatedStats(res, next, Callback) {
         CalculatedStats.findOne({}, function (err, calculatedStats) {
             if (err) {
@@ -114,6 +124,12 @@ class StatsSingleton {
         });
     }
 
+    /**
+     *
+     * @param res
+     * @param next
+     * @param Callback
+     */
     GetDailyStats(res, next, Callback) {
         DailyStats.findOne({'createdOn': {$gt: startOfToday}}, function (err, dailyStats) {
             if (err) {
@@ -127,6 +143,12 @@ class StatsSingleton {
         });
     }
 
+    /**
+     *
+     * @param snakeDetails
+     * @param playerCount
+     * @param next
+     */
     UpdateDailyStats(snakeDetails, playerCount, next) {
 
         DailyStats.findOneAndUpdate({'createdOn': {$gt: startOfToday}}, {}, {
@@ -199,6 +221,11 @@ class StatsSingleton {
         }.bind(this));
     }
 
+    /**
+     *
+     * @param snakeDetails
+     * @param next
+     */
     UpdateCalculatedStats(snakeDetails, next) {
 
         CalculatedStats.findOne({}, function (err, calculatedStats) {

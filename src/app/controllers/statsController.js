@@ -6,7 +6,6 @@ var StatsSingleton = require('../services/statsSingleton');
 
 var globalFunctions = new StatsSingleton(express);
 
-
 function generateAvgChartData(usersStats) {
 
     var avgSnakeLengthChartData = [];
@@ -165,13 +164,25 @@ function getMinutesAgo(date) {
     return Math.floor(seconds) + " seconds";
 }
 
-
+/**
+ *
+ */
 class StatsController {
-
+    /**
+     *
+     * @param express
+     * @constructor
+     */
     constructor(express) {
         this.express = express;
     }
 
+    /**
+     *
+     * @param req
+     * @param res
+     * @param next
+     */
     Index(req, res, next) {
 
         var cookie_id = req.cookies.cookie_id;
@@ -201,15 +212,32 @@ class StatsController {
         });//for UserService.GetUser
     }
 
+    /**
+     *
+     * @param req
+     * @param res
+     * @param next
+     */
     ProfileStats(req, res, next) {
         res.redirect('/stats' + '#profile');
     }
 
+    /**
+     *
+     * @param req
+     * @param res
+     * @param next
+     */
     GlobalStats(req, res, next) {
         res.redirect('/stats' + '#global');
     }
 
-//fixme -  Fix all the stupid Ajax calls. Chris suggested to first see if data is loaded. If yes, then just get JSON and update. Else, call the Index function.
+    /**
+     *
+     * @param req
+     * @param res
+     * @param next
+     */
     AjaxUpdateProfileStats(req, res, next) {
         if (req.xhr) {
             var cookie_id = req.cookies.cookie_id;
@@ -233,6 +261,12 @@ class StatsController {
         }
     }
 
+    /**
+     *
+     * @param req
+     * @param res
+     * @param next
+     */
     AjaxUpdateGlobalStats(req, res, next) {
         if (req.xhr) {
             var cookie_id = req.cookies.cookie_id;

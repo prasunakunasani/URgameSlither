@@ -1,5 +1,8 @@
 var mongoose = require('mongoose');
-
+/**
+ * Users Schema
+ * @constructor Users
+ */
 var usersSchema = new mongoose.Schema({
     cookie_id:
         {

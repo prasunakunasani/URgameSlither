@@ -5,17 +5,26 @@ let UserService = require('../services/userService');
 let StatsSingleton = require('../services/statsSingleton');
 let config = require('../../../config');
 
-
-
-//StatsSingleton(express).getInstance();
-
+/**
+ * Class GameController called after Game Server sends snake data
+ */
 class GameController {
-
+    /**
+     *
+     * @param express
+     * @constructor
+     */
 	constructor(express) {
 		this.express = express;
         this.globalFunctions = new StatsSingleton(express);
 	}
 
+    /**
+     *
+     * @param req
+     * @param res
+     * @param next
+     */
 	Index(req, res, next) {
 
 		Users.findOne({'cookie_id': req.cookies.cookie_id}, function (err, user) {
@@ -26,11 +35,13 @@ class GameController {
 		});
 	}
 
-    //todo - change the service functions to static
-    //todo - in UML , if underlined, static
-
     //takes too long to calculate all of them.
-
+    /**
+     *
+     * @param req
+     * @param res
+     * @param next
+     */
     SaveUserAndSnake(req, res, next) {
         if (req.body.secret !== config.get("DATA_SECRET"))
             return next();
