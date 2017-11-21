@@ -17,7 +17,7 @@
             <% } else { %>
             <div><%= (usersStatsList.totals.length / usersStatsList.totals.deaths).toFixed(0) %></div>
             <% } %>
-            <p id="progress0" data-min="0" data-max="<%= usersStatsList.totals.length %>"
+            <p id="progress0" data-min="0" data-max="<%= usersStatsList.best_snake.length %>"
                data-mode="none"></p>
         </div>
         <div class="col-sm-2 well imp main-orange">
@@ -27,7 +27,7 @@
             <% } else { %>
             <div><%= (usersStatsList.totals.boosts / usersStatsList.totals.deaths).toFixed(0) %></div>
             <% } %>
-            <p id="progress1" data-min="0" data-max="<%= usersStatsList.totals.boosts %>"
+            <p id="progress1" data-min="0" data-max="<%= usersStatsList.best_snake.boosts  %>"
                data-mode="none"></p>
         </div>
         <div class="col-sm-2 well imp main-green">
@@ -38,7 +38,7 @@
             <div><%= (usersStatsList.totals.kills / usersStatsList.totals.deaths).toFixed(2) %></div>
             <% } %>
 
-            <p id="progress2" data-min="0" data-max="<%= usersStatsList.totals.kills %>"
+            <p id="progress2" data-min="0" data-max="<%=usersStatsList.best_snake.kills  %>"
                data-mode="none"></p>
         </div>
     </div>
