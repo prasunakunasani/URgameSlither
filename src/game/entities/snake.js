@@ -305,9 +305,16 @@ class Snake extends EventEmitter {
 		var degrees = radians * (180 / Math.PI);
 		//	console.log(degrees);
 		this._direction.expectedAngle = radians;
-		return;
 	}
 
+	/**
+	 * sets the {@link Snake#_direction#expectedAngle} of the snake
+	 * @param radians Angle to be set to
+	 */
+	setAngle(radians) {
+		this.setExpectedAngle(radians);
+	}
+	
 	/**
 	 * @readonly
 	 * @return {String}

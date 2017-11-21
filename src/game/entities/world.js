@@ -49,6 +49,10 @@ class World extends EventEmitter {
 		return this._foods;
 	}
 
+	getFoods(){
+		return this._foods;
+	}
+	
 	get radius() {
 		return this._radius;
 	}
@@ -132,6 +136,7 @@ class World extends EventEmitter {
 		}
 		return newFoods;
 	}
+	
 
 }
 

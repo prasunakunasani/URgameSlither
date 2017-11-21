@@ -1,13 +1,10 @@
 // TODO? unused for now
  var message = require('../utils/message');
-var config = require('../config/config');
 
 var type = 'u'.charCodeAt(0);
 
-exports.build = function (snakes) {
- 
-
-	var radius =  config["gameRadius"];
+exports.build = function (snakes, world) {
+	
 
 	var b = new Array(80);
 	
@@ -21,9 +18,9 @@ exports.build = function (snakes) {
   snakes.forEach(snake=>{
   	snake.parts.forEach(part=>{
   		"use strict";
-			var i = Math.floor(part.y* 79 / (2*radius));
+			var i = Math.floor(part.y* 79 / (2*world.radius));
 			if(i > 80) i = 80;
-			var j = Math.floor(part.x * 79 / (2*radius)) ;
+			var j = Math.floor(part.x * 79 / (2*world.radius)) ;
 			if(j > 80) j = 80;
 			b[i][j] = 1;
 		})

@@ -1,7 +1,5 @@
 var message = require('../utils/message');
 
-var math = require('../utils/math');
-
 var type = 'l'.charCodeAt(0);
 
 exports.build = function (rank, players, top) {
