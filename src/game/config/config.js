@@ -35,7 +35,7 @@ var GameConfig = {
 	port: 8080,
 	path: '/game/socket',
 	bots: 0, // Not Implemented
-	maxConnections: 40,
+	maxConnections: 80,
 	highscoreName: "How to change Highscore Msg",
 	highscoreMsg: "Set this message in the config",
 	food: 1000,
