@@ -11,7 +11,7 @@ class Observer
 	 */
 	constructor(){
 		if (new.target === Observer) {
-			throw new TypeError("Cannot construct Abstract instances directly");
+			throw new TypeError("Cannot construct Interface Classes");
 		}
 	}
 
