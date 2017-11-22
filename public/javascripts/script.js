@@ -68,7 +68,7 @@ function loadProfileCharts() {
 	}
 	bestScoreAndKillsChart.valueAxes[1].maximum = max;
 
-	var cumulativeMovingScoreChart = makeChart("cumulativeMovingScorechartdiv", cumulativeMovingScoreChartData, "score", "game", "#ffca74", "Cumulative Score per game", "Score", "Game Number")
+	var cumulativeMovingScoreChart = makeChart("cumulativeMovingScorechartdiv", cumulativeMovingScoreChartData, "score", "game", "#ffca74", "Average Score Trend", "Score", "Games")
 }
 
 function loadGlobalCharts() {

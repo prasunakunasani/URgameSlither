@@ -282,3 +282,9 @@ svg {
 .one-line{
     white-space:nowrap;
 }
+
+#profile-name{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

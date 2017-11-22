@@ -1,11 +1,11 @@
 <div class="row card block">
     <div class="row">
-        <div class="col-sm-6 well">
+        <div class="col-sm-6 well" id="profile-name">
             <% if (usersStatsList.totals.deaths <= 0) { %>
             Please play a game
             <% } else { %>
             <h5><%= usersList.snake.name %></h5>
-            <span style="position: absolute; bottom:4px">Last game played: <%= getMinutesAgo(usersStatsList.lastModifiedOn) %>
+            <span>Last game played: <%= getMinutesAgo(usersStatsList.lastModifiedOn) %>
                 ago
                 <% } %>
             </span>
