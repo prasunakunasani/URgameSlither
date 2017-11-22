@@ -105,7 +105,7 @@ function generateAllAvgChartData(dailyStats) {
     for (var x = 0; x < dailyStats.interval_data.averages.length; x++) {
         avgSnakeLengthAllChartData.push({
             second: x * 5,
-            length: dailyStats.interval_data.averages[x]
+            length: (dailyStats.interval_data.averages[x]).toFixed(1)
         });
     }
 
@@ -125,7 +125,7 @@ function generateAllHighChartData(dailyStats) {
     for (var x = 0; x < dailyStats.interval_data.highScore.length; x++) {
         highestSnakeLengthAllChartData.push({
             second: x * 5,
-            length: dailyStats.interval_data.highScore[x]
+            length: (dailyStats.interval_data.highScore[x]).toFixed(1)
         });
     }
 
