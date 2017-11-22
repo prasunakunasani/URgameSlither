@@ -27,7 +27,7 @@ b += message.writeInt16(b, arr, config['nsp1'] * 100);
 
 b += message.writeInt16(b, arr, config['nsp2'] * 100);
 
-b += message.writeInt16(b, arr, 14 * 100);
+b += message.writeInt16(b, arr, config["maxSpeed"] * 100);
 
 b += message.writeInt16(b, arr, 0.033 * 1e3);
 
