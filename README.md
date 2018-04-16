@@ -6,5 +6,5 @@ slither.io clone
 
 Node JS, Mongo DB and NPM required
 
-npm install
+npm install  
 npm run dev
